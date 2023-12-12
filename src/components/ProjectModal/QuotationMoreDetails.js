@@ -156,7 +156,8 @@ export default function QuotationMoreDetails({
                   <Col>
                     <FormGroup>
                       <Label>
-                        {element.quote_date ? moment(element.quote_date).format('YYYY-MM-DD') : ''}
+                      
+                        {element.quote_date ? moment(element.quote_date).format('DD MMM YY') : ''}
                       </Label>
                     </FormGroup>
                   </Col>

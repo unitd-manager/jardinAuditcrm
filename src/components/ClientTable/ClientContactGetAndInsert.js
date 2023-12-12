@@ -583,7 +583,7 @@ export default function ClientContactGetAndInsert({
                             <PdfClientForm45 form45Id={element.contact_id}></PdfClientForm45>
                           </span>
                           /{' '}
-                          <span style={{ color: 'SlatebBlue' }}>
+                          <span style={{ color: 'SlateBlue' }}>
                             <PdfClientDirectorAppoint
                               companyId={element.company_id}
                               directorResignId={element.contact_id}

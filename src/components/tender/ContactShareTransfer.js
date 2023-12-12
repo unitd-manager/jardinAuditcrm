@@ -23,12 +23,14 @@ const ContactEditModal = ({
   editContactEditModals,
   setEditContactEditModals,
   contactsDetails,
+  getShareTransfer
 }) => {
   ContactEditModal.propTypes = {
     contactDatas: PropTypes.object,
     editContactEditModals: PropTypes.bool,
     setEditContactEditModals: PropTypes.func,
     contactsDetails: PropTypes.any,
+    getShareTransfer:PropTypes.any,
   };
 
   const [contactinsert, setContactInsert] = useState();
@@ -54,6 +56,8 @@ const ContactEditModal = ({
         .post('/clients/editShareTransfer', contactinsert)
         .then(() => {
           message('Record editted successfully', 'success');
+          setEditContactEditModals(false);
+          getShareTransfer();
         })
         .catch(() => {
           message('Unable to edit record.', 'error');

@@ -88,7 +88,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
         setAddLineItem(res.data.data[0]);
       })
       .catch(() => {
-        message('Line Items not found', 'info');
+        // message('Line Items not found', 'info');
       });
   };
   //Edit invoice

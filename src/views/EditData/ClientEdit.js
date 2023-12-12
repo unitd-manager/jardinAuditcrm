@@ -3,6 +3,7 @@ import { TabPane, TabContent, Row, Col, Button } from 'reactstrap';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import * as Icon from 'react-feather';
 import ClientButton from '../../components/ClientTable/ClientButton';
 import ClientMainDetails from '../../components/ClientTable/ClientMainDetails';
@@ -38,8 +39,8 @@ const ClientsEdit = () => {
   //Const Variables
   const [activeTab, setActiveTab] = useState('1');
   const [contactData, setContactData] = useState();
-  const [submitting, setSubmitting] = useState(false);
-  const [submittings, setSubmittings] = useState(false);
+  // const [submitting, setSubmitting] = useState(false);
+  // const [submittings, setSubmittings] = useState(false);
   const [contactDatas, setContactDatas] = useState();
   const [contactDatass, setContactDatass] = useState();
   const [addContactModal, setAddContactModal] = useState(false);
@@ -259,6 +260,8 @@ const ClientsEdit = () => {
           // const insertedDataId = res.data.data.insertId;
           message('Contact inserted successfully.', 'success');
           window.location.reload();
+          // addContactToggle(false);
+          // getContactLinked();
         })
         .catch(() => {
           message('Network connection error.', 'error');
@@ -324,7 +327,8 @@ const ClientsEdit = () => {
         .then(() => {
           // const insertedDataId = res.data.data.insertId;
           message('Share inserted successfully.', 'success');
-          window.location.reload();
+          getShareTransfer();
+          addContactToggles(false);
         })
         .catch(() => {
           message('Network connection error.', 'error');
@@ -363,7 +367,9 @@ const ClientsEdit = () => {
         .then(() => {
           // const insertedDataId = res.data.data.insertId;
           message('Share inserted successfully.', 'success');
-          window.location.reload();
+          // window.location.reload();
+          getShareIncrease();
+          addContactToggless(false);
         })
         .catch(() => {
           message('Network connection error.', 'error');
@@ -427,7 +433,7 @@ const ClientsEdit = () => {
         setallCountries(res.data.data);
       })
       .catch(() => {
-        message('Country Data Not Found', 'info');
+        //message('Country Data Not Found', 'info');
       });
   };
 
@@ -438,7 +444,7 @@ const ClientsEdit = () => {
         setallNationality(res.data.data);
       })
       .catch(() => {
-        message('Country Data Not Found', 'info');
+        //message('Country Data Not Found', 'info');
       });
   };
 
@@ -536,7 +542,7 @@ const ClientsEdit = () => {
         setDirector(res.data.data);
       })
       .catch(() => {
-        message('Conatct Data Not Found', 'info');
+        //message('Conatct Data Not Found', 'info');
       });
   };
 
@@ -566,6 +572,10 @@ const ClientsEdit = () => {
       api
         .post('/clients/insertCompanyAddress', newAddressWithCompanyId)
         .then(() => {
+          getCompanyAddressById();
+          addcompanyaddressToggle(false);
+                //  window.location.reload();
+
           if (newAddressWithCompanyId.update_address === '1') {
             api
               .post('/clients/editClientaddress', {
@@ -578,18 +588,19 @@ const ClientsEdit = () => {
               })
               .then(() => {
                 message('new address inserted successfully.', 'success');
-                //addcompanyaddressToggle(false);
+                addcompanyaddressToggle(false);
                 getCompanyAddressById();
                 //setAddressDetails(res.data.data[res.data.data.length - 1]);
-                 window.location.reload();
+                 //window.location.reload();
               })
-                        }
+            }
         })
         .catch(() => {
           message('Network connection error.', 'error');
-        }).finally(() => {
-          setSubmittings(false); // Reset the submitting state after the API call completes (success or error).
-        });
+          })
+        // }).finally(() => {
+        //   setSubmittings(false); // Reset the submitting state after the API call completes (success or error).
+        // });
     } else {
       message('Please fill all required fields', 'warning');
     }
@@ -632,6 +643,9 @@ const ClientsEdit = () => {
         .post('/clients/insertCompanyName', newNameWithCompanyId)
 
         .then(() => {
+          getCompanyNameById();
+          //window.location.reload();
+          addcompanynameToggle(false);
           if (newcompanynameDetails.update_company_name === '1') {
             api
               .post('/clients/editClientname', {
@@ -641,15 +655,17 @@ const ClientsEdit = () => {
               .then(() => {
                 message('new name inserted successfully.', 'success');
                 getCompanyNameById();
-                    window.location.reload();
+                addcompanynameToggle(false);
+                    //window.location.reload();
               })
               .catch(() => {
                 message('Network connection error.', 'error');
               });
           }
-        }).finally(() => {
-          setSubmitting(false); // Reset the submitting state after the API call completes (success or error).
-        });
+        })
+        // .finally(() => {
+        //   setSubmitting(false); // Reset the submitting state after the API call completes (success or error).
+        // });
         
     } else {
       message('Please fill all required fields', 'warning');
@@ -728,10 +744,10 @@ const ClientsEdit = () => {
           <TabPane tabId="1">
             <ClientContactGetAndInsert
               setContactData={setContactData}
+              addContactToggle={addContactToggle}
               setEditContactEditModal={setEditContactEditModal}
               deleteRecord={deleteRecord}
               contactsDetails={contactsDetails}
-              addContactToggle={addContactToggle}
               addContactModal={addContactModal}
               handleAddNewContact={handleAddNewContact}
               handleChanges={handleChanges}
@@ -742,6 +758,7 @@ const ClientsEdit = () => {
             ></ClientContactGetAndInsert>
             {/* Contact Linked Edit modal */}
             <ContactEditModal
+            getContactLinked={getContactLinked}
               editContactEditModal={editContactEditModal}
               setEditContactEditModal={setEditContactEditModal}
               contactData={contactData}
@@ -754,6 +771,7 @@ const ClientsEdit = () => {
           {/* share transfer */}
           <TabPane tabId="2">
             <ClientShareTrasfer
+              getShareTransfer={getShareTransfer}
               setContactDatas={setContactDatas}
               setEditContactEditModals={setEditContactEditModals}
               deleteRecordTransfer={deleteRecordTransfer}
@@ -772,6 +790,7 @@ const ClientsEdit = () => {
               setEditContactEditModals={setEditContactEditModals}
               contactDatas={contactDatas}
               contactsDetails={contactsDetails}
+              getShareTransfer={getShareTransfer}
             ></ContactShareTransfer>
           </TabPane>
           {/* share Increase */}
@@ -787,6 +806,7 @@ const ClientsEdit = () => {
               newIncreaseData={newIncreaseData}
               AddNewIncrease={AddNewIncrease}
               director={director}
+              getShareIncrease={getShareIncrease}
             ></ClientShareIncrease>
             {/* Increase Edit */}
             <ContactShareIncrease
@@ -794,6 +814,7 @@ const ClientsEdit = () => {
               setEditContactEditModalss={setEditContactEditModalss}
               contactDatass={contactDatass}
               director={director}
+              getShareIncrease={getShareIncrease}
             ></ContactShareIncrease>
           </TabPane>
           {/* Company Address change */}
@@ -810,8 +831,8 @@ const ClientsEdit = () => {
               handleCompanyAddressInputs={handleCompanyAddressInputs}
               newcompanyaddressDetails={newcompanyaddressDetails}
               insertnewcompanyaddress={insertnewcompanyaddress}
-              submittings={submittings}
-              setSubmittings={setSubmittings}
+              // submittings={submittings}
+              // setSubmittings={setSubmittings}
             ></CompanyAddressChange>
             {/* Company Address change Edit */}
             <ClientCompanyAddressEdit
@@ -838,8 +859,8 @@ const ClientsEdit = () => {
               handleCompanyNameInputs={handleCompanyNameInputs}
               newcompanynameDetails={newcompanynameDetails}
               insertnewcompanyname={insertnewcompanyname}
-              submitting={submitting}
-              setSubmitting={setSubmitting}
+              // submitting={submitting}
+              // setSubmitting={setSubmitting}
             ></CompanyNameChange>
             {/* Company Address change Edit */}
             <ClientCompanyNameEdit

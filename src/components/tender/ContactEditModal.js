@@ -28,7 +28,8 @@ const ContactEditModal = ({
   allNationality,
   allCountries,
   clientsDetails,
-  contactsDetails
+  contactsDetails,
+  getContactLinked
 }) => {
   ContactEditModal.propTypes = {
     contactData: PropTypes.object,
@@ -37,7 +38,8 @@ const ContactEditModal = ({
     allNationality: PropTypes.any,
     allCountries: PropTypes.any,
     clientsDetails: PropTypes.any,
-    contactsDetails:PropTypes.array
+    contactsDetails:PropTypes.array,
+    getContactLinked:PropTypes.any,
   };
 
   const [contactinsert, setContactInsert] = useState();
@@ -118,7 +120,9 @@ allshare = parseFloat(totalPaidUp) + parseFloat(single)
         .post('/clients/editContact', contactinsert)
         .then(() => {
           message('Record editted successfully', 'success');
-           window.location.reload();
+           //window.location.reload();
+           setEditContactEditModal(false);
+           getContactLinked();
         })
         .catch(() => {
           message('Unable to edit record.', 'error');

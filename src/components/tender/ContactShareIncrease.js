@@ -22,12 +22,14 @@ const ContactEditModal = ({
   editContactEditModalss,
   setEditContactEditModalss,
   director,
+  getShareIncrease
 }) => {
   ContactEditModal.propTypes = {
     contactDatass: PropTypes.object,
     editContactEditModalss: PropTypes.bool,
     setEditContactEditModalss: PropTypes.func,
     director: PropTypes.any,
+    getShareIncrease:PropTypes.any,
   };
 
   const [contactinsert, setContactInsert] = useState();
@@ -48,7 +50,8 @@ const ContactEditModal = ({
       .post('/clients/editShareIncrease', contactinsert)
       .then(() => {
         message('Record editted successfully', 'success');
-        //window.location.reload();
+        setEditContactEditModalss(false);
+        getShareIncrease();
       })
       .catch(() => {
         message('Unable to edit record.', 'error');

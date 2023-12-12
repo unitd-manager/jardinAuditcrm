@@ -28,8 +28,8 @@ export default function CompanyNameChange({
   insertnewcompanyname,
   allCountries,
   clientnameDetails,
-  setSubmitting,
-  submitting,
+  // setSubmitting,
+  // submitting,
 }) {
   CompanyNameChange.propTypes = {
     clientnameDetails: PropTypes.any,
@@ -42,8 +42,8 @@ export default function CompanyNameChange({
     newcompanynameDetails: PropTypes.object,
     insertnewcompanyname: PropTypes.func,
     allCountries: PropTypes.any,
-    setSubmitting:PropTypes.any,
-    submitting:PropTypes.any
+    // setSubmitting:PropTypes.any,
+    // submitting:PropTypes.any
   };
   
 console.log("name",companynameDetails)
@@ -278,12 +278,14 @@ console.log("name",companynameDetails)
                   className="shadow-none"
                   color="primary"
                   onClick={() => {
-                    if (!submitting) {
-                      setSubmitting(true);
-                      insertnewcompanyname();
-                    }
+                    insertnewcompanyname();
+                    // if (!submitting) {
+                    //   setSubmitting(true);
+                    //   insertnewcompanyname();
+                    // }
                   }}
-                  disabled={submitting}
+                  
+                  //disabled={submitting}
                   
                 >
                   Submit

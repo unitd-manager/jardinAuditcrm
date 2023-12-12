@@ -15,6 +15,7 @@ import {
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 import * as Icon from 'react-feather';
+import moment from 'moment';
 
 export default function ProjectTaskTab({
   setContactDatas,
@@ -336,8 +337,8 @@ export default function ProjectTaskTab({
                     </td>
                     <td>{element.title}</td>
                     <td>{element.status}</td>
-                    <td>{element.due_date}</td>
-                    <td>{element.select_date}</td>
+                    <td>{element.due_date ? moment(element.due_date).format('DD-MM-YYYY') : ''}</td>
+                    <td>{element.select_date ? moment(element.select_date).format('DD-MM-YYYY') : ''}</td>
                     <td>{element.employee_id}</td>
                   </tr>
                 );

@@ -29,8 +29,8 @@ export default function CompanyAddressChange({
   insertnewcompanyaddress,
   allCountries,
   clientaddressDetails,
-  setSubmittings,
-  submittings,
+  // setSubmittings,
+  // submittings,
 }) {
   CompanyAddressChange.propTypes = {
     clientaddressDetails:PropTypes.func,
@@ -44,8 +44,8 @@ export default function CompanyAddressChange({
     newcompanyaddressDetails: PropTypes.object,
     insertnewcompanyaddress: PropTypes.func,
     allCountries: PropTypes.func,
-    setSubmittings:PropTypes.any,
-    submittings:PropTypes.any
+    // setSubmittings:PropTypes.any,
+    // submittings:PropTypes.any
   };
 
   console.log('companyaddressDetails', companyaddressDetails);
@@ -336,13 +336,13 @@ export default function CompanyAddressChange({
                   className="shadow-none"
                   color="primary"
                   onClick={() => {
-                  
-                    if (!submittings) {
-                      setSubmittings(true);
-                      insertnewcompanyaddress();
-                    }
+                    insertnewcompanyaddress();
+                    // if (!submittings) {
+                    //   setSubmittings(true);
+                    //   insertnewcompanyaddress();
+                    // }
                   }}
-                  disabled={submittings}
+                  //disabled={submittings}
                 >
                   Submit
                 </Button> 

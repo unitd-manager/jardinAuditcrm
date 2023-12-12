@@ -15,6 +15,7 @@ import {
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 import * as Icon from 'react-feather';
+import moment from 'moment';
 import PdfClientTransferForm from '../PDF/PdfClientTransferForm';
 import PdfClientShareTransfer from '../PDF/PdfClientShareTransfer';
 
@@ -301,7 +302,7 @@ export default function ClientContact({
                     </td>
                     <td>{element.name}</td>
                     <td>{element.to_name}</td>
-                    <td>{element.transfer_date}</td>
+                    <td>{element.transfer_date ? moment(element.transfer_date).format('DD-MM-YYYY') : ''}</td>
                     <td>{element.no_of_shares}</td>
                     <td>
                       <PdfClientTransferForm

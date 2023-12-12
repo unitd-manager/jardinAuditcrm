@@ -52,7 +52,7 @@ const FinanceReceiptData = ({ editCreateReceipt, setEditCreateReceipt,orderId })
       .post('/finance/insertInvoiceReceiptHistory', createReceiptHistory)
       .then(() => {
         message('data inserted successfully.');
-        window.location.reload()
+        //window.location.reload()
       })
       .catch(() => {
         message('Network connection error.');

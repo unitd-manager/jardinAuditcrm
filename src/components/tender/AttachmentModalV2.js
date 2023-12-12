@@ -14,7 +14,7 @@ const AttachmentModalV2 = ({
   altTagData,
   desc,
   update,
-  setUpdate,
+  setUpdate
 }) => {
   AttachmentModalV2.propTypes = {
     attachmentModal: PropTypes.bool,
@@ -58,14 +58,20 @@ const AttachmentModalV2 = ({
         })
         .then(() => {
           message('Files Uploaded Successfully', 'success');
-
+          setUploaded(null)
+          setHandleValue()
+          setFile([])
+          
           setAttachmentModal(false);
-          setUpdate(!update);
+          setUpdate(!update)
         })
         .catch(() => {
+          setUploaded(null)
+          setHandleValue()
+          setFile([])
           setAttachmentModal(false);
           message('Unable to upload File', 'error');
-          setUpdate(!update);
+          setUpdate(!update)
         });
     } else {
       message('No files selected', 'info');
@@ -82,7 +88,7 @@ const AttachmentModalV2 = ({
 
             {handleValue ? (
               handleValue.map((e) => (
-                <div>
+                <div key={e.name}>
                   <span> Name: {e.name} </span>
                 </div>
               ))

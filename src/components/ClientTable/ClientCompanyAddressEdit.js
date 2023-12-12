@@ -53,6 +53,9 @@ const ClientCompanyAddressEdit = ({
       api
         .post('/clients/editCompanyAddress', companyaddressEditDetails)
         .then(() => {
+          getCompanyAddressById();
+                
+                setCompanyAddressEditModal(false);
           if (companyaddressEditDetails.update_address === '1') {
             api
               .post('/clients/editClientaddress', {
@@ -68,7 +71,7 @@ const ClientCompanyAddressEdit = ({
                 //addcompanyaddressToggle(false);
                 getCompanyAddressById();
                 //setAddressDetails(res.data.data[res.data.data.length - 1]);
-                 window.location.reload();
+                setCompanyAddressEditModal(false);
               })
               .catch(() => {
                 message('Network connection error.', 'error');
@@ -76,7 +79,7 @@ const ClientCompanyAddressEdit = ({
           }
           message('Record editted successfully', 'success');
           getCompanyAddressById();
-          //window.location.reload();
+          window.location.reload();
         })
         .catch(() => {
           message('Unable to edit record.', 'error');

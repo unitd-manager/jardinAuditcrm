@@ -39,7 +39,6 @@ function ViewFileComponentV2({ moduleId, roomName,update,setUpdate }) {
             console.log(res);
             Swal.fire('Deleted!', 'Media has been deleted.', 'success');
             setUpdate(!update)
-            //window.location.reload();
           })
           .catch(() => {
             message('Unable to Delete Media', 'info');
@@ -51,6 +50,10 @@ function ViewFileComponentV2({ moduleId, roomName,update,setUpdate }) {
   useEffect(() => {
     getFiles();
   }, [update]);
+  
+  useEffect(() => {
+    getFiles();
+  }, []);
 
   return (
     <>
@@ -68,7 +71,7 @@ function ViewFileComponentV2({ moduleId, roomName,update,setUpdate }) {
                 <tr key={res.media_id}>
                   <td style={tableStyle}>
                     <a
-                      href={`http://43.228.126.245/audit-crm-api/storage/uploads/${res.name}`}
+                      href={`http://43.228.126.245/JardinAuditcrm-Api/storage/uploads/${res.name}`}
                       target="_blank"
                       rel="noreferrer"
                     >

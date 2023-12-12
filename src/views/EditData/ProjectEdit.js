@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, TabContent, TabPane, Button } from 'reactstrap';
+import { Row, Col, TabContent, TabPane, Button,Form ,FormGroup } from 'reactstrap';
 import { ToastContainer } from 'react-toastify';
 import Swal from 'sweetalert2';
 import { useParams, useNavigate } from 'react-router-dom';
 import * as Icon from 'react-feather';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import BreadCrumbs from '../../layouts/breadcrumbs/BreadCrumbs';
 import ComponentCard from '../../components/ComponentCard';
 import QuotationMoreDetails from '../../components/ProjectModal/QuotationMoreDetails';
@@ -146,7 +147,7 @@ const ProjectEdit = () => {
 
   const getEmployeeById = () => {
     api
-      .post('/project/getEmployeeByID', { project_id: id })
+      .post('/project/getTaskStaffById', { project_id: id })
       .then((res) => {
         setEmployeeDetails(res.data.data);
       })
@@ -351,38 +352,48 @@ const ProjectEdit = () => {
             <FinanceTab projectId={id} projectDetail={projectDetail}></FinanceTab>
           </TabPane>
 
+          {/* Attachment */}
           <TabPane tabId="5">
-            <Row>
-              <Col xs="12" md="3" className="mb-3">
-                <Button
-                  className="shadow-none"
-                  color="primary"
-                  onClick={() => {
-                    setRoomName('Tender');
-                    setFileTypes(['JPG', 'JPEG', 'PNG', 'GIF', 'PDF']);
-                    dataForAttachment();
-                    setAttachmentModal(true);
-                  }}
-                >
-                  <Icon.File className="rounded-circle" width="20" />
-                </Button>
-              </Col>
-            </Row>
-            <AttachmentModalV2
-              moduleId={id}
-              attachmentModal={attachmentModal}
-              setAttachmentModal={setAttachmentModal}
-              roomName={RoomName}
-              fileTypes={fileTypes}
-              altTagData="TenderRelated Data"
-              desc="TenderRelated Data"
-              recordType="RelatedPicture"
-              mediaType={attachmentData.modelType}
-              update={update}
-              setUpdate={setUpdate}
-            />
-            <ViewFileComponentV2 moduleId={id} roomName="Tender" recordType="RelatedPicture" update={update}
-                    setUpdate={setUpdate} />
+            <Form>
+              <FormGroup>
+                <Row>
+                  <Col xs="12" md="3" className="mb-3">
+                    <Button
+                      className="shadow-none"
+                      color="primary"
+                      onClick={() => {
+                        setRoomName('Project');
+                        setFileTypes(['JPG', 'JPEG', 'PNG', 'GIF', 'PDF']);
+                        dataForAttachment();
+                        setAttachmentModal(true);
+                      }}
+                    >
+                      <Icon.File className="rounded-circle" width="20" />
+                    </Button>
+                  </Col>
+                </Row>
+                <AttachmentModalV2
+                  moduleId={id}
+                  attachmentModal={attachmentModal}
+                  setAttachmentModal={setAttachmentModal}
+                  roomName={RoomName}
+                  fileTypes={fileTypes}
+                  altTagData="ProjectRelated Data"
+                  desc="ProjectRelated Data"
+                  recordType="RelatedPicture"
+                  mediaType={attachmentData.modelType}
+                  update={update}
+                  setUpdate={setUpdate}
+                />
+                <ViewFileComponentV2
+                  moduleId={id}
+                  roomName="Project"
+                  recordType="RelatedPicture"
+                  update={update}
+                  setUpdate={setUpdate}
+                />
+              </FormGroup>
+            </Form>
           </TabPane>
         </TabContent>
       </ComponentCard>

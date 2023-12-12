@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import '../form-editor/editor.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
 // import moment from 'moment';
 import InvoiceData from '../../components/finance/InvoiceData';
 import InvoiceModal from '../../components/finance/InvoiceModal';
@@ -241,7 +242,7 @@ const FinanceEdit = () => {
   };
   return (
     <>
-      <BreadCrumbs heading={financeDetails && financeDetails.order_id} />
+      <BreadCrumbs />
       <TabContent className="p-4" activeTab={activeTab}>
         {/* Save,Apply Buttons */}
         <FinanceButton
@@ -367,6 +368,7 @@ const FinanceEdit = () => {
               cancelInvoice={cancelInvoice}
               invoiceCancel={invoiceCancel}
               setEditModal={setEditModal}
+              receipt={receipt}
               setEditInvoiceModal={setEditInvoiceModal}
               setInvoiceDatas={setInvoiceDatas}
             ></FinanceInvoiceModal>

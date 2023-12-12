@@ -15,6 +15,7 @@ import {
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 import * as Icon from 'react-feather';
+import moment from 'moment';
 import PdfclientShareIncrease from '../PDF/PdfClientShareIncrease';
 
 export default function ClientContact({
@@ -254,7 +255,7 @@ export default function ClientContact({
                     <td>{element.no_of_shares_increased}</td>
                     <td>{element.consideration_amount}</td>
                     <td>{element.directors_ordinary_shares}</td>
-                    <td>{element.date}</td>
+                    <td>{element.date ? moment(element.date).format('DD-MM-YYYY') : ''}</td>
                     <td>{element.first_name}</td>
                     <td>
                       <PdfclientShareIncrease
