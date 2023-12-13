@@ -216,6 +216,8 @@ const ProjectEdit = Loadable(lazy(() => import('../views/EditData/ProjectEdit'))
 const ClientEdit = Loadable(lazy(() => import('../views/EditData/ClientEdit')));
 const SectionEdit = Loadable(lazy(() => import('../views/EditData/SectionEdit')));
 const LoanEdit = Loadable(lazy(() => import('../views/EditData/LoanEdit')));
+const EmployeeEdit = Loadable(lazy(() => import('../views/EditData/EmployeeEdit')));
+const CpfCalculatorEdit = Loadable(lazy(() => import('../views/EditData/CpfCalculatorEdit')));
 const LeavesEdit = Loadable(lazy(() => import('../views/EditData/LeavesEdit')));
 const JobInformationEdit = Loadable(lazy(() => import('../views/EditData/JobInformationEdit')));
 const StaffEdit = Loadable(lazy(() => import('../views/EditData/StaffEdit')));
@@ -278,6 +280,8 @@ const Routernew = () => {
 
          
           <Route path="/LoanEdit/:id" name="loandata" element={<LoanEdit />}></Route>
+          <Route path="/EmployeeEdit/:id" name="employeedata" element={<EmployeeEdit />}></Route>
+          <Route path="/CpfCalculatorEdit/:id" name="cpfdata" element={<CpfCalculatorEdit />}></Route>
                     <Route
             path="/JobInformationEdit/:id"
             name="jobinformationdata"

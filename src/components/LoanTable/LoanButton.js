@@ -2,26 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Form, FormGroup, Button } from 'reactstrap';
 import ComponentCardV2 from '../ComponentCardV2';
-// import DeleteButton from '../DeleteButton';
 
 export default function LoanButtons({
   editLoanData,
   editLoanStartData,
   editLoanClosingData,
-  // navigate,
   applyChanges,
   saveChanges,
-  // id,
   backToList,
 }) {
   LoanButtons.propTypes = {
     editLoanData: PropTypes.func,
     editLoanStartData: PropTypes.func,
-    editLoanClosingData:PropTypes.func,
-    // navigate: PropTypes.func,
+    editLoanClosingData: PropTypes.func,
     applyChanges: PropTypes.func,
     saveChanges: PropTypes.func,
-    // id: PropTypes.string,
     backToList: PropTypes.func,
   };
   return (
@@ -37,7 +32,7 @@ export default function LoanButtons({
                   editLoanData();
                   editLoanStartData();
                   editLoanClosingData();
-                  saveChanges();                
+                  saveChanges();
                 }}
               >
                 Save
@@ -52,45 +47,17 @@ export default function LoanButtons({
                   editLoanStartData();
                   editLoanClosingData();
                   applyChanges();
-
-                  console.log('cancel process');
                 }}
               >
                 Apply
               </Button>
             </Col>
-            {/* <Col>
-              <Button
-                type="submit"
-                color="dark"
-                className="shadow-none"
-                onClick={(e) => {
-                  if (window.confirm('Are you sure you want to cancel? ')) {
-                    navigate('/Loan');
-                  } else {
-                    e.preventDefault();
-                  }
-                }}
-              >
-                Cancel
-              </Button>
-            </Col>
-            <Col>
-            <DeleteButton
-              ifAttachment
-              attachmentroom="attachmentroom"
-              id={id} 
-              columnname="loan_id"
-              tablename="loan"
-            ></DeleteButton>
-            </Col> */}
             <Col>
               <Button
                 color="dark"
                 className="shadow-none"
                 onClick={() => {
                   backToList();
-                  console.log('back to list');
                 }}
               >
                 Back to List

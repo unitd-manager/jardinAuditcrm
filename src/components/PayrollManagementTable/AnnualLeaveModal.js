@@ -13,11 +13,11 @@ import {
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-function ViewMontlyLeaveModal({ monthlyLeaveModal, setMonthlyLeaveModal, monthlyLeave }) {
-  ViewMontlyLeaveModal.propTypes = {
-    monthlyLeaveModal: PropTypes.bool,
-    setMonthlyLeaveModal: PropTypes.func,
-    monthlyLeave: PropTypes.array,
+function ViewAnnualLeaveModal({ annualLeaveModal, setAnnualLeaveModal, annualLeave }) {
+  ViewAnnualLeaveModal.propTypes = {
+    annualLeaveModal: PropTypes.bool,
+    setAnnualLeaveModal: PropTypes.func,
+    annualLeave: PropTypes.array,
   };
 
   const alcolumns = [
@@ -44,10 +44,10 @@ function ViewMontlyLeaveModal({ monthlyLeaveModal, setMonthlyLeaveModal, monthly
     },
   ];
 
-return (
+  return (
     <>
-      <Modal isOpen={monthlyLeaveModal}>
-        <ModalHeader>Montly Leave History</ModalHeader>
+      <Modal isOpen={annualLeaveModal}>
+        <ModalHeader>Annual Leave History</ModalHeader>
         <ModalBody>
           <Row>
             <Col md="12">
@@ -62,8 +62,8 @@ return (
                       </tr>
                     </thead>
                     <tbody>
-                      {monthlyLeave &&
-                        monthlyLeave.map((element) => {
+                      {annualLeave &&
+                        annualLeave.map((element) => {
                           return (
                             <tr key={element.leave_id}>
                               <td>{element.from_date}</td>
@@ -84,7 +84,7 @@ return (
             color="dark"
             className="shadow-none"
             onClick={() => {
-              setMonthlyLeaveModal(false);
+              setAnnualLeaveModal(false);
             }}
           >
             {' '}
@@ -96,4 +96,4 @@ return (
   );
 }
 
-export default ViewMontlyLeaveModal;
+export default ViewAnnualLeaveModal;

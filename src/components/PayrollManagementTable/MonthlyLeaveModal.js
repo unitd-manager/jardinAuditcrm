@@ -12,13 +12,12 @@ import {
   Table,
 } from 'reactstrap';
 import PropTypes from 'prop-types';
-// import { useDispatch } from 'react-redux';
 
-function ViewAnnualLeaveModal({ annualLeaveModal, setAnnualLeaveModal, annualLeave }) {
-  ViewAnnualLeaveModal.propTypes = {
-    annualLeaveModal: PropTypes.bool,
-    setAnnualLeaveModal: PropTypes.func,
-    annualLeave: PropTypes.array,
+function ViewMontlyLeaveModal({ monthlyLeaveModal, setMonthlyLeaveModal, monthlyLeave }) {
+  ViewMontlyLeaveModal.propTypes = {
+    monthlyLeaveModal: PropTypes.bool,
+    setMonthlyLeaveModal: PropTypes.func,
+    monthlyLeave: PropTypes.array,
   };
 
   const alcolumns = [
@@ -44,11 +43,11 @@ function ViewAnnualLeaveModal({ annualLeaveModal, setAnnualLeaveModal, annualLea
       grow: 0,
     },
   ];
-  
+
   return (
     <>
-      <Modal isOpen={annualLeaveModal}>
-        <ModalHeader>Annual Leave History</ModalHeader>
+      <Modal isOpen={monthlyLeaveModal}>
+        <ModalHeader>Montly Leave History</ModalHeader>
         <ModalBody>
           <Row>
             <Col md="12">
@@ -63,8 +62,8 @@ function ViewAnnualLeaveModal({ annualLeaveModal, setAnnualLeaveModal, annualLea
                       </tr>
                     </thead>
                     <tbody>
-                      {annualLeave &&
-                        annualLeave.map((element) => {
+                      {monthlyLeave &&
+                        monthlyLeave.map((element) => {
                           return (
                             <tr key={element.leave_id}>
                               <td>{element.from_date}</td>
@@ -85,7 +84,7 @@ function ViewAnnualLeaveModal({ annualLeaveModal, setAnnualLeaveModal, annualLea
             color="dark"
             className="shadow-none"
             onClick={() => {
-              setAnnualLeaveModal(false);
+              setMonthlyLeaveModal(false);
             }}
           >
             {' '}
@@ -97,4 +96,4 @@ function ViewAnnualLeaveModal({ annualLeaveModal, setAnnualLeaveModal, annualLea
   );
 }
 
-export default ViewAnnualLeaveModal;
+export default ViewMontlyLeaveModal;

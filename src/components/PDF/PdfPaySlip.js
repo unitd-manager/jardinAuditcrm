@@ -1,23 +1,24 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Button } from 'reactstrap';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import api from '../../constants/api';
-import message from '../Message';
 import PdfFooter from './PdfFooter';
 import PdfHeader from './PdfHeader';
 
-const PdfPaySlip = () => {
-  const { id } = useParams();
+const PdfPaySlip = ({payroll}) => {
+  PdfPaySlip.propTypes = {
+    payroll: PropTypes.any,
+  }
+  // const { id } = useParams();
   const [hfdata, setHeaderFooterData] = React.useState();
-  const [payroll, setPayroll] = React.useState();
-
+  // const [payroll, setPayroll] = React.useState();
+console.log('payroll',payroll)
   React.useEffect(() => {
     api.get('/setting/getSettingsForCompany').then((res) => {
       setHeaderFooterData(res.data.data);
-      console.log(res.data);
     });
   }, []);
 
@@ -26,39 +27,20 @@ const PdfPaySlip = () => {
     return filteredResult.value;
   };
   // Gettind data from Job By Id
-  const getPayslip = () => {
-    api
-      .post('/PayrollManagement/getpayrollmanagementById', { payroll_management_id: id })
-      .then((res) => {
-        setPayroll(res.data.data[0]);
-      })
-      .catch(() => {
-        message('payroll Data Not Found', 'info');
-      });
-  };
+  // const getPayslip = () => {
+  //   api
+  //     .post('/PayrollManagement/getpayrollmanagementById', { payroll_management_id: id })
+  //     .then((res) => {
+  //       setPayroll(res.data.data[0]);
+  //     })
+  //     .catch(() => {
+  //       message('payroll Data Not Found', 'info');
+  //     });
+  // };
 
-  //   const getPurchaseOrderId = () => {
-  //     api
-  //       .post('/purchaseorder/getPurchaseOrderByPdf', { purchase_order_id: id })
-  //       .then((res) => {
-  //         setProducts(res.data.data);
-  //          //grand total
-  //          let grandTotal = 0;
-  //         //  let grand = 0;
-  //          res.data.data.forEach((elem) => {
-  //            grandTotal += elem.total_price;
-  //           //  grand += elem.actual_value;
-  //          });
-  //          setGtotal(grandTotal);
-  //         //  setGrTotal(grand);
-  //       })
-  //       .catch(() => {
-  //         message('PurchaseOrder Data Not Found', 'info');
-  //       });
-  //   };
-  React.useEffect(() => {
-    getPayslip();
-  }, []);
+  // React.useEffect(() => {
+  //   getPayslip();
+  // }, []);
 
   const GetPdf = () => {
     const dd = {
@@ -86,11 +68,8 @@ const PdfPaySlip = () => {
               return '#eaeaea';
             },
             hLineStyle: () => {
-              // if (i === 0 || i === node.table.body.length) {
               return null;
-              //}
             },
-            // vLineStyle: function () { return {dash: { length: 10, space: 4 }}; },
             paddingLeft: () => {
               return 10;
             },
@@ -143,11 +122,8 @@ const PdfPaySlip = () => {
               return '#eaeaea';
             },
             hLineStyle: () => {
-              // if (i === 0 || i === node.table.body.length) {
               return null;
-              //}
             },
-            // vLineStyle: function () { return {dash: { length: 10, space: 4 }}; },
             paddingLeft: () => {
               return 10;
             },
@@ -206,11 +182,8 @@ const PdfPaySlip = () => {
               return '#eaeaea';
             },
             hLineStyle: () => {
-              // if (i === 0 || i === node.table.body.length) {
               return null;
-              //}
             },
-            // vLineStyle: function () { return {dash: { length: 10, space: 4 }}; },
             paddingLeft: () => {
               return 10;
             },
@@ -269,11 +242,8 @@ const PdfPaySlip = () => {
               return '#eaeaea';
             },
             hLineStyle: () => {
-              // if (i === 0 || i === node.table.body.length) {
               return null;
-              //}
             },
-            // vLineStyle: function () { return {dash: { length: 10, space: 4 }}; },
             paddingLeft: () => {
               return 10;
             },
@@ -315,9 +285,9 @@ const PdfPaySlip = () => {
                 },
                 {
                   border: [false, false, false, true],
-                  text: `${payroll.basic_pay.toLocaleString('en-IN', {
+                  text: `${payroll.basic_pay?payroll.basic_pay.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
-                  })}`,
+                  }):0.00}`,
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
                 },
@@ -331,9 +301,9 @@ const PdfPaySlip = () => {
                 },
 
                 {
-                  text: `${payroll.basic_pay.toLocaleString('en-IN', {
+                  text: `${payroll.basic_pay?payroll.basic_pay.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
-                  })}                                                             (A)`,
+                  }):0.00}                                                             (A)`,
                   border: [false, false, false, true],
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
@@ -363,9 +333,9 @@ const PdfPaySlip = () => {
                 },
 
                 {
-                  text: `${payroll.allowance1.toLocaleString('en-IN', {
+                  text: `${payroll.allowance1?payroll.allowance1.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
-                  })}`,
+                  }):0.00}`,
                   border: [false, false, false, true],
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
@@ -379,9 +349,9 @@ const PdfPaySlip = () => {
                 },
 
                 {
-                  text: `${payroll.allowance2.toLocaleString('en-IN', {
+                  text: `${payroll.allowance2?payroll.allowance2.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
-                  })}`,
+                  }):0.00}`,
                   border: [false, false, false, true],
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
@@ -395,9 +365,9 @@ const PdfPaySlip = () => {
                 },
 
                 {
-                  text: `${payroll.allowance3.toLocaleString('en-IN', {
+                  text: `${payroll.allowance3?payroll.allowance3.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
-                  })}`,
+                  }):0.00}`,
                   border: [false, false, false, true],
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
@@ -411,9 +381,9 @@ const PdfPaySlip = () => {
                 },
 
                 {
-                  text: `${payroll.allowance4.toLocaleString('en-IN', {
+                  text: `${payroll.allowance4?payroll.allowance4.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
-                  })}`,
+                  }):0.00}`,
                   border: [false, false, false, true],
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
@@ -427,9 +397,9 @@ const PdfPaySlip = () => {
                 },
 
                 {
-                  text: `${payroll.allowance5.toLocaleString('en-IN', {
+                  text: `${payroll.allowance5?payroll.allowance5.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
-                  })}`,
+                  }):0.00 }`,
                   border: [false, false, false, true],
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
@@ -459,9 +429,9 @@ const PdfPaySlip = () => {
                 },
 
                 {
-                  text: `${payroll.cpf_employee.toLocaleString('en-IN', {
+                  text: `${payroll.cpf_employee?payroll.cpf_employee.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
-                  })}`,
+                  }):0.00}`,
                   border: [false, false, false, true],
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
@@ -475,7 +445,7 @@ const PdfPaySlip = () => {
                 },
 
                 {
-                  text: `${payroll.sdl.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+                  text: `${payroll.sdl?payroll.sdl.toLocaleString('en-IN', { minimumFractionDigits: 2 }):0.00}`,
                   border: [false, false, false, true],
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
@@ -503,9 +473,9 @@ const PdfPaySlip = () => {
                 },
 
                 {
-                  text: `${payroll.deduction1.toLocaleString('en-IN', {
+                  text: `${payroll.deduction1?payroll.deduction1.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
-                  })}`,
+                  }):0.00}`,
                   border: [false, false, false, true],
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
@@ -519,9 +489,9 @@ const PdfPaySlip = () => {
                 },
 
                 {
-                  text: `${payroll.deduction2.toLocaleString('en-IN', {
+                  text: `${payroll.deduction2?payroll.deduction2.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
-                  })}`,
+                  }):0.00}`,
                   border: [false, false, false, true],
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
@@ -535,9 +505,9 @@ const PdfPaySlip = () => {
                 },
 
                 {
-                  text: `${payroll.deduction3.toLocaleString('en-IN', {
+                  text: `${payroll.deduction3?payroll.deduction3.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
-                  })}`,
+                  }):0.00}`,
                   border: [false, false, false, true],
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
@@ -551,9 +521,9 @@ const PdfPaySlip = () => {
                 },
 
                 {
-                  text: `${payroll.deduction4.toLocaleString('en-IN', {
+                  text: `${payroll.deduction4?payroll.deduction4.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
-                  })}`,
+                  }):0.00}`,
                   border: [false, false, false, true],
                   fillColor: '#f5f5f5',
                   style: 'tableBody',
@@ -578,11 +548,8 @@ const PdfPaySlip = () => {
             },
 
             hLineStyle: () => {
-              // if (i === 0 || i === node.table.body.length) {
               return null;
-              //}
             },
-            // vLineStyle: function () { return {dash: { length: 10, space: 4 }}; },
             paddingLeft: () => {
               return 10;
             },
@@ -623,8 +590,6 @@ const PdfPaySlip = () => {
                   ? moment(payroll.generated_date).format('DD-MM-YYYY')
                   : ''
               } `,
-              //style: [ 'textSize'],margin:[51,0,0,0]  ,
-
               margin: [10, 0, 0, 0],
               style: ['notesText', 'textSize'],
             },
@@ -650,11 +615,8 @@ const PdfPaySlip = () => {
               return '#eaeaea';
             },
             hLineStyle: () => {
-              // if (i === 0 || i === node.table.body.length) {
               return null;
-              //}
             },
-            // vLineStyle: function () { return {dash: { length: 10, space: 4 }}; },
             paddingLeft: () => {
               return 10;
             },
@@ -713,11 +675,8 @@ const PdfPaySlip = () => {
               return '#eaeaea';
             },
             hLineStyle: () => {
-              // if (i === 0 || i === node.table.body.length) {
               return null;
-              //}
             },
-            // vLineStyle: function () { return {dash: { length: 10, space: 4 }}; },
             paddingLeft: () => {
               return 10;
             },
@@ -821,11 +780,8 @@ const PdfPaySlip = () => {
               return '#eaeaea';
             },
             hLineStyle: () => {
-              // if (i === 0 || i === node.table.body.length) {
               return null;
-              //}
             },
-            // vLineStyle: function () { return {dash: { length: 10, space: 4 }}; },
             paddingLeft: () => {
               return 10;
             },
@@ -912,11 +868,8 @@ const PdfPaySlip = () => {
               return '#eaeaea';
             },
             hLineStyle: () => {
-              // if (i === 0 || i === node.table.body.length) {
               return null;
-              //}
             },
-            // vLineStyle: function () { return {dash: { length: 10, space: 4 }}; },
             paddingLeft: () => {
               return 10;
             },
@@ -987,7 +940,15 @@ const PdfPaySlip = () => {
 
             {
               canvas: [
-                { type: 'line', margin: [0, 50, -150, 0], x1: 0, y1: 0, x2: 150, y2: 0, lineWidth: 1 },
+                {
+                  type: 'line',
+                  margin: [0, 50, -150, 0],
+                  x1: 0,
+                  y1: 0,
+                  x2: 150,
+                  y2: 0,
+                  lineWidth: 1,
+                },
               ],
             },
             '\n',
