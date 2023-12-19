@@ -15,6 +15,7 @@ import {
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 import * as Icon from 'react-feather';
+import moment from 'moment';
 import PdfClientCompanyAddress from '../PDF/PdfClientCompanyAddress';
 
 export default function CompanyAddressChange({
@@ -69,14 +70,21 @@ export default function CompanyAddressChange({
       sortable: false,
     },
     {
-      name: 'Old Address 1',
+      name: 'Date',
       selector: 'first_name',
       sortable: true,
       grow: 0,
       wrap: true,
     },
     {
-      name: 'New Address 1',
+      name: 'Old Address ',
+      selector: 'first_name',
+      sortable: true,
+      grow: 0,
+      wrap: true,
+    },
+    {
+      name: 'New Address ',
       selector: 'email',
       sortable: true,
       grow: 2,
@@ -384,6 +392,8 @@ export default function CompanyAddressChange({
                         <Icon.Edit2 />
                       </span>
                     </td>
+                    {/* <td>{element.change_date}</td> */}
+                    <td>{element.change_date ? moment(element.change_date).format('DD-MM-YYYY') : ''}</td>
                     <td>{element.previous_address_flat}</td>
                     <td>{element.current_address_flat}</td>
                     <td>

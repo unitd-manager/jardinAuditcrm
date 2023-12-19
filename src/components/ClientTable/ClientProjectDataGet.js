@@ -46,9 +46,15 @@ export default function ClientProjectDataGet({projectDetails}) {
               return (
                 <tr key={element.project_code}>
                   <td>{element.project_code}</td>
-                  <td>
+                  {/* <td>
                     <Link to={`/projectEdit/${element.project_id}`}>{element.title}</Link>
-                  </td>
+                  </td> */}
+                  <td>
+                      {/* Modified: Added target="_blank" attribute */}
+                      <Link to={`/projectEdit/${element.project_id}`} target="_blank">
+                        {element.title}
+                      </Link>
+                    </td>
                   <td>{element.project_value}</td>
                   <td>{element.status}</td>
                 </tr>

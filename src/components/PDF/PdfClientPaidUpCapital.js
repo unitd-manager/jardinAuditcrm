@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Button } from 'reactstrap';
+import * as Icon from 'react-feather';
 import api from '../../constants/api';
 
 
@@ -394,9 +395,22 @@ import api from '../../constants/api';
 
   return (
     <>
-    <Button type="submit" className="shadow-none" color="primary" onClick={GetPdf}>
+    {/* <Button type="submit" className="shadow-none" color="primary" onClick={GetPdf}>
         PaidUpCapital
-      </Button>
+      </Button> */}
+      <Button
+  type="submit"
+  className="shadow-none"
+  color="primary"
+  onClick={GetPdf}
+  style={{ color: 'white' }} // Changing the text color to white
+>
+  <span style={{ color: 'white' }}> PaidUpCapital</span>{' '}
+  <span style={{ color: 'white' }}>
+  <Icon.File /> 
+
+  </span>
+</Button>
     </>
   );
 };

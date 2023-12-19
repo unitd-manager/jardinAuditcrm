@@ -136,10 +136,15 @@ const ClientsEdit = () => {
     clientsDetails.modification_date = creationdatetime;
     if (
       clientsDetails.company_name !== '' &&
-      clientsDetails.reg_no !== '' &&
       clientsDetails.category !== '' &&
       clientsDetails.group_name !== ''
     ) {
+    if ((clientsDetails.reg_no !== '' && clientsDetails.date_of_incorporation === '') 
+    || (clientsDetails.date_of_incorporation !== '' && clientsDetails.reg_no === '')) {
+      // Display a message when Reg No is filled but Incorporation Date is empty
+        message('Please enter both Reg No and Incorporation Date', 'warning');
+        //message('Please enter Incorporation Date', 'warning');
+    } else {
       api
         .post('/clients/editClients', clientsDetails)
         .then(() => {
@@ -149,8 +154,12 @@ const ClientsEdit = () => {
         .catch(() => {
           message('Unable to edit record.', 'error');
         });
-    } else {
-      message('Please fill all required fields', 'warning');
+    // } else {
+    //   message('Please fill all required fields', 'warning');
+    // }
+      }
+  }else {
+      message('Please fill reg_no and incorporation date fields', 'warning');
     }
   };
   //Logic for edit data in db
@@ -209,8 +218,10 @@ const ClientsEdit = () => {
 
   // insert Contact
   const [newContactData, setNewContactData] = useState({
-    salutation: '',
+    salutation: 'Mr',
     first_name: '',
+    id_card_type: '',
+    id_card_no: '',
     email: '',
     position: '',
     department: '',
@@ -222,14 +233,12 @@ const ClientsEdit = () => {
     secretary_appoint_date: '',
     secretary_resign_date: '',
     issued_share_capital: '',
-    id_card_type: '',
-    id_card_no: '',
     address_flat: '',
     address_street: '',
     address_town: '',
     sing_pass: '',
     address_po_code: '',
-    address_country: '',
+    address_country: 'Singapore',
     date_in_forms: '',
   });
   const PaidUp = clientsDetails && clientsDetails.CapitalTotal;
@@ -242,8 +251,8 @@ const ClientsEdit = () => {
     if (
       newContactData.salutation !== '' &&
       newContactData.first_name !== '' &&
-      newContactData.id_card_no !== '' &&
       newContactData.id_card_type !== '' &&
+      newContactData.id_card_no !== ''  &&
       newContactData.issued_share_capital !== ''
     ) {
       // Check if issued_share_capital exceeds paidup_capital
@@ -545,12 +554,12 @@ const ClientsEdit = () => {
         //message('Conatct Data Not Found', 'info');
       });
   };
-
+  //const [showAddModal, setShowAddModal] = useState(false);
   //Add payment data
   const [newcompanyaddressDetails, setNewCompanyAddressDetails] = useState({
     company_id: '',
     current_address_flat: '',
-    current_address_country: '',
+    current_address_country: 'Singapore',
     current_address_po_code: '',
     change_date: '',
   });
@@ -572,7 +581,15 @@ const ClientsEdit = () => {
       api
         .post('/clients/insertCompanyAddress', newAddressWithCompanyId)
         .then(() => {
+          setNewCompanyAddressDetails({
+            company_id: '',
+            current_address_flat: '',
+            current_address_country: '',
+            current_address_po_code: '',
+            change_date: '',
+          });
           getCompanyAddressById();
+          editClientsById();
           addcompanyaddressToggle(false);
                 //  window.location.reload();
 
@@ -589,6 +606,7 @@ const ClientsEdit = () => {
               .then(() => {
                 message('new address inserted successfully.', 'success');
                 addcompanyaddressToggle(false);
+                editClientsById();
                 getCompanyAddressById();
                 //setAddressDetails(res.data.data[res.data.data.length - 1]);
                  //window.location.reload();
@@ -618,7 +636,7 @@ const ClientsEdit = () => {
     current_company_name: '',
     meeting_time: '',
     meeting_address_po_code: '',
-    meeting_address_country: '',
+    meeting_address_country: 'Singapore',
     meeting_address_flat: '',
     previous_company_name: '',
   });
@@ -632,8 +650,10 @@ const ClientsEdit = () => {
       newcompanynameDetails.meeting_time !== '' &&
       newcompanynameDetails.current_company_name !== ''
     ) {
+      const currentDate = new Date(); // Get today's date in YYYY-MM-DD format
       const newNameWithCompanyId = newcompanynameDetails;
       newNameWithCompanyId.company_id = id;
+      newNameWithCompanyId.date= currentDate; 
       //newNameWithCompanyId.previous_company_name = clientnameDetails.company_name;
       //newNameWithCompanyId.previous_company_name = clientnameDetails.current_company_name;
       if( !newNameWithCompanyId.previous_company_name){
@@ -644,6 +664,7 @@ const ClientsEdit = () => {
 
         .then(() => {
           getCompanyNameById();
+          editClientsById();
           //window.location.reload();
           addcompanynameToggle(false);
           if (newcompanynameDetails.update_company_name === '1') {
@@ -656,6 +677,7 @@ const ClientsEdit = () => {
                 message('new name inserted successfully.', 'success');
                 getCompanyNameById();
                 addcompanynameToggle(false);
+                editClientsById();
                     //window.location.reload();
               })
               .catch(() => {
@@ -697,13 +719,13 @@ const ClientsEdit = () => {
 
   const tabs = [
     { id: '1', name: 'Officers/Authorised Representative' },
-    { id: '2', name: 'Share Transfer Linked' },
-    { id: '3', name: 'Share Increase Linked' },
-    { id: '4', name: 'Company Address change' },
+    { id: '2', name: 'Share Transfer'},
+    { id: '3', name: 'Share Increase'},
+    { id: '4', name: 'Company Address change'},
     { id: '5', name: 'Company Name Change' },
-    { id: '6', name: 'Projects Linked' },
-    { id: '7', name: 'Invoice Linked' },
-    { id: '8', name: 'Tender Linked' },
+    { id: '6', name: 'Projects' },
+    { id: '7', name: 'Invoice ' },
+    { id: '8', name: 'Tender' },
     { id: '9', name: 'Attachments' },
     { id: '10', name: 'Add a Note' },
   ];
@@ -726,14 +748,14 @@ const ClientsEdit = () => {
       ></ClientButton>
 
       {/* Client Main details */}
-      <ComponentCard title="Client Details" creationModificationDate={clientsDetails}>
+      <ComponentCard title="Client Details"  creationModificationDate={clientsDetails}>
         <ClientMainDetails
           handleInputs={handleInputs}
           clientsDetails={clientsDetails}
           allCountries={allCountries}
         ></ClientMainDetails>
       </ComponentCard>
-      <ClientButtonPdf editClientsData={editClientsData} backToList={backToList}></ClientButtonPdf>
+      <ClientButtonPdf editClientsData={editClientsData} ></ClientButtonPdf>
 
       <ComponentCard>
         <ToastContainer></ToastContainer>
@@ -820,6 +842,7 @@ const ClientsEdit = () => {
           {/* Company Address change */}
           <TabPane tabId="4">
             <CompanyAddressChange
+           
               clientaddressDetails={clientaddressDetails}
               allCountries={allCountries}
               setCompanyAddressData={setCompanyAddressData}
@@ -836,6 +859,7 @@ const ClientsEdit = () => {
             ></CompanyAddressChange>
             {/* Company Address change Edit */}
             <ClientCompanyAddressEdit
+              editClientsById={editClientsById}
               allCountries={allCountries}
               setCompanyAddressEditModal={setCompanyAddressEditModal}
               companyaddressEditModal={companyaddressEditModal}
@@ -864,6 +888,7 @@ const ClientsEdit = () => {
             ></CompanyNameChange>
             {/* Company Address change Edit */}
             <ClientCompanyNameEdit
+             editClientsById={editClientsById}
               allCountries={allCountries}
               setCompanyNameEditModal={setCompanyNameEditModal}
               companynameEditModal={companynameEditModal}

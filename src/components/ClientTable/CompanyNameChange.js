@@ -15,6 +15,7 @@ import {
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 import * as Icon from 'react-feather';
+import moment from 'moment';
 import PdfClientCompanyName from '../PDF/PdfClientCompanyName';
 
 export default function CompanyNameChange({
@@ -66,14 +67,17 @@ console.log("name",companynameDetails)
       sortable: false,
     },
     {
-      name: 'Old Name 1',
+      name:'Date',
+    },
+    {
+      name: 'Old Name ',
       selector: 'previous_company_name',
       sortable: true,
       grow: 0,
       wrap: true,
     },
     {
-      name: 'New Name 1',
+      name: 'New Name ',
       selector: 'current_company_name',
       sortable: true,
       grow: 2,
@@ -328,6 +332,8 @@ console.log("name",companynameDetails)
                         <Icon.Edit2 />
                       </span>
                     </td>
+                    {/* <td>{element.date}</td> */}
+                    <td>{element.date ? moment(element.date).format('DD-MM-YYYY') : ''}</td>
                     <td>{element.previous_company_name}</td>
                     <td>{element.current_company_name}</td>
                     <td>

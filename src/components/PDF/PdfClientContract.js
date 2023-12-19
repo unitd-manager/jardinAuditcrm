@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import pdfMake from 'pdfmake';
+import * as Icon from 'react-feather';
 import { Button } from 'reactstrap';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import api from '../../constants/api';
 
 
-
-
 const PdfClientContract = () => {
   const { id } = useParams();
-
-
   
   const [companycontactDetails, setCompanyContactDetails] = useState();
 
@@ -594,10 +591,23 @@ const PdfClientContract = () => {
 
   return (
     <>
-  <Button type="submit" className="shadow-none"
+  {/* <Button type="submit" className="shadow-none"
                 color="primary" onClick={GetPdf}>
         Contract
-      </Button>
+      </Button> */}
+      <Button
+  type="submit"
+  className="shadow-none"
+  color="primary"
+  onClick={GetPdf}
+  style={{ color: 'white' }} // Changing the text color to white
+>
+  <span style={{ color: 'white' }}> Contract</span>{' '}
+  <span style={{ color: 'white' }}>
+  <Icon.File /> 
+
+  </span>
+</Button>
    </>
   );
 };

@@ -20,10 +20,10 @@ export default function ClientTenderDataGet({tenderDetails}) {
       name: 'Title',
       
     },
-    {
-      name: 'Est Value',
+    // {
+    //   name: 'Est Value',
       
-    },
+    // },
     {
       name: 'Status',
      
@@ -48,11 +48,12 @@ export default function ClientTenderDataGet({tenderDetails}) {
                             <td>{element.opportunity_code}</td>
                             <td>
                               {' '}
-                              <Link to={`/TenderEdit/${element.opportunity_id}`}>
+                              <Link to={`/TenderEdit/${element.opportunity_id}`} target="_blank">
                                 {element.title}
                               </Link>
                             </td>
-                            <td>{element.price}</td>
+                            
+                            {/* <td>{element.price}</td> */}
                             <td>{element.status}</td>
                           </tr>
                         );

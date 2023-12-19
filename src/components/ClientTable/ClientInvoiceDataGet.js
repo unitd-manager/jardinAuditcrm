@@ -47,14 +47,20 @@ export default function ClientInvoiceDataGet({ invoiceDetails }) {
               invoiceDetails.map((element) => {
                 return (
                   <tr key={element.invoice_code}>
-                    <td>
+                    {/* <td>
                       {' '}
                       <Link to={`/InvoiceEdit/${element.invoice_id}`}>{element.invoice_code}</Link>
+                    </td> */}
+                    <td>
+                      {/* Modified: Added target="_blank" attribute */}
+                      <Link to={`/InvoiceEdit/${element.invoice_id}`} target="_blank">
+                      {element.invoice_code}
+                      </Link>
                     </td>
                     <td>{element.project_title}</td>
                     <td>{element.invoice_amount}</td>
-                    <td>{moment(element.invoice_date).format('YYYY-MM-DD')}</td>
-                    <td>{moment(element.invoice_due_date).format('YYYY-MM-DD')}</td>
+                    <td>{moment(element.invoice_date).format('DD-MM-YYYY')}</td>
+                    <td>{moment(element.invoice_due_date).format('DD-MM-YYYY')}</td>
                     <td>{element.status}</td>
                   </tr>
                 );

@@ -133,7 +133,7 @@ export default function ClientContactGetAndInsert({
                       <Row>
                         <Col md="12">
                           <FormGroup>
-                            <Label>Position</Label>
+                            <Label>Position<span className="required"> *</span></Label>
                             {/* <Input
                               name="position"
                               // onChange={handleAddNewContact}
@@ -412,11 +412,12 @@ export default function ClientContactGetAndInsert({
                             <Label>
                               NRIC/FIN/PP<span className="required"> *</span>
                             </Label>
-                            <Input
+                            
+                              <Input
                               type="text"
-                              name="id_card_no"
                               onChange={handleAddNewContact}
                               value={newContactData && newContactData.id_card_no}
+                              name="id_card_no"
                             />
                           </FormGroup>
                         </Col>

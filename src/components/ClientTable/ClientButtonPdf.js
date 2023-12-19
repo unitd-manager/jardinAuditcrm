@@ -1,6 +1,5 @@
 import React from 'react';
-import { Row, Col, Form, FormGroup, Button } from 'reactstrap';
-import PropTypes from 'prop-types';
+import { Row, Col, Form, FormGroup } from 'reactstrap';
 import PdfClientIncorporationDetails from '../PDF/PdfClientIncorporationDetails';
 import PdfClientPaidUpCapital from '../PDF/PdfClientPaidUpCapital';
 import PdfClientContract from '../PDF/PdfClientContract';
@@ -9,10 +8,8 @@ import PdfClientEp200 from '../PDF/PdfClientEp200';
 import PdfClientRickAssessment from '../PDF/PdfClientRickAssessment';
 import ComponentCardV2 from '../ComponentCardV2';
 
-export default function ClientButtonPdf({ backToList }) {
-  ClientButtonPdf.propTypes = {
-    backToList: PropTypes.func,
-  };
+export default function ClientButtonPdf() {
+
   return (
     <Form>
       <FormGroup>
@@ -37,7 +34,7 @@ export default function ClientButtonPdf({ backToList }) {
             <Col>
               <PdfClientRickAssessment></PdfClientRickAssessment>
             </Col>
-
+{/* 
             <Col>
               <Button
                 className="shadow-none"
@@ -49,7 +46,7 @@ export default function ClientButtonPdf({ backToList }) {
               >
                 BackToList
               </Button>
-            </Col>
+            </Col> */}
           </Row>
         </ComponentCardV2>
       </FormGroup>

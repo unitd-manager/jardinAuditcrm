@@ -89,6 +89,7 @@ console.log('contctdetail',contactsDetails)
     if (
       contactinsert.salutation !== '' &&
       contactinsert.first_name !== '' &&
+      contactinsert.position !== '' &&
       contactinsert.id_card_no !== '' &&
       contactinsert.id_card_type !== ''
     ) {
@@ -157,7 +158,7 @@ allshare = parseFloat(totalPaidUp) + parseFloat(single)
           <Row>
             <Col md="4">
               <FormGroup>
-                <Label>Title </Label>
+                <Label>Title <span className="required"> *</span></Label>
                 <Input
                   type="select"
                   onChange={handleInputs}
@@ -177,7 +178,7 @@ allshare = parseFloat(totalPaidUp) + parseFloat(single)
             </Col>
             <Col md="4">
               <FormGroup>
-                <Label>Name</Label>
+                <Label>Name <span className="required"> *</span></Label>
                 <Input
                   type="text"
                   onChange={handleInputs}
@@ -212,7 +213,7 @@ allshare = parseFloat(totalPaidUp) + parseFloat(single)
           <Row>
             <Col md="12">
               <FormGroup>
-                <Label>Position</Label>
+                <Label>Position<span className="required"> *</span></Label>
                 {/* <Input
                                   name="position"
                                   // onChange={handleAddNewContact}
@@ -408,12 +409,13 @@ allshare = parseFloat(totalPaidUp) + parseFloat(single)
           <Row>
             <Col md="4">
               <FormGroup>
-                <Label>ID card type</Label>
+                <Label>ID card type<span className="required"> *</span></Label>
                 <Input
                   type="select"
-                  onChange={(e) => {
-                    handleInputs(e);
-                  }}
+                  // onChange={(e) => {
+                  //   handleInputs(e);
+                  // }}
+                  onChange={handleInputs}
                   value={contactinsert && contactinsert.id_card_type}
                   name="id_card_type"
                 >
@@ -427,7 +429,7 @@ allshare = parseFloat(totalPaidUp) + parseFloat(single)
             </Col>
             <Col md="4">
               <FormGroup>
-                <Label>NRIC/FIN/PP</Label>
+                <Label>NRIC/FIN/PP<span className="required"> *</span></Label>
                 <Input
                   type="text"
                   name="id_card_no"

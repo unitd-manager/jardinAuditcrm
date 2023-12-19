@@ -1,5 +1,6 @@
 import React from 'react';
 import pdfMake from 'pdfmake';
+import * as Icon from 'react-feather';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Button } from 'reactstrap';
 
@@ -406,9 +407,23 @@ const PdfClientEp200= () => {
 
   return (
     <>
-      <Button type="submit" className="shadow-none" color="primary" onClick={GetPdf}>
+      {/* <Button type="submit" className="shadow-none" color="primary" onClick={GetPdf}>
         EP 200
-      </Button>
+      </Button> */}
+      <Button
+  type="submit"
+  className="shadow-none"
+  color="primary"
+  onClick={GetPdf}
+  style={{ color: 'white' }} // Changing the text color to white
+>
+  <span style={{ color: 'white' }}>EP 200</span>{' '}
+  <span style={{ color: 'white' }}>
+  <Icon.File /> 
+
+  </span>
+</Button>
+      
     </>
   );
 };

@@ -203,7 +203,7 @@ export default function ProjectTaskTab({
                             />
                           </FormGroup>
                         </Col>
-                        <Col md="4">
+                        {/* <Col md="4">
                           <Label>Alert Staff by email</Label>
                           <FormGroup>
                             <Input
@@ -252,7 +252,7 @@ export default function ProjectTaskTab({
                             &nbsp;&nbsp;
                             <Label>No</Label>
                           </FormGroup>
-                        </Col>
+                        </Col> */}
                         <Col md="4">
                           <FormGroup>
                             <Label>

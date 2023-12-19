@@ -9,7 +9,7 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
-  Button,
+ 
   //CardTitle
 } from 'reactstrap';
 import moment from 'moment';
@@ -21,7 +21,7 @@ import ViewLineItemModal from './ViewLineItemModal';
 import EditQuotation from './EditQuotation';
 import QuoteviewEditItem from './QuoteviewEditItem';
 import PdfProjectQuote from '../PDF/PdfProjectQuote';
-import ViewQuoteLogModal from './ViewQuoteLogModal';
+//import ViewQuoteLogModal from './ViewQuoteLogModal';
 //import QuotationViewLineItem from './QuotationViewLineItems';
 const BlueLabel = styled.label`
   color: #2962ff;
@@ -35,8 +35,8 @@ export default function QuotationMoreDetails({
   viewLineModal,
   viewLineToggle,
   getLineItem,
-  quotationsModal,
-  setquotationsModal,
+  //quotationsModal,
+  //setquotationsModal,
   quotation,
   setViewLineModal,
 }) {
@@ -48,8 +48,8 @@ export default function QuotationMoreDetails({
     viewLineModal: PropTypes.object,
     viewLineToggle: PropTypes.object,
     getLineItem: PropTypes.array,
-    quotationsModal: PropTypes.object,
-    setquotationsModal: PropTypes.object,
+    //quotationsModal: PropTypes.object,
+    //setquotationsModal: PropTypes.object,
     quotation: PropTypes.object,
     setViewLineModal: PropTypes.object,
   };
@@ -83,7 +83,7 @@ export default function QuotationMoreDetails({
 
   return (
     <>
-      {Object.keys(quotation).length !== 0 && (
+      {/* {Object.keys(quotation).length !== 0 && (
         <Col md="2" className="mb-4 d-flex justify-content-between">
           <Button
             color="primary"
@@ -95,7 +95,7 @@ export default function QuotationMoreDetails({
             View Quote Log
           </Button>
         </Col>
-      )}
+      )} */}
 
       {/* <CardTitle tag="h5" className="border-bottom bg-secondary p-2 mb-0 text-white">
           {' '}
@@ -290,13 +290,13 @@ export default function QuotationMoreDetails({
                     >
                       {' '}
                     </QuoteviewEditItem>
-                    {quotationsModal && (
+                    {/* {quotationsModal && (
                       <ViewQuoteLogModal
                         quotationsModal={quotationsModal}
                         setquotationsModal={setquotationsModal}
                         quoteId={element.quote_id}
                       />
-                    )}
+                    )} */}
                     {addLineItemModal && (
                       <ViewLineItemModal
                         projectInfo={id}

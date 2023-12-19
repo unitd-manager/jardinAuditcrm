@@ -204,7 +204,7 @@ const ProjectEditTaskModel = ({
                 />
               </FormGroup>
             </Col>
-            <Col md="4">
+            {/* <Col md="4">
               <Label>Alert Staff by email</Label>
               <FormGroup>
                 <Input
@@ -249,7 +249,7 @@ const ProjectEditTaskModel = ({
                 &nbsp;&nbsp;
                 <Label>No</Label>
               </FormGroup>
-            </Col>
+            </Col> */}
             <Col md="4">
               <FormGroup>
                 <Label>Employee Linked</Label>

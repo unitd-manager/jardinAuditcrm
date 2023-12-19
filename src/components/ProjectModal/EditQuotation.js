@@ -151,8 +151,8 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                   </Col>
                 </Row>
 
-                <Row>
-                  <Col md="4">
+               
+                  {/* <Col md="4">
                     <Label>Drawing Nos</Label>
                     <FormGroup>
                       <Input
@@ -174,7 +174,8 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                       &nbsp;&nbsp;
                       <Label>No</Label>
                     </FormGroup>
-                  </Col>
+                  </Col> */}
+                  <Row>
                   <Col md="4">
                     <FormGroup>
                       <Label>Project Reference</Label>
@@ -205,8 +206,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                       </Input>
                     </FormGroup>
                   </Col>
-                  </Row>
-                  <Row>
+                 
                   <Col md="4">
                     <FormGroup>
                       <Label>Ref No</Label>
@@ -218,6 +218,8 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                       />
                     </FormGroup>
                   </Col>
+                  </Row>
+                  <Row>
                   <Col md="4">
                     <FormGroup>
                       <Label>Quote Revision</Label>

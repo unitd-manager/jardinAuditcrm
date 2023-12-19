@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import * as Icon from 'react-feather';
 import { useParams } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import api from '../../constants/api';
@@ -283,10 +284,23 @@ const PdfActivity = () => {
 
   return (
     <>
-     <Button type="submit" className="shadow-none"
+     {/* <Button type="submit" className="shadow-none"
                 color="primary" onClick={GetPdf}>
        Activity
-      </Button>
+      </Button> */}
+      <Button
+  type="submit"
+  className="shadow-none"
+  color="primary"
+  onClick={GetPdf}
+  style={{ color: 'white' }} // Changing the text color to white
+>
+  <span style={{ color: 'white' }}> Activity</span>{' '}
+  <span style={{ color: 'white' }}>
+  <Icon.File /> 
+
+  </span>
+</Button>
     </>
   );
 };

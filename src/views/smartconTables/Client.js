@@ -160,7 +160,7 @@ const Clients = () => {
           </thead>
           <tbody>
             {clients &&
-              clients.map((element, i) => {
+              clients.slice(0).reverse().map((element, i) => {
                 return (
                   <tr key={element.company_id}>
                     <td>{i + 1}</td>
