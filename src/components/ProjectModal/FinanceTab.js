@@ -26,8 +26,8 @@ export default function FinanceTab({ projectDetail }) {
   const [receipt, setReceipt] = useState(null);
   const [orderId, setOrderId] = useState(null);
   const [receiveble, setReceiveble] = useState(null);
-  const [supplierAmount, setSupplierAmount] = useState(null);
-  const [subconAmount, setSubConAmount] = useState(null);
+  // const [supplierAmount, setSupplierAmount] = useState(null);
+  // const [subconAmount, setSubConAmount] = useState(null);
   const [editModal, setEditModal] = useState(false);
   const [editInvoiceModal, setEditInvoiceModal] = useState(false);
   const [editReceiptModal, setEditReceiptModal] = useState(false);
@@ -53,26 +53,26 @@ export default function FinanceTab({ projectDetail }) {
        
       });
   };
-  const getSupplierById = () => {
-    api
-      .post('/project/getSupplierById', { project_id: id })
-      .then((res) => {
-        setSupplierAmount(res.data.data);
-      })
-      .catch(() => {
+  // const getSupplierById = () => {
+  //   api
+  //     .post('/project/getSupplierById', { project_id: id })
+  //     .then((res) => {
+  //       setSupplierAmount(res.data.data);
+  //     })
+  //     .catch(() => {
        
-      });
-  };
-  const getSubconById = () => {
-    api
-      .post('/project/getSubconById', { project_id: id })
-      .then((res) => {
-        setSubConAmount(res.data.data);
-      })
-      .catch(() => {
+  //     });
+  // };
+  // const getSubconById = () => {
+  //   api
+  //     .post('/project/getSubconById', { project_id: id })
+  //     .then((res) => {
+  //       setSubConAmount(res.data.data);
+  //     })
+  //     .catch(() => {
         
-      });
-  };
+  //     });
+  // };
 
   const getOrdersById = () => {
     api
@@ -147,8 +147,8 @@ export default function FinanceTab({ projectDetail }) {
     getReceiptById();
     getOrdersById();
     getAmountById();
-    getSupplierById();
-    getSubconById();
+    // getSupplierById();
+    // getSubconById();
   }, []);
 
   return (
@@ -196,7 +196,7 @@ export default function FinanceTab({ projectDetail }) {
         )}
       </Row>
       <Row>
-        <Col lg="6">
+        <Col lg="12">
           <CardTitle tag="h4" className="border-bottom p-3 mb-0">
             {' '}
             Account Receivables{' '}
@@ -234,7 +234,7 @@ export default function FinanceTab({ projectDetail }) {
             <br />
           </Table>
         </Col>
-        <Col lg="6">
+        {/* <Col lg="6">
           <CardTitle tag="h4" className="border-bottom p-3 mb-0">
             {' '}
             Account Payables{' '}
@@ -287,7 +287,7 @@ export default function FinanceTab({ projectDetail }) {
               </tr>
             </tbody>
           </Table>
-        </Col>
+        </Col> */}
       </Row>
       <FinanceInvoiceData
         editInvoiceData={editInvoiceData}

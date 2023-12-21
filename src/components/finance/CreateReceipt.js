@@ -158,6 +158,10 @@ const CreateReceipt = ({ editCreateReceipt, setEditCreateReceipt }) => {
       message('Please fill all required fields', 'warning');
    }
   }
+  else {
+    message('Please fill mode of payment fields', 'warning');
+    setSubmitting(false);
+ }
   };
   const generateCode = () => {
     api
@@ -361,7 +365,7 @@ const CreateReceipt = ({ editCreateReceipt, setEditCreateReceipt }) => {
                           />
                         </FormGroup>
                       </Col>
-                    </Row>:<span>Sorry</span>}
+                    </Row>:<span>No Invoice</span>}
                   </Form>
             </Col>
           </Row>
@@ -372,7 +376,13 @@ const CreateReceipt = ({ editCreateReceipt, setEditCreateReceipt }) => {
             onClick={() => {
               if (!submitting) {
                 setSubmitting(true);
+                if (parseFloat(createReceipt.amount) > 0) {
                 generateCode();
+              } else {
+                // Show an error message indicating that the amount should be greater than 0
+                message('Pls select atleast one Invoice', 'warning');
+                setSubmitting(false); // Reset submitting state
+              }
               }
             }}
             disabled={submitting}

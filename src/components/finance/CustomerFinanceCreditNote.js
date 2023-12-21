@@ -9,7 +9,7 @@ export default function CustomerFinanceCreditNote({note}) {
         note: PropTypes.array,
       }
 //Structure of creditNote table
-    const noteTableColumns = [{name: "Code"},{name: "Date"},{name: "Amount"},{name: "Print"}]
+    const noteTableColumns = [{name: "Code"},{name: "Invoice Code"},{name: "Date"},{name: "Amount"},{name: "Print"}]
 
   return (
     // Credit note tab
@@ -29,7 +29,8 @@ export default function CustomerFinanceCreditNote({note}) {
             {note && note.map(element => {
               return (<tr key={element.credit_note_id }>
                 <td>{element.credit_note_code}</td>
-                <td>{moment(element.from_date).format('YYYY-MM-DD')}</td>
+                <td>{element.invoice_code}</td>
+                <td>{moment(element.from_date).format('DD-MM-YYYY')}</td>
                 <td>{element.amount}</td>
                 <td>  <PdfCreditNote
                   note={note}

@@ -21,7 +21,7 @@ import CustomerFinanceReceipt from '../../components/finance/CustomerFinanceRece
 import CustomerFinanceCreditNote from '../../components/finance/CustomerFinanceCreditNote';
 import FinanceSummary from '../../components/finance/FinanceSummary';
 import FinanceButton from '../../components/finance/FinanceButton';
-import FinanceDeliveryAddress from '../../components/finance/FinanceDeliveryAddress';
+// import FinanceDeliveryAddress from '../../components/finance/FinanceDeliveryAddress';
 import FinanceMainDetails from '../../components/finance/FinanceMainDetails';
 import creationdatetime from '../../constants/creationdatetime';
 import Tab from '../../components/Project/Tab';
@@ -230,12 +230,12 @@ const FinanceEdit = () => {
     getInvoiceItemSummaryById();
   }, [id]);
   const tabs = [
-    { id: '1', name: 'Delivery Address' },
-    { id: '2', name: 'Customer Details' },
-    { id: '3', name: 'Summary'},
-    { id: '4', name: 'Invoice(s)'},
-    { id: '5', name: 'Receipt(s)'},
-    { id: '6', name: 'CreditNote(s)'},
+    // { id: '1', name: 'Delivery Address' },
+    { id: '1', name: 'Customer Details' },
+    { id: '2', name: 'Summary'},
+    { id: '3', name: 'Invoice(s)'},
+    { id: '4', name: 'Receipt(s)'},
+    { id: '5', name: 'CreditNote(s)'},
       ];
   const toggle = (tab) => {
     setActiveTab(tab);
@@ -333,17 +333,17 @@ const FinanceEdit = () => {
         <Tab toggle={toggle} tabs={tabs} />
      
                 {/* Delivery address Form */}
-        <TabPane tabId="1">
+        {/* <TabPane tabId="1">
           <ComponentCard title="Delivery Address">
             <FinanceDeliveryAddress
               financeDetails={financeDetails}
               handleInputs={handleInputs}
             ></FinanceDeliveryAddress>
           </ComponentCard>
-        </TabPane>
+        </TabPane> */}
 
         {/* Customer Details Form */}
-        <TabPane tabId="2">
+        <TabPane tabId="1">
         <ComponentCard
             title="Finance Details"
           
@@ -352,7 +352,7 @@ const FinanceEdit = () => {
           </ComponentCard>
         </TabPane>
         {/* Summary */}
-        <TabPane tabId="3">
+        <TabPane tabId="2">
           <ComponentCard title="Summary">
             <FinanceSummary
               invoicesummary={invoicesummary}
@@ -361,7 +361,7 @@ const FinanceEdit = () => {
             ></FinanceSummary>
           </ComponentCard>
         </TabPane>
-        <TabPane tabId="4">
+        <TabPane tabId="3">
           <ComponentCard title="Invoice">
           <FinanceInvoiceModal
               createInvoice={createInvoice}
@@ -376,7 +376,7 @@ const FinanceEdit = () => {
           </ComponentCard>
         </TabPane>
 
-        <TabPane tabId="5">
+        <TabPane tabId="4">
           <ComponentCard title="Receipt">
             <CustomerFinanceReceipt
               receiptCancel={receiptCancel}
@@ -387,7 +387,7 @@ const FinanceEdit = () => {
           </ComponentCard>
         </TabPane>
 
-        <TabPane tabId="6">
+        <TabPane tabId="5">
           <ComponentCard title="Credit Note">
             <CustomerFinanceCreditNote note={note}></CustomerFinanceCreditNote>
           </ComponentCard>

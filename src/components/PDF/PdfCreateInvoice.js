@@ -207,21 +207,6 @@ const PdfCreateInvoice = ({ invoiceId}) => {
                   style: ['textSize'],
                   margin: [100, 0, 0, 0],
                 },
-                {
-                  text: `Code :${createInvoice.code ? createInvoice.code : ''} `,
-                  style: ['textSize'],
-                  margin: [100, 0, 0, 0],
-                },
-                {
-                  text: `SO Ref Number :${createInvoice.so_ref_no ? createInvoice.so_ref_no : ''} `,
-                  style: ['textSize'],
-                  margin: [100, 0, 0, 0],
-                },
-                {
-                  text: ` PO Number :${createInvoice.po_number ? createInvoice.po_number : ''} `,
-                  style: ['textSize'],
-                  margin: [100, 0, 0, 0],
-                },
                 '\n',
               ],
             },
@@ -236,13 +221,9 @@ const PdfCreateInvoice = ({ invoiceId}) => {
                 createInvoice.attention ? createInvoice.attention : ''
               }\n Dear Sir,\n Site Name : ${
                 createInvoice.title ? createInvoice.title : ''
-              } \n Site Code : ${
-                createInvoice.site_code ? createInvoice.site_code : ''
-              }\n Reference :  ${
+              } \n Reference :  ${
                 createInvoice.reference ? createInvoice.reference : ''
-              }\n Project Reference :${
-                createInvoice.project_reference ? createInvoice.project_reference : ''
-              } \n `,
+              }\n `,
               style: 'textSize',
               bold: true,
             },

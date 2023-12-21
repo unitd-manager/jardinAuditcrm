@@ -9,17 +9,7 @@ const CreateReceipt = ({ createInvoice, handleInserts }) => {
   };
   return (
     <>
-      <Col md="4">
-        <FormGroup>
-          <Label>Discount</Label>
-          <Input
-            type="number"
-            onChange={handleInserts}
-            value={createInvoice && createInvoice.discount}
-            name="discount"
-          />
-        </FormGroup>
-      </Col>
+     
       <Col md="4">
         <FormGroup>
           <Label>Quote Code</Label>
@@ -31,28 +21,7 @@ const CreateReceipt = ({ createInvoice, handleInserts }) => {
           />
         </FormGroup>
       </Col>
-      <Col md="4">
-        <FormGroup>
-          <Label>PO Number</Label>
-          <Input
-            type="text"
-            onChange={handleInserts}
-            value={createInvoice && createInvoice.po_number}
-            name="po_number"
-          />
-        </FormGroup>
-      </Col>
-      <Col md="4">
-        <FormGroup>
-          <Label>Project Reference</Label>
-          <Input
-            type="text"
-            onChange={handleInserts}
-            value={createInvoice && createInvoice.project_reference}
-            name="project_reference"
-          />
-        </FormGroup>
-      </Col>
+    
       <Col md="4">
         <FormGroup>
           <Label>Invoice date</Label>
@@ -64,40 +33,7 @@ const CreateReceipt = ({ createInvoice, handleInserts }) => {
           />
         </FormGroup>
       </Col>
-      <Col md="4">
-        <FormGroup>
-          <Label>Code</Label>
-          <Input
-            type="text"
-            onChange={handleInserts}
-            value={createInvoice && createInvoice.code}
-            name="code"
-          />
-        </FormGroup>
-      </Col>
-      <Col md="4">
-        <FormGroup>
-          <Label>SO Ref Number</Label>
-          <Input
-            type="text"
-            onChange={handleInserts}
-            value={createInvoice && createInvoice.so_ref_no}
-            name="so_ref_no"
-          />
-        </FormGroup>
-      </Col>
-      <Col md="4">
-        <FormGroup>
-          <Label>Site Code</Label>
-          <Input
-            type="text"
-            onChange={handleInserts}
-            value={createInvoice && createInvoice.site_code}
-            name="site_code"
-          />
-        </FormGroup>
-      </Col>
-      <Col md="4">
+       <Col md="4">
         <FormGroup>
           <Label>Attention</Label>
           <Input
@@ -127,6 +63,17 @@ const CreateReceipt = ({ createInvoice, handleInserts }) => {
             onChange={handleInserts}
             value={createInvoice && createInvoice.invoice_terms}
             name="invoice_terms"
+          />
+        </FormGroup>
+      </Col>
+      <Col md="4">
+        <FormGroup>
+          <Label>Discount</Label>
+          <Input
+            type="number"
+            onChange={handleInserts}
+            value={createInvoice && createInvoice.discount}
+            name="discount"
           />
         </FormGroup>
       </Col>

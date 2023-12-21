@@ -245,18 +245,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
             <Col md="12">
               <Form>
                 <Row>
-                  <Col md="3">
-                    <Button
-                      className="shadow-none"
-                      color="primary"
-                      type="button"
-                      onClick={() => {
-                        AddNewLineItem();
-                      }}
-                    >
-                      Add Line Item
-                    </Button>
-                  </Col>
+                  
                   {/* Invoice Detail */}
                   <Row>
                     <InvoiceTable createInvoice={createInvoice} handleInserts={handleInserts} />
@@ -273,6 +262,18 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
                       />
                     </ComponentCard>
                   </Row>
+                  <Col md="3">
+                    <Button
+                      className="shadow-none"
+                      color="primary"
+                      type="button"
+                      onClick={() => {
+                        AddNewLineItem();
+                      }}
+                    >
+                      Add Line Item
+                    </Button>
+                  </Col>
                   {/* Invoice Item */}
                   <Row>
                     <Col>

@@ -45,7 +45,7 @@ const CreateNote = ({ editCreateNote, setEditCreateNote,projectInfo }) => {
       .then((res) => {
         console.log('Inserted successfully.');
         setCreateInvoiceNote(res.data.data);
-        //  window.location.reload()
+          //window.location.reload()
       })
       .catch(() => {
         console.log('Network connection error.');

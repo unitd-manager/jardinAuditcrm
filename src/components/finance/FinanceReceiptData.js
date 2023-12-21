@@ -153,13 +153,18 @@ const FinanceReceiptData = ({ editCreateReceipt, setEditCreateReceipt,orderId })
       .catch(() => {
         message('Network connection error.');
       }) .finally(() => {
-        setSubmitting(false); // Reset the submitting state after the API call completes (success or error).
+        setSubmitting(false);// Reset the submitting state after the API call completes (success or error).
+        window.location.reload();
       });
     }
     else {
       message('Please fill all required fields', 'warning');
    }
   }
+  else {
+    message('Please fill mode of payment fields', 'warning');
+    setSubmitting(false);
+ }
   };
   const generateCode = () => {
     api
@@ -363,7 +368,7 @@ const FinanceReceiptData = ({ editCreateReceipt, setEditCreateReceipt,orderId })
                           />
                         </FormGroup>
                       </Col>
-                    </Row>:<span>Sorry</span>}
+                    </Row>:<span>No Invoice</span>}
                   </Form>
             </Col>
           </Row>
@@ -374,7 +379,15 @@ const FinanceReceiptData = ({ editCreateReceipt, setEditCreateReceipt,orderId })
             onClick={() => {
               if (!submitting) {
                 setSubmitting(true);
-                generateCode();
+                if (parseFloat(createReceipt.amount) > 0) {
+
+                  generateCode();
+                
+                } else {
+                  // Show an error message indicating that the amount should be greater than 0
+                  message('Pls select atleast one Invoice', 'warning');
+                  setSubmitting(false); // Reset submitting state
+                }
               }
             }}
             disabled={submitting}

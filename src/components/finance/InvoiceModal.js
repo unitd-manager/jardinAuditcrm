@@ -22,7 +22,7 @@ import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 //  import * as $ from 'jquery';
-import moment from 'moment';
+// import moment from 'moment';
 import api from '../../constants/api';
 import message from '../Message';
 
@@ -43,15 +43,20 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
   // const [invoiceData, setInvoiceData] = useState({});
   // const { id } = useParams();
   //Add Line Item
-  const [addLineItem, setAddLineItem] = useState();
+  const [addLineItem, setAddLineItem] = useState([]);
 
   //setting value in invoiceData
   const handleInputs = (e) => {
     setInvoiceData({ ...invoiceData, [e.target.name]: e.target.value });
   };
 
-  const handleLineInputs = (e) => {
-    setAddLineItem({ ...addLineItem, [e.target.name]: e.target.value });
+  const handleLineInputs = (e, index) => {
+    const updatedLineItems = [...addLineItem];
+    updatedLineItems[index] = {
+      ...updatedLineItems[index],
+      [e.target.name]: e.target.value,
+    };
+    setAddLineItem(updatedLineItems);
   };
   // const handleDataEditor = (e, type) => {
   //   SetInvoiceData({
@@ -85,7 +90,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
     api
       .post('/invoice/getInvoiceItemsById', { invoice_id: editInvoiceModal.invoice_id })
       .then((res) => {
-        setAddLineItem(res.data.data[0]);
+        setAddLineItem(res.data.data);
       })
       .catch(() => {
         // message('Line Items not found', 'info');
@@ -108,14 +113,16 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
   //editlineitem
   const editLineItemApi = () => {
     // invoiceData.invoice_id = id;
+    addLineItem.forEach((item) => {
     api
-      .post('/finance/editInvoiceItem', addLineItem)
+      .post('/finance/editInvoiceItem', item)
       .then(() => {
         message('Line Item Edited Successfully', 'sucess');
       })
       .catch(() => {
         message('Cannot Edit Line Items', 'error');
       });
+    }) 
   };
 
  console.log('amountInvoice',addLineItem)
@@ -174,28 +181,6 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
                           </Col>
                           <Col md="4">
                             <FormGroup>
-                              <Label>Quote Code</Label>
-                              <Input
-                                type="text"
-                                value={invoiceData && invoiceData.quote_code}
-                                onChange={handleInputs}
-                                name="quote_code"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label>PO Number</Label>
-                              <Input
-                                type="text"
-                                value={invoiceData && invoiceData.po_number}
-                                onChange={handleInputs}
-                                name="po_number"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
                               <Label>Gst Percentage</Label>
                               <Input
                                 type="number"
@@ -206,65 +191,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
                               />
                             </FormGroup>
                           </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label>Project Reference</Label>
-                              <Input
-                                type="text"
-                                value={invoiceData && invoiceData.project_reference}
-                                onChange={handleInputs}
-                                name="project_reference"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label>Invoice date</Label>
-                              <Input
-                                type="date"
-                                value={moment(invoiceData && invoiceData.invoice_date).format(
-                                  'YYYY-MM-DD',
-                                )}
-                                onChange={handleInputs}
-                                name="invoice_date"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label>Code</Label>
-                              <Input
-                                type="text"
-                                value={invoiceData && invoiceData.code}
-                                onChange={handleInputs}
-                                name="code"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label>SO Ref Number</Label>
-                              <Input
-                                type="text"
-                                value={invoiceData && invoiceData.so_ref_no}
-                                onChange={handleInputs}
-                                name="so_ref_no"
-                              />
-                            </FormGroup>
-                          </Col>
-
-                          <Col md="4">
-                            <FormGroup>
-                              <Label>Site Code</Label>
-                              <Input
-                                type="text"
-                                value={invoiceData && invoiceData.site_code}
-                                onChange={handleInputs}
-                                name="site_code"
-                              />
-                            </FormGroup>
-                          </Col>
-
+                        
                           <Col md="4">
                             <FormGroup>
                               <Label>Attention</Label>
@@ -280,7 +207,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
                             <FormGroup>
                               <Label>Reference</Label>
                               <Input
-                                type="textarea"
+                                type="text"
                                 value={invoiceData && invoiceData.reference}
                                 onChange={handleInputs}
                                 name="reference"
@@ -291,7 +218,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
                             <FormGroup>
                               <Label>Invoice Terms</Label>
                               <Input
-                                type="text"
+                                type="textarea"
                                 value={invoiceData && invoiceData.invoice_terms}
                                 onChange={handleInputs}
                                 name="invoice_terms"
@@ -328,33 +255,36 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td data-label="Item">
-                                <Input
-                                  type="text"
-                                  name="item_title"
-                                  defaultValue={addLineItem && addLineItem.item_title}
-                                  onChange={handleLineInputs}
-                                />
-                              </td>
-                              <td data-label="Description">
-                                <Input
-                                  defaultValue={addLineItem && addLineItem.description}
-                                  type="text"
-                                  name="description"
-                                  onChange={handleLineInputs}
-                                />
-                              </td>
-                              <td data-label="Amount">
-                                <Input
-                                  value={addLineItem && addLineItem.total_cost}
-                                  type="text"
-                                  name="total_cost"
-                                  onChange={handleLineInputs}
-                                  disabled
-                                />
-                              </td>
-                            </tr>
+                          {addLineItem &&
+            addLineItem.map((item, index) => (
+              <tr key={item.invoice_item_id}>
+                <td data-label="Item">
+                  <Input
+                    type="text"
+                    name="item_title"
+                    defaultValue={item.item_title}
+                    onChange={(e) => handleLineInputs(e, index)}
+                  />
+                </td>
+                <td data-label="Description">
+                  <Input
+                    defaultValue={item.description}
+                    type="text"
+                    name="description"
+                    onChange={(e) => handleLineInputs(e, index)}
+                  />
+                </td>
+                <td data-label="Amount">
+                  <Input
+                    value={item.total_cost}
+                    type="text"
+                    name="total_cost"
+                    onChange={(e) => handleLineInputs(e, index)}
+                    disabled
+                  />
+                </td>
+              </tr>
+            ))}
                           </tbody>
                         </Table>
                         {/*                       
