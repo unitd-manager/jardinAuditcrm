@@ -19,7 +19,7 @@ import styled from 'styled-components';
 import api from '../../constants/api';
 import AddLineItemModal from '../tender/AddLineItemModal';
 import EditQuoteModal from '../tender/EditQuoteModal';
-import ViewQuoteLogModal from '../tender/ViewQuoteLogModal';
+//import ViewQuoteLogModal from '../tender/ViewQuoteLogModal';
 import EditLineItemModal from '../tender/EditLineItemModal';
 
 const RedLabel = styled.label`
@@ -31,8 +31,8 @@ export default function TenderQuotation({
   quote,
   lineItem,
   PdfQuote,
-  quotationsModal,
-  setquotationsModal,
+  // quotationsModal,
+  // setquotationsModal,
   getLineItem,
   setAddLineItemModal,
   setEditQuoteModal,
@@ -58,8 +58,8 @@ export default function TenderQuotation({
     setAddLineItemModal: PropTypes.object,
     editQuoteModal: PropTypes.object,
     addLineItemModal: PropTypes.object,
-    quotationsModal: PropTypes.object,
-    setquotationsModal: PropTypes.object,
+    // quotationsModal: PropTypes.object,
+    // setquotationsModal: PropTypes.object,
     quote: PropTypes.object,
     project: PropTypes.array,
     id: PropTypes.any,
@@ -121,7 +121,7 @@ export default function TenderQuotation({
             </Button>
           </Col>
         )}
-        {Object.keys(quote).length !== 0 && (
+        {/* {Object.keys(quote).length !== 0 && (
           <Col md="2" className="mb-4 d-flex justify-content-between">
             <Button
               color="primary"
@@ -133,7 +133,7 @@ export default function TenderQuotation({
               View Quote Log
             </Button>
           </Col>
-        )}
+        )} */}
         {QuoteProject === undefined && quote.quote_status === 'Awarded' && (
           <Col md="2" className="mb-4 d-flex justify-content-between">
             <Button
@@ -179,13 +179,13 @@ export default function TenderQuotation({
       </EditLineItemModal>
 
       {/* Call View Quote Log Modal */}
-      {quotationsModal && (
+      {/* {quotationsModal && (
         <ViewQuoteLogModal
           quotationsModal={quotationsModal}
           setquotationsModal={setquotationsModal}
           id={tenderId}
         />
-      )}
+      )} */}
       {Object.keys(quote).length !== 0 && (
         <Form>
           <Row>

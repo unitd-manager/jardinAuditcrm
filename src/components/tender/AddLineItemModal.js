@@ -70,16 +70,28 @@ const AddLineItemModal = ({ addLineItemModal, setAddLineItemModal, projectInfo, 
   //Invoice item values
   const getAllValues = () => {
     const result = [];
+    let isValid = true; // Initialize a validation flag
     $('.lineitem tbody tr').each(function input() {
       const allValues = {};
       $(this)
         .find('input')
         .each(function output() {
           const fieldName = $(this).attr('name');
-          allValues[fieldName] = $(this).val();
+          const fieldValue = $(this).val();
+          allValues[fieldName] = fieldValue;
+          // Check if Amount, Title, and Description are empty
+          if (fieldName === 'amount' || fieldName === 'title' || fieldName === 'description') {
+            if (!fieldValue) {
+              isValid = false; // Set the flag to false if any of these fields are empty
+            }
+          }
         });
       result.push(allValues);
     });
+    if (!isValid) {
+      alert('Please fill in Amount, Title, and Description for all line items.');
+      return; // Prevent further processing if validation fails
+    }
     setTotalAmount(0);
     console.log(result);
     result.forEach((element) => {
@@ -187,7 +199,7 @@ const AddLineItemModal = ({ addLineItemModal, setAddLineItemModal, projectInfo, 
                       color="primary"
                       onClick={() => {
                         getAllValues();
-                        setAddLineItemModal(false);
+                        //setAddLineItemModal(false);
                       }}
                     >
                       {' '}

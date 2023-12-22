@@ -21,8 +21,6 @@ import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import api from '../../constants/api';
 import message from '../Message';
 
-const ComponentCard = React.lazy(() => import('../ComponentCard'));
-
 const EditQuoteModal = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem }) => {
   EditQuoteModal.propTypes = {
     editQuoteModal: PropTypes.bool,
@@ -126,7 +124,7 @@ const EditQuoteModal = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineIte
           <FormGroup>
             <Form>
               <FormGroup>
-                <ComponentCard>
+                
                   <Row>
                     <Col md="3">
                       <FormGroup>
@@ -289,7 +287,7 @@ const EditQuoteModal = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineIte
                       </Button>
                     </div>
                   </Row>
-                </ComponentCard>
+                
               </FormGroup>
             </Form>
           </FormGroup>

@@ -39,11 +39,20 @@ const ProjectDetails = () => {
   const handleCompany=(e)=>{
     console.log('companychange')
     const selectedObjectId = Number(e.target.value);
+    console.log('1',selectedObjectId);
     const selectedObjectData = company.find((obj) => obj.company_id === selectedObjectId);
 console.log('incorpobj',selectedObjectData)
     setIncorpDate(selectedObjectData.date_of_incorporation);
     setYearEnd(selectedObjectData.category);
   }
+//   if (selectedObjectData) {
+//     setIncorpDate(selectedObjectData.date_of_incorporation);
+//     setYearEnd(selectedObjectData.category);
+//   } else {
+//     setIncorpDate(null); // Ensure incorpDate is set to null if no company is found
+//     setYearEnd(null);
+//   }
+// };
  
 
   const arra = [
@@ -275,9 +284,12 @@ console.log('incorpobj',selectedObjectData)
       });
   };
  console.log('year end',yearEnd)
+ console.log('incorpDate',incorpDate)
   //QUTO GENERATED CODE
   const generateCode = async () => {
-    if (incorpDate !== null && clientForms.category === 'Incorporation') {
+    if (incorpDate !== null && clientForms.category === 'Incorporation') 
+    {
+      console.log('incorpDate1',incorpDate)
       message('Already incorporated', 'yellow');
     } else if (incorpDate === null && clientForms.category === 'Year End Accounts') {
       message(' This company not incorporated', 'red');

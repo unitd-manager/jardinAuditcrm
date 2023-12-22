@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { Row, Col, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 import BreadCrumbs from '../../layouts/breadcrumbs/BreadCrumbs';
 import ComponentCard from '../../components/ComponentCard';
 import api from '../../constants/api';
+import creationdatetime from '../../constants/creationdatetime';
+import AppContext from '../../context/AppContext';
 import message from '../../components/Message';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import TenderCompanyDetails from '../../components/TenderTable/TenderCompanyDetails';
@@ -18,6 +20,8 @@ const TenderDetails = () => {
   const toggle = () => {
     setModal(!modal);
   };
+   //get staff details
+   const { loggedInuser } = useContext(AppContext);
   //Api call for getting company dropdown
   const getCompany = () => {
     api.get('/company/getCompany').then((res) => {
@@ -100,6 +104,8 @@ const TenderDetails = () => {
   };
   //console.log(tenderDetails);
   const insertTender = (code) => {
+    tenderForms.modified_by = loggedInuser.first_name;
+    tenderForms.creation_date = creationdatetime;
     if (tenderForms.company_id !== '' && tenderForms.title !== '' && tenderForms.category !== '') {
       tenderForms.opportunity_code = code;
       api

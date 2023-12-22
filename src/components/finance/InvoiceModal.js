@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Card,
-  CardBody,
   Row,
   Col,
   Form,
@@ -26,17 +24,17 @@ import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import api from '../../constants/api';
 import message from '../Message';
 
-const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }) => {
+const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal, invoiceDatas }) => {
   InvoiceModal.propTypes = {
     editInvoiceModal: PropTypes.any,
     editModal: PropTypes.bool,
     setEditModal: PropTypes.func,
-    invoiceDatas:PropTypes.func,
+    invoiceDatas: PropTypes.func,
   };
-  console.log('gst',editInvoiceModal)
+  console.log('gst', editInvoiceModal)
   //All state variable
   //const [totalAmount, setTotalAmount] = useState(0);
-  
+
   const [conditions, setConditions] = useState('');
   const [invoiceData, setInvoiceData] = useState(invoiceDatas);
 
@@ -114,29 +112,29 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
   const editLineItemApi = () => {
     // invoiceData.invoice_id = id;
     addLineItem.forEach((item) => {
-    api
-      .post('/finance/editInvoiceItem', item)
-      .then(() => {
-        message('Line Item Edited Successfully', 'sucess');
-      })
-      .catch(() => {
-        message('Cannot Edit Line Items', 'error');
-      });
-    }) 
+      api
+        .post('/finance/editInvoiceItem', item)
+        .then(() => {
+          message('Line Item Edited Successfully', 'sucess');
+        })
+        .catch(() => {
+          message('Cannot Edit Line Items', 'error');
+        });
+    })
   };
 
- console.log('amountInvoice',addLineItem)
+  console.log('amountInvoice', addLineItem)
   useEffect(() => {
     getLineItem();
     getInvoice();
     convertHtmlToDraftcondition(invoiceDatas);
     setInvoiceData(editInvoiceModal);
-  }, [invoiceDatas,editInvoiceModal]);
+  }, [invoiceDatas, editInvoiceModal]);
   return (
     <>
-      <Modal size="xl" isOpen={editModal}>
+      <Modal size="lg" isOpen={editModal}>
         <ModalHeader>
-          Create Invoice
+         Edit Invoice
           <Button
             className="shadow-none"
             color="secondary"
@@ -150,93 +148,93 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
         <ModalBody>
           <Row>
             <Col md="12">
-              <Card>
-                <CardBody>
-                  <Form>
-                    <Card>
-                      <Row>
-                        <Row>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label>Invoice Code</Label>
-                              <Input
-                                type="text"
-                                value={invoiceData && invoiceData.invoice_code}
-                                onChange={handleInputs}
-                                name="invoice_code"
-                                disabled
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label>Discount</Label>
-                              <Input
-                                type="text"
-                                value={invoiceData && invoiceData.discount}
-                                onChange={handleInputs}
-                                name="discount"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label>Gst Percentage</Label>
-                              <Input
-                                type="number"
-                                value={invoiceData && invoiceData.gst_percentage}
-                                onChange={handleInputs}
-                                name="gst_percentage"
-                                disabled
-                              />
-                            </FormGroup>
-                          </Col>
-                        
-                          <Col md="4">
-                            <FormGroup>
-                              <Label>Attention</Label>
-                              <Input
-                                type="text"
-                                value={invoiceData && invoiceData.attention}
-                                onChange={handleInputs}
-                                name="attention"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label>Reference</Label>
-                              <Input
-                                type="text"
-                                value={invoiceData && invoiceData.reference}
-                                onChange={handleInputs}
-                                name="reference"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="8">
-                            <FormGroup>
-                              <Label>Invoice Terms</Label>
-                              <Input
-                                type="textarea"
-                                value={invoiceData && invoiceData.invoice_terms}
-                                onChange={handleInputs}
-                                name="invoice_terms"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Editor
-                  editorState={conditions}
-                  wrapperClassName="demo-wrapper mb-0"
-                  editorClassName="demo-editor border mb-4 edi-height"
-                  onEditorStateChange={(e) => {
-                    handleDataEditor(e, 'payment_terms');
-                    setConditions(e);
-                  }}
-                />
+              <Form>
+                <Row>
+                  <Col md="4">
+                    <FormGroup>
+                      <Label>Invoice Code</Label>
+                      <Input
+                        type="text"
+                        value={invoiceData && invoiceData.invoice_code}
+                        onChange={handleInputs}
+                        name="invoice_code"
+                        disabled
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="4">
+                    <FormGroup>
+                      <Label>Discount</Label>
+                      <Input
+                        type="text"
+                        value={invoiceData && invoiceData.discount}
+                        onChange={handleInputs}
+                        name="discount"
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="4">
+                    <FormGroup>
+                      <Label>Gst Percentage</Label>
+                      <Input
+                        type="number"
+                        value={invoiceData && invoiceData.gst_percentage}
+                        onChange={handleInputs}
+                        name="gst_percentage"
+                        disabled
+                      />
+                    </FormGroup>
+                  </Col>
 
+                  <Col md="4">
+                    <FormGroup>
+                      <Label>Attention</Label>
+                      <Input
+                        type="text"
+                        value={invoiceData && invoiceData.attention}
+                        onChange={handleInputs}
+                        name="attention"
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="4">
+                    <FormGroup>
+                      <Label>Reference</Label>
+                      <Input
+                        type="text"
+                        value={invoiceData && invoiceData.reference}
+                        onChange={handleInputs}
+                        name="reference"
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="4">
+                    <FormGroup>
+                      <Label>Invoice Terms</Label>
+                      <Input
+                        type="textarea"
+                        value={invoiceData && invoiceData.invoice_terms}
+                        onChange={handleInputs}
+                        name="invoice_terms"
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col>
+                  <Row>
+                    <Label>Description</Label>
+                    </Row>
+                  <Editor
+                    editorState={conditions}
+                    wrapperClassName="demo-wrapper mb-0"
+                    editorClassName="demo-editor border mb-4 edi-height"
+                    onEditorStateChange={(e) => {
+                      handleDataEditor(e, 'payment_terms');
+                      setConditions(e);
+                    }}
+                  />
+                    </Col>
 
-                          {/* <Editor
+                  {/* <Editor
                             editorState={paymentTerms}
                             wrapperClassName="demo-wrapper mb-0"
                             editorClassName="demo-editor border mb-4 edi-height"
@@ -245,49 +243,49 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
                               setPaymentTerms(e);
                             }}
                           /> */}
-                        </Row>
-                        <Table bordered className="lineitem">
-                          <thead>
-                            <tr>
-                              <th scope="col">Title</th>
-                              <th scope="col">Description</th>
-                              <th scope="col">Amount</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          {addLineItem &&
-            addLineItem.map((item, index) => (
-              <tr key={item.invoice_item_id}>
-                <td data-label="Item">
-                  <Input
-                    type="text"
-                    name="item_title"
-                    defaultValue={item.item_title}
-                    onChange={(e) => handleLineInputs(e, index)}
-                  />
-                </td>
-                <td data-label="Description">
-                  <Input
-                    defaultValue={item.description}
-                    type="text"
-                    name="description"
-                    onChange={(e) => handleLineInputs(e, index)}
-                  />
-                </td>
-                <td data-label="Amount">
-                  <Input
-                    value={item.total_cost}
-                    type="text"
-                    name="total_cost"
-                    onChange={(e) => handleLineInputs(e, index)}
-                    disabled
-                  />
-                </td>
-              </tr>
-            ))}
-                          </tbody>
-                        </Table>
-                        {/*                       
+                </Row>
+                <Table bordered className="lineitem">
+                  <thead>
+                    <tr>
+                      <th scope="col">Title</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {addLineItem &&
+                      addLineItem.map((item, index) => (
+                        <tr key={item.invoice_item_id}>
+                          <td data-label="Item">
+                            <Input
+                              type="text"
+                              name="item_title"
+                              defaultValue={item.item_title}
+                              onChange={(e) => handleLineInputs(e, index)}
+                            />
+                          </td>
+                          <td data-label="Description">
+                            <Input
+                              defaultValue={item.description}
+                              type="text"
+                              name="description"
+                              onChange={(e) => handleLineInputs(e, index)}
+                            />
+                          </td>
+                          <td data-label="Amount">
+                            <Input
+                              value={item.total_cost}
+                              type="text"
+                              name="total_cost"
+                              onChange={(e) => handleLineInputs(e, index)}
+                              disabled
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </Table>
+                {/*                       
                             <Row>
                             <Col md="3">
                               <FormGroup>
@@ -323,39 +321,35 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
                             </Col>
                             </Row> */}
 
-                        <ModalFooter>
-                          <Button
-                            className="shadow-none"
-                            color="primary"
-                            onClick={() => {
-                              editInvoice();
-                              editLineItemApi();
-                              //addLineItemApi();
-                              //getAllValues();
-                            }}
-                          >
-                            {' '}
-                            Submit{' '}
-                          </Button>
-                          <Button
-                            className="shadow-none"
-                            color="secondary"
-                            onClick={() => {
-                              setEditModal(false);
-                            }}
-                          >
-                            Cancel
-                          </Button>
-                        </ModalFooter>
-                      </Row>
-                    </Card>
-                  </Form>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </ModalBody>
-      </Modal>
+                <ModalFooter>
+                  <Button
+                    className="shadow-none"
+                    color="primary"
+                    onClick={() => {
+                      editInvoice();
+                      editLineItemApi();
+                      //addLineItemApi();
+                      //getAllValues();
+                    }}
+                  >
+                    {' '}
+                    Submit{' '}
+                  </Button>
+                  <Button
+                    className="shadow-none"
+                    color="secondary"
+                    onClick={() => {
+                      setEditModal(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </ModalFooter>
+              </Form>
+            </Col >
+          </Row >
+        </ModalBody >
+      </Modal >
     </>
   );
 };

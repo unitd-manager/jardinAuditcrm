@@ -9,7 +9,7 @@ const CreateReceipt = ({ createInvoice, handleInserts }) => {
   };
   return (
     <>
-     
+
       <Col md="4">
         <FormGroup>
           <Label>Quote Code</Label>
@@ -21,7 +21,7 @@ const CreateReceipt = ({ createInvoice, handleInserts }) => {
           />
         </FormGroup>
       </Col>
-    
+
       <Col md="4">
         <FormGroup>
           <Label>Invoice date</Label>
@@ -33,7 +33,7 @@ const CreateReceipt = ({ createInvoice, handleInserts }) => {
           />
         </FormGroup>
       </Col>
-       <Col md="4">
+      <Col md="4">
         <FormGroup>
           <Label>Attention</Label>
           <Input
@@ -41,17 +41,6 @@ const CreateReceipt = ({ createInvoice, handleInserts }) => {
             onChange={handleInserts}
             value={createInvoice && createInvoice.attention}
             name="attention"
-          />
-        </FormGroup>
-      </Col>
-      <Col md="4">
-        <FormGroup>
-          <Label>Reference</Label>
-          <Input
-            type="textarea"
-            onChange={handleInserts}
-            value={createInvoice && createInvoice.reference}
-            name="reference"
           />
         </FormGroup>
       </Col>
@@ -74,6 +63,17 @@ const CreateReceipt = ({ createInvoice, handleInserts }) => {
             onChange={handleInserts}
             value={createInvoice && createInvoice.discount}
             name="discount"
+          />
+        </FormGroup>
+      </Col>
+      <Col md="4">
+        <FormGroup>
+          <Label>Reference</Label>
+          <Input
+            type="textarea"
+            onChange={handleInserts}
+            value={createInvoice && createInvoice.reference}
+            name="reference"
           />
         </FormGroup>
       </Col>

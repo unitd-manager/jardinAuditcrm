@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import { TabContent, TabPane } from 'reactstrap';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -13,6 +13,8 @@ import PdfQuote from '../../components/PDF/PdfQuote';
 import TenderMoreDetails from '../../components/TenderTable/TenderMoreDetails';
 import TenderQuotation from '../../components/TenderTable/TenderQuotation';
 import Tab from '../../components/Project/Tab';
+import creationdatetime from '../../constants/creationdatetime';
+import AppContext from '../../context/AppContext';
 import TenderAttachments from '../../components/TenderTable/TenderAttachments';
 
 const TenderEdit = () => {
@@ -36,7 +38,8 @@ const TenderEdit = () => {
     quote_date: '',
     quote_code: '',
   });
-
+ //get staff details
+ const { loggedInuser } = useContext(AppContext);
   const { id } = useParams();
   const navigate = useNavigate();
   const applyChanges = () => {};
@@ -138,6 +141,8 @@ const TenderEdit = () => {
 
   //Logic for edit data in db
   const editTenderData = () => {
+    tenderDetails.modification_date = creationdatetime;
+    tenderDetails.modified_by = loggedInuser.first_name;
     if (tenderDetails.title !== '' && tenderDetails.status !== '')
       api
         .post('/tender/edit-Tenders', tenderDetails)

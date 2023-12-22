@@ -4,8 +4,8 @@ import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Button } from 'reactstrap';
 import moment from 'moment';
-//import { useParams } from 'react-router-dom';
-import Converter from 'number-to-words';
+// //import { useParams } from 'react-router-dom';
+// import Converter from 'number-to-words';
 import api from '../../constants/api';
 import message from '../Message';
 
@@ -18,8 +18,7 @@ const PdfCreateInvoice = ({ invoiceId}) => {
   const [cancelInvoice, setCancelInvoice] = React.useState([]);
   const [createInvoice, setCreateInvoice] = React.useState(null);
   const [gTotal, setGtotal] = React.useState(0);
-  const [gstTotal, setGsttotal] = React.useState(0);
-  const [Total, setTotal] = React.useState(0);
+  
 
   // Gettind data from Job By Id
   const getInvoiceById = () => {
@@ -32,6 +31,12 @@ const PdfCreateInvoice = ({ invoiceId}) => {
         message('Invoice Data Not Found', 'info');
       });
   };
+  const calculateTotal = () => {
+    const grandTotal = cancelInvoice.reduce((acc, element) => acc + element.total_cost, 0);
+    const gstValue = createInvoice.gst_value || 0;
+    const total = grandTotal + gstValue;
+    return total;
+  };
   const getInvoiceItemById = () => {
     api
       .post('/invoice/getProjectInvoicePdf', { invoice_id: invoiceId })
@@ -39,18 +44,12 @@ const PdfCreateInvoice = ({ invoiceId}) => {
         setCancelInvoice(res.data.data);
         //grand total
         console.log('quote1', res.data.data);
-        let grandTotal = 0;
-        let grand = 0;
-        let gst = 0;
+         let grandTotal = 0;
         res.data.data.forEach((elem) => {
           grandTotal += elem.total_cost;
-          //  grand += elem.actual_value;
         });
+
         setGtotal(grandTotal);
-        gst = grandTotal * 0.07;
-        setGsttotal(gst);
-        grand = grandTotal + gst;
-        setTotal(grand);
       })
       .catch(() => {
         message('Invoice Data Not Found', 'info');
@@ -283,7 +282,7 @@ const PdfCreateInvoice = ({ invoiceId}) => {
             {
               stack: [
                 {
-                  text: `SubTotal $ :     ${gTotal.toLocaleString('en-IN', {
+                  text: `TOTAL $ : ${gTotal.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
                   })}`,
                   alignment: 'right',
@@ -292,20 +291,22 @@ const PdfCreateInvoice = ({ invoiceId}) => {
                 },
                 '\n',
                 {
-                  text: `GST  :        ${gstTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+                  text: `GST ${createInvoice.gst_percentage? createInvoice.gst_percentage : ''}% :      ${createInvoice.gst_value.toLocaleString('en-IN', {
+                    minimumFractionDigits: 2,
+                  })}`,
                   alignment: 'right',
                   margin: [0, 0, 41, 0],
                   style: 'textSize',
                 },
                 '\n',
                 {
-                  text: `Total $ :     ${Total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+                  text: `GRAND TOTAL ($) : ${calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
                   alignment: 'right',
               margin: [0, 0, 41, 0],
               style: 'textSize',
                 },
                 '\n\n\n\n',
-                { text: `TOTAL : ${Converter.toWords(Total)}`, style: 'bold', margin: [40, 0, 0, 0] },
+                // { text: `TOTAL : ${Converter.toWords(Total)}`, style: 'bold', margin: [40, 0, 0, 0] },
               ],
             },
             '\n\n',

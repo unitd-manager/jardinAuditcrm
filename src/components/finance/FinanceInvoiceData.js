@@ -5,6 +5,7 @@ import {
   Form,
   Input,
   Button,
+  Label,
   Modal,
   ModalHeader,
   ModalBody,
@@ -19,7 +20,6 @@ import * as $ from 'jquery';
 import random from 'random';
 import api from '../../constants/api';
 import message from '../Message';
-import ComponentCard from '../ComponentCard';
 import InvoiceTable from './InvoiceTable';
 
 const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, orderId }) => {
@@ -32,7 +32,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
   //All state Varible
   const { id } = useParams();
   const [totalAmount, setTotalAmount] = useState(0);
-  const [submitting, setSubmitting] = useState(false);
+  //const [submitting, setSubmitting] = useState(false);
   const [gstValue, setGstValue] = useState();
   const [paymentTerms, setPaymentTerms] = useState('');
   const gstPercentageValue = parseInt(gstValue?.value, 10) || 0; 
@@ -186,16 +186,28 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
   const getAllValues = () => {
     let totalValue=0;
     const result = [];
+    let isValid = true; // Initialize a validation flag
     $('.lineitem tbody tr').each(function input() {
       const allValues = {};
       $(this)
         .find('input')
         .each(function output() {
           const fieldName = $(this).attr('name');
-          allValues[fieldName] = $(this).val();
+          const fieldValue = $(this).val();
+          allValues[fieldName] = fieldValue;
+          // Check if Amount, Title, and Description are empty
+          if (fieldName === 'total_cost') {
+            if (!fieldValue) {
+              isValid = false; // Set the flag to false if any of these fields are empty
+            }
+          }
         });
       result.push(allValues);
     });
+    if (!isValid) {
+      alert('Please fill in Amount for all invoice items.');
+      return; // Prevent further processing if validation fails
+    }
     
     console.log(result);
     
@@ -207,7 +219,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
     setTotalAmount(totalValue)
     console.log('totamount',totalValue);
     generateCode(result, 'invoice',totalValue).finally(() => {
-      setSubmitting(false); // Reset the submitting state after the API call completes (success or error).
+      //setSubmitting(false); // Reset the submitting state after the API call completes (success or error).
     });
   };
   
@@ -227,7 +239,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
 
   return (
     <>
-      <Modal size="xl" isOpen={editInvoiceData}>
+      <Modal size="lg" isOpen={editInvoiceData}>
         <ModalHeader>
           Create Invoice
           <Button
@@ -250,7 +262,10 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
                   <Row>
                     <InvoiceTable createInvoice={createInvoice} handleInserts={handleInserts} />
                     {/* Description form */}
-                    <ComponentCard title="Description">
+                    <Row>
+                    <Label>Description</Label>
+                    </Row>
+                    {/* <ComponentCard title="Description"> */}
                       <Editor
                         editorState={paymentTerms}
                         wrapperClassName="demo-wrapper mb-0"
@@ -260,7 +275,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
                           setPaymentTerms(e);
                         }}
                       />
-                    </ComponentCard>
+                    {/* </ComponentCard> */}
                   </Row>
                   <Col md="3">
                     <Button
@@ -325,12 +340,13 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
                       className="shadow-none"
                       color="primary"
                       onClick={() => {
-                        if (!submitting) {
-                          setSubmitting(true);
-                          getAllValues();
-                        }
+                        getAllValues();
+                        // if (!submitting) {
+                        //   setSubmitting(true);
+                        //   getAllValues();
+                        // }
                       }}
-                      disabled={submitting}
+                      // disabled={submitting}
                     >
                       {' '}
                       Submit{' '}

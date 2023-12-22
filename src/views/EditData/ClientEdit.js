@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import { TabPane, TabContent, Row, Col, Button } from 'reactstrap';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -16,6 +16,7 @@ import ClientTenderDataGet from '../../components/ClientTable/ClientTenderDataGe
 import BreadCrumbs from '../../layouts/breadcrumbs/BreadCrumbs';
 import message from '../../components/Message';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import AppContext from '../../context/AppContext';
 import '../form-editor/editor.scss';
 import ComponentCard from '../../components/ComponentCard';
 import api from '../../constants/api';
@@ -82,7 +83,8 @@ const ClientsEdit = () => {
   const backToList = () => {
     navigate('/client');
   };
-
+//get staff details
+const { loggedInuser } = useContext(AppContext);
   //  AttachmentModal
   const [RoomName, setRoomName] = useState('');
   const [fileTypes, setFileTypes] = useState('');
@@ -134,6 +136,7 @@ const ClientsEdit = () => {
   //Logic for edit data in db
   const editClientsData = () => {
     clientsDetails.modification_date = creationdatetime;
+    clientsDetails.modified_by = loggedInuser.first_name;
     if (
       clientsDetails.company_name !== '' &&
       clientsDetails.category !== '' &&

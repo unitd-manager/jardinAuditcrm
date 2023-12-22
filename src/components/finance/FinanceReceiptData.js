@@ -137,35 +137,92 @@ const FinanceReceiptData = ({ editCreateReceipt, setEditCreateReceipt,orderId })
       }
   };
   
+// Inside the `insertReceipt` function
+const insertReceipt = async (code) => {
+  createReceipt.receipt_code = code;
 
-  //Insert Receipt
-  const insertReceipt =async (code)=> {
-    createReceipt.receipt_code = code;
-    // createReceipt.receipt_date = moment()
-    if (createReceipt.mode_of_payment && (selectedInvoice.length>0)){
-    if(totalAmount>=createReceipt.amount) {
-    api
-      .post('/finance/insertreceipt', createReceipt)
-      .then((res) => {
-        message('data inserted successfully.');
-          finalCalculation(res.data.data.insertId)
-      })
-      .catch(() => {
-        message('Network connection error.');
-      }) .finally(() => {
-        setSubmitting(false);// Reset the submitting state after the API call completes (success or error).
-        window.location.reload();
-      });
+  // Validate if the entered amount exceeds the total selected invoice amount
+  // const totalSelectedInvoiceAmount = selectedInvoice.reduce(
+  //   (total, invoice) => total + invoice.remainingAmount,
+  //   0
+  // );
+
+  // if (createReceipt.mode_of_payment && selectedInvoice.length > 0) {
+  //   if (parseFloat(totalAmount) <= parseFloat(totalSelectedInvoiceAmount)) {
+      // Proceed with the API call to insert receipt
+      
+
+      if (createReceipt.mode_of_payment && createReceipt.mode_of_payment !== 'Please Select') {
+        // Ensure that at least one checkbox is selected
+        if (selectedInvoice.length > 0) {
+          // Calculate the total amount of selected invoices
+          const totalInvoiceAmount = selectedInvoice.reduce((total, invoice) => total + invoice.remainingAmount, 0);
+    
+          if (parseFloat(createReceipt.amount) <= totalInvoiceAmount) {
+            // If the amount is less than or equal to the total invoice amount, proceed with inserting the receipt.
+      api
+        .post('/finance/insertreceipt', createReceipt)
+        .then((res) => {
+          message('Data inserted successfully.');
+          finalCalculation(res.data.data.insertId);
+        })
+        .catch(() => {
+          message('Network connection error.');
+        })
+        .finally(() => {
+          setSubmitting(false); // Reset the submitting state after the API call completes (success or error).
+          window.location.reload();
+        });
+      } else {
+        // Set the amount validation error message
+        alert('Amount should be less than or equal to the total invoice amount.');
+      }
+    } else {
+      // Set the checkbox validation error message
+      alert('Please select at least one invoice.');
     }
-    else {
-      message('Please fill all required fields', 'warning');
-   }
+  } else {
+    // Set the mode of payment validation error message
+    alert('Please select a valid mode of payment');
   }
-  else {
-    message('Please fill mode of payment fields', 'warning');
-    setSubmitting(false);
- }
-  };
+};
+
+//   //Insert Receipt
+//   const insertReceipt =async (code)=> {
+//     createReceipt.receipt_code = code;
+//     // createReceipt.receipt_date = moment()
+//     // Validate if the entered amount exceeds the total selected invoice amount
+//   const totalSelectedInvoiceAmount = selectedInvoice.reduce(
+//     (total, invoice) => total + invoice.remainingAmount,
+//     0
+//   );
+//     if (createReceipt.mode_of_payment && (selectedInvoice.length>0)){
+//     if(totalAmount>=createReceipt.amount) {
+//     api
+//       .post('/finance/insertreceipt', createReceipt)
+//       .then((res) => {
+//         message('data inserted successfully.');
+//           finalCalculation(res.data.data.insertId)
+//       })
+//       .catch(() => {
+//         message('Network connection error.');
+//       }) .finally(() => {
+//         setSubmitting(false);// Reset the submitting state after the API call completes (success or error).
+//         window.location.reload();
+//       });
+//     }
+//     else {
+//       message('Please fill all required fields', 'warning');
+//    }
+   
+//   }
+//   else {
+//     message('Please fill mode of payment fields', 'warning');
+   
+//     setSubmitting(false);
+//  }
+ 
+//   };
   const generateCode = () => {
     api
       .post('/commonApi/getCodeValue', { type:'receipt'})

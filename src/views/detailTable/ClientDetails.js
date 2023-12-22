@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext} from 'react';
 import { Row, Col, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -8,6 +8,7 @@ import BreadCrumbs from '../../layouts/breadcrumbs/BreadCrumbs';
 import ComponentCard from '../../components/ComponentCard';
 import api from '../../constants/api';
 import creationdatetime from '../../constants/creationdatetime';
+import AppContext from '../../context/AppContext';
 
 const ClientDetails = () => {
   // Navigation and Parameter Constants
@@ -17,6 +18,8 @@ const ClientDetails = () => {
   const [clientForms, setClientForms] = useState({
     company_name: '',
   });
+    //get staff details
+    const { loggedInuser } = useContext(AppContext);
 
   //Client Functions/Methods
   const handleClientForms = (e) => {
@@ -27,6 +30,7 @@ const ClientDetails = () => {
   const insertClient = () => {
     if (clientForms.company_name !== '') {
       clientForms.creation_date = creationdatetime;
+      clientForms.modified_by = loggedInuser.first_name;
       api
         .post('/clients/insertCompany', clientForms)
         .then((res) => {
