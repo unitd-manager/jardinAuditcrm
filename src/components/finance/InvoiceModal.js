@@ -101,7 +101,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal, invoiceDatas 
     api
       .post('/finance/editInvoicePortalDisplay', invoiceData)
       .then(() => {
-        window.location.reload();
+        //window.location.reload();
         message('Invoice edited successfully.', 'success');
       })
       .catch(() => {

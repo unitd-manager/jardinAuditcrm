@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext} from 'react';
 import { Row, Col, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import message from '../../components/Message';
 import BreadCrumbs from '../../layouts/breadcrumbs/BreadCrumbs';
 import api from '../../constants/api';
+import AppContext from '../../context/AppContext';
 import ComponentCard from '../../components/ComponentCard';
 import creationdatetime from '../../constants/creationdatetime';
 
@@ -16,6 +17,8 @@ const ProjectDetails = () => {
   const [company, setCompany] = useState();
   const [incorpDate, setIncorpDate] = useState(null);
   const [yearEnd, setYearEnd] = useState(null);
+  //get staff details
+ const { loggedInuser } = useContext(AppContext);
   //  insertClient
   const [clientForms, setClientForms] = useState({
     title: '',
@@ -254,6 +257,7 @@ console.log('incorpobj',selectedObjectData)
   const insertProject = async(code) => {
     if (clientForms.title !== '' && clientForms.company_id !== '' && clientForms.category !== '') {
       clientForms.creation_date = creationdatetime;
+      clientForms.created_by = loggedInuser.first_name;
       clientForms.project_code = code;
       await api
         .post('/project/insertProject', clientForms)

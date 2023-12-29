@@ -2,24 +2,25 @@ import React from 'react';
 import { Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 import ComponentCard from '../ComponentCard';
 import ComponentCardV2 from '../ComponentCardV2';
 import PdfProjectIncorporationDetails from '../PDF/PdfProjectIncorporationDetails';
 import PdfProjectPaidUpCapital from '../PDF/PdfProjectPaidUpCapital';
 
-export default function ProjectMainDetails({ handleInputs, projectDetail, contact, company,incharge }) {
+export default function ProjectMainDetails({ handleInputs, projectDetail, contact, company }) {
   ProjectMainDetails.propTypes = {
     handleInputs: PropTypes.func,
     projectDetail: PropTypes.any,
     contact: PropTypes.any,
     company: PropTypes.any,
-    incharge: PropTypes.any,
+    // incharge: PropTypes.any,
   };
   return (
     <>
       <Form>
         <FormGroup>
-          <ComponentCard title="Project Details">
+          <ComponentCard title="Project Details" creationModificationDate={projectDetail}>
             <Row>
               <Col md="3">
                 <FormGroup>
@@ -114,7 +115,7 @@ export default function ProjectMainDetails({ handleInputs, projectDetail, contac
                     defaultValue={projectDetail && projectDetail.old_company_name}
                     onChange={handleInputs}
                   >
-                   
+
                   </Input>
                 </FormGroup>
               </Col>
@@ -128,6 +129,24 @@ export default function ProjectMainDetails({ handleInputs, projectDetail, contac
                     defaultValue={moment(projectDetail && projectDetail.date_of_incorporation).format('DD-MM-YYYY')}
                     onChange={handleInputs}
                   />
+                </FormGroup>
+              </Col>
+              <Col md="3">
+                <FormGroup>
+                  <Label>Opp Code</Label>
+                  <br />
+                  {/* <Input
+                    type="text"
+                    name="project_code"
+                    defaultValue={projectDetail && projectDetail.project_code}
+                    onChange={handleInputs}
+                  /> */}
+                  {/* <Link to={`/ProjectEdit/${financeDetails && financeDetails.project_id}?tab=4`}>
+                      {financeDetails && financeDetails.project_code}
+                    </Link> */}
+                  <Link to={`/TenderEdit/${projectDetail && projectDetail.opportunity_id}? tab=1`} target="_blank" >
+                    {projectDetail && projectDetail.opportunity_code}
+                  </Link>
                 </FormGroup>
               </Col>
               <Col md="3">
@@ -151,9 +170,6 @@ export default function ProjectMainDetails({ handleInputs, projectDetail, contac
                   </Input>
                 </FormGroup>
               </Col>
-            </Row>
-
-            <Row>
               <Col md="3">
                 <FormGroup>
                   <Label>Start Date</Label>
@@ -187,7 +203,7 @@ export default function ProjectMainDetails({ handleInputs, projectDetail, contac
                   />
                 </FormGroup>
               </Col>
-              <Col md="3">
+              {/* <Col md="3">
                 <FormGroup>
                   <Label>Project Manager</Label>
                   <Input
@@ -207,9 +223,8 @@ export default function ProjectMainDetails({ handleInputs, projectDetail, contac
                       })}
                   </Input>
                 </FormGroup>
-              </Col>
-            </Row>
-            <Row>
+              </Col> */}
+
               <Col md="3">
                 <FormGroup>
                   <Label>Work Status</Label>
@@ -224,10 +239,11 @@ export default function ProjectMainDetails({ handleInputs, projectDetail, contac
                     <option defaultValue="selected" value="WIP">
                       WIP
                     </option>
-                    <option value=" C/O PARA THAI ADDICTION "> C/O PARA THAI ADDICTION </option>
                     <option value="Cancelled">Cancelled</option>
                     <option value="Complete">Complete</option>
-                    <option value="Others">Others</option>
+                    <option value="Billable">Billable</option>
+                    <option value="Billed">Billed</option>
+                    <option value="On Hold">On Hold</option>
                     <option value="To Be Started">To Be Started</option>
                     <option value="Latest">Latest</option>
                   </Input>

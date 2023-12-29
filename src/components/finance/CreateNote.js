@@ -19,13 +19,16 @@ import PropTypes from 'prop-types';
 import $ from 'jquery';
 import api from '../../constants/api';
 
-const CreateNote = ({ editCreateNote, setEditCreateNote,projectInfo }) => {
+const CreateNote = ({ editCreateNote, setEditCreateNote,projectInfo ,getCreditById}) => {
   CreateNote.propTypes = {
     editCreateNote: PropTypes.bool,
     setEditCreateNote: PropTypes.func,
     projectInfo:PropTypes.func,
+    getCreditById:PropTypes.func,
   };
-  const [createNoteAmount, setCreateNoteAmount] = useState(null);
+  const [createNoteAmount, setCreateNoteAmount] = useState({
+    from_date: new Date().toISOString().split('T')[0],
+  });
   const [createInvoiceNote, setCreateInvoiceNote] = useState(null);
   //edit Tab Costing Summary Form
   const { id } = useParams();
@@ -96,6 +99,7 @@ const CreateNote = ({ editCreateNote, setEditCreateNote,projectInfo }) => {
         setCreateNoteAmount(res.data.data);
         finalapicall(res.data.data.insertId, results);
         //window.location.reload();
+        getCreditById();
       })
       .catch(() => {
         console.log('Network connection error.');
@@ -304,6 +308,7 @@ const CreateNote = ({ editCreateNote, setEditCreateNote,projectInfo }) => {
             type="button"
             onClick={() => {
               getAllValues();
+              setEditCreateNote(false);
             }}
           >
             Submit

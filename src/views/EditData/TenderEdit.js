@@ -20,7 +20,7 @@ import TenderAttachments from '../../components/TenderTable/TenderAttachments';
 const TenderEdit = () => {
   const [activeTab, setActiveTab] = useState('1');
   const [lineItem, setLineItem] = useState([]);
-  const [tenderDetails, setTenderDetails] = useState();
+  const [tenderDetails, setTenderDetails] = useState([]);
   const [quote, setQuote] = useState({});
   const [quotationsModal, setquotationsModal] = useState(false);
   const [viewLineModal, setViewLineModal] = useState(false);
@@ -69,7 +69,7 @@ const TenderEdit = () => {
     company_name: '',
     address_street: '',
     address_town: '',
-    address_country: '',
+    address_country: 'Singapore',
     address_po_code: '',
     phone: '',
     fax: '',
@@ -147,6 +147,7 @@ const TenderEdit = () => {
       api
         .post('/tender/edit-Tenders', tenderDetails)
         .then(() => {
+          editTenderById();
           message('Record editted successfully', 'success');
         })
         .catch(() => {});
@@ -174,7 +175,7 @@ const TenderEdit = () => {
 
   // Add new Contact
   const [newContactData, setNewContactData] = useState({
-    salutation: '',
+    salutation: 'Mr',
     first_name: '',
     email: '',
     position: '',
@@ -187,6 +188,7 @@ const TenderEdit = () => {
   const handleAddNewContact = (e) => {
     setNewContactData({ ...newContactData, [e.target.name]: e.target.value });
   };
+  
 
   const AddNewContact = () => {
     const newDataWithCompanyId = newContactData;
@@ -228,7 +230,7 @@ const TenderEdit = () => {
   //Project GENERATED CODE
   const generateCodes = () => {
     api
-      .post('/tender/getCodeValue', { type: 'opportunityproject' })
+      .post('/tender/getCodeValue', { type: 'project' })
       .then((res) => {
         insertProject(res.data.data);
       })

@@ -78,6 +78,7 @@ export default function CustomerFinanceInvoice({
                             setEditInvoiceModal(element);
                             setEditModal(true);
                             setInvoiceDatas(element.invoice_id);
+                            setInvoiceDatas(element.invoice_item_id);
                                 setInvoiceDatas(element)
                           }}
                         >

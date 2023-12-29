@@ -31,7 +31,7 @@ export default function FinanceMainDetails({ financeDetails, handleInputs }) {
                   <br />
                   <td>
                     {' '}
-                    <Link to={`/ProjectEdit/${financeDetails && financeDetails.project_id}?tab=4`}>
+                    <Link to={`/ProjectEdit/${financeDetails && financeDetails.project_id}?tab=4`} target="_blank" >
                       {financeDetails && financeDetails.project_code}
                     </Link>
                   </td>

@@ -18,12 +18,14 @@ import {
 
 export default function TenderContactDetails({
   handleAddNewContact,
+  newContactData,
   addContactModal,
   addContactToggle,
   AddNewContact,
 }) {
   TenderContactDetails.propTypes = {
     handleAddNewContact: PropTypes.any,
+    newContactData:PropTypes.any,
     addContactModal: PropTypes.object,
     addContactToggle: PropTypes.any,
     AddNewContact: PropTypes.any,
@@ -45,10 +47,11 @@ export default function TenderContactDetails({
                           <Label>
                             Title<span className="required"> *</span>
                           </Label>
-                          <Input type="select" name="salutation" onChange={handleAddNewContact}>
-                            <option value="" selected="selected">
-                              Please Select
-                            </option>
+                          <Input type="select" name="salutation" onChange={handleAddNewContact}  
+                          value={newContactData && newContactData.salutation}>
+                            <option defaultValue="selected" value="">
+                            Please Select
+                          </option>
                             <option value="Ms">Ms</option>
                             <option value="Mr">Mr</option>
                             <option value="Mrs">Mrs</option>
@@ -60,7 +63,8 @@ export default function TenderContactDetails({
                           <Label>
                             Name<span className="required"> *</span>
                           </Label>
-                          <Input type="text" name="first_name" onChange={handleAddNewContact} />
+                          <Input type="text" name="first_name" onChange={handleAddNewContact} 
+                          value={newContactData && newContactData.first_name}/>
                         </FormGroup>
                       </Col>
                       <Col md="4">

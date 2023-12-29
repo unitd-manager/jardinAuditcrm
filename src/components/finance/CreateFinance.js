@@ -133,7 +133,7 @@ const CreateFinance = ({ financeModal, setFinanceModal, projectId,getOrdersById 
                       />
                     </FormGroup>
                   </Col>
-                  <Col md="4">
+                  {/* <Col md="4">
                     <FormGroup>
                       <Label>Project</Label>
                       <Input
@@ -149,7 +149,7 @@ const CreateFinance = ({ financeModal, setFinanceModal, projectId,getOrdersById 
                         <option value="Awarded">Maintenance</option>
                       </Input>
                     </FormGroup>
-                  </Col>
+                  </Col> */}
                   <Col md="4">
                     <FormGroup>
                       <Label>Status </Label>

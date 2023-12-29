@@ -1,21 +1,25 @@
-import React from 'react';
+import React,{useState} from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Form, Table } from 'reactstrap';
+import ReceiptModal from './ReceiptModal';
 
 export default function CustomerFinanceReceipt({
   receipt,
-  setEditReceiptModal,
+  // setEditReceiptModal,
   setReceiptDataModal,
+  //editReceiptDataModal,
   receiptCancel,
 }) {
   CustomerFinanceReceipt.propTypes = {
     receipt: PropTypes.array,
-    setEditReceiptModal: PropTypes.func,
+    // setEditReceiptModal: PropTypes.func,
+    //editReceiptDataModal:PropTypes.func,
     setReceiptDataModal: PropTypes.func,
     receiptCancel: PropTypes.func,
   };
-
+  const [selectedReceipt, setSelectedReceipt] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   //Structure of Receipt table
   const receiptTableColumns = [
     { name: 'Receipt Code' },
@@ -26,10 +30,17 @@ export default function CustomerFinanceReceipt({
     { name: 'View' },
     { name: 'Cancel' },
   ];
+  const openReceiptModal = (element) => {
+    setSelectedReceipt(element);
+    setIsModalOpen(true);
+  };
 
+  const closeReceiptModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     //Receipt tab
-
+<>
     <Form>
       <div className="MainDiv">
         <div className="container">
@@ -57,8 +68,11 @@ export default function CustomerFinanceReceipt({
                         <span
                           className="addline"
                           onClick={() => {
-                            setEditReceiptModal(element);
+                            // setEditReceiptModal(element);
+                            // setReceiptDataModal(true);
+                            setSelectedReceipt(element); // Set the selected receipt
                             setReceiptDataModal(true);
+                            openReceiptModal(element);
                           }}
                         >
                           View
@@ -90,5 +104,18 @@ export default function CustomerFinanceReceipt({
         </div>
       </div>
     </Form>
+     {/* Display ReceiptModal based on selected receipt */}
+     {isModalOpen && (
+      <ReceiptModal
+        // editReceiptModal={selectedReceipt}
+        // editReceiptDataModal={editReceiptDataModal}
+        // setReceiptDataModal={setReceiptDataModal}
+        editReceiptModal={selectedReceipt}
+          editReceiptDataModal={isModalOpen}
+          setReceiptDataModal={closeReceiptModal}
+      />
+      
+    )}
+    </>
   );
 }

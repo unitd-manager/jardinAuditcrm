@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { Row, Col, TabContent, TabPane, Button,Form ,FormGroup } from 'reactstrap';
 import { ToastContainer } from 'react-toastify';
 import Swal from 'sweetalert2';
@@ -15,6 +15,8 @@ import ViewFileComponentV2 from '../../components/ProjectModal/ViewFileComponent
 import FinanceTab from '../../components/ProjectModal/FinanceTab';
 import message from '../../components/Message';
 import api from '../../constants/api';
+import creationdatetime from '../../constants/creationdatetime';
+import AppContext from '../../context/AppContext';
 import ProjectButton from '../../components/ProjectTable/ProjectButton';
 import ProjectMainDetails from '../../components/ProjectTable/ProjectMainDetails';
 import ProjectTaskTab from '../../components/ProjectTable/ProjectTaskTab';
@@ -73,7 +75,8 @@ const ProjectEdit = () => {
   const [attachmentData, setDataForAttachment] = useState({
     modelType: '',
   });
-
+ //get staff details
+ const { loggedInuser } = useContext(AppContext);
   //attachment for upload file
   const dataForAttachment = () => {
     setDataForAttachment({
@@ -90,7 +93,7 @@ const ProjectEdit = () => {
     api
       .post('/project/getProjectById', { project_id: id })
       .then((res) => {
-        setProjectDetail(res.data.data[0]);
+        setProjectDetail(res.data.data);
       })
       .catch(() => {});
   };
@@ -111,9 +114,12 @@ const ProjectEdit = () => {
   };
 
   const UpdateData = () => {
+    projectDetail.modification_date = creationdatetime;
+    projectDetail.modified_by = loggedInuser.first_name;
     api
       .post('/project/edit-Project', projectDetail)
       .then(() => {
+        getProjectById();
         message('Record editted successfully', 'success');
       })
       .catch(() => {});

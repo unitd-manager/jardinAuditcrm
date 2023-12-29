@@ -161,26 +161,28 @@ export default function KeyStaffDetails({
             </Col>
             <Col md="3">
               <FormGroup>
+                
                 <Label>Published</Label>
                 <br></br>
                 <Input
                   name="published"
                   value="1"
                   type="radio"
-                  defaultChecked={staffeditdetails && staffeditdetails.published === 1 && true}
+                  Checked={staffeditdetails && staffeditdetails.published === 1 && true}
                   onChange={handleInputs}
                 />
-                <Label>Yes</Label>
+                <Label> Yes </Label>
                 <Input
                   name="published"
                   value="0"
                   type="radio"
-                  defaultChecked={staffeditdetails && staffeditdetails.published === 0 && true}
+                  Checked={staffeditdetails && staffeditdetails.published === 0 && true}
                   onChange={handleInputs}
                 />
                 <Label>No</Label>
+                
               </FormGroup>
-            </Col>
+              </Col>
           </Row>
         </ComponentCard>
       </FormGroup>

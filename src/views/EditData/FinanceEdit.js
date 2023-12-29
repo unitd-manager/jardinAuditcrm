@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import moment from 'moment';
 import InvoiceData from '../../components/finance/InvoiceData';
 import InvoiceModal from '../../components/finance/InvoiceModal';
-import ReceiptModal from '../../components/finance/ReceiptModal';
+// import ReceiptModal from '../../components/finance/ReceiptModal';
 import CreateReceipt from '../../components/finance/CreateReceipt';
 import CreateNote from '../../components/finance/CreateNote';
 import BreadCrumbs from '../../layouts/breadcrumbs/BreadCrumbs';
@@ -187,7 +187,7 @@ const FinanceEdit = () => {
         setFinanceDetails(res.data.data);
       })
       .catch(() => {
-        message('Fianance Data Not Found', 'info');
+        //message('Fianance Data Not Found', 'info');
       });
   };
   // const getFinanceById = () => {
@@ -276,7 +276,7 @@ const FinanceEdit = () => {
             setEditCreateReceipt={setEditCreateReceipt}
           />
 
-          <CreateNote editCreateNote={editCreateNote} setEditCreateNote={setEditCreateNote} 
+          <CreateNote editCreateNote={editCreateNote} getCreditById={getCreditById} setEditCreateNote={setEditCreateNote} 
           projectInfo={id}/>
 
           <InvoiceModal
@@ -287,11 +287,12 @@ const FinanceEdit = () => {
             setInvoiceDatas={setInvoiceDatas}
         invoiceDatas={invoiceDatas}
           />
-          <ReceiptModal
+          {/* <ReceiptModal
             editReceiptModal={editReceiptModal}
             setReceiptDataModal={setReceiptDataModal}
             editReceiptDataModal={editReceiptDataModal}
-          />
+          /> */}
+          
 
           {/* Invoice,Receipt and Note tab button */}
           <Row>
@@ -383,6 +384,8 @@ const FinanceEdit = () => {
               receipt={receipt}
               setEditReceiptModal={setEditReceiptModal}
               setReceiptDataModal={setReceiptDataModal}
+              editReceiptDataModal={editReceiptDataModal}
+              editReceiptModal={editReceiptModal}
             ></CustomerFinanceReceipt>
           </ComponentCard>
         </TabPane>

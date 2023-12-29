@@ -30,7 +30,7 @@ const ClientDetails = () => {
   const insertClient = () => {
     if (clientForms.company_name !== '') {
       clientForms.creation_date = creationdatetime;
-      clientForms.modified_by = loggedInuser.first_name;
+      clientForms.created_by= loggedInuser.first_name;
       api
         .post('/clients/insertCompany', clientForms)
         .then((res) => {

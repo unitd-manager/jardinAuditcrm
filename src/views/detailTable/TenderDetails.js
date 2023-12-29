@@ -34,7 +34,7 @@ const TenderDetails = () => {
     company_name: '',
     address_street: '',
     address_town: '',
-    address_country: '',
+    address_country: 'Singapore',
     address_po_code: '',
     phone: '',
     fax: '',
@@ -104,7 +104,7 @@ const TenderDetails = () => {
   };
   //console.log(tenderDetails);
   const insertTender = (code) => {
-    tenderForms.modified_by = loggedInuser.first_name;
+    tenderForms.created_by = loggedInuser.first_name;
     tenderForms.creation_date = creationdatetime;
     if (tenderForms.company_id !== '' && tenderForms.title !== '' && tenderForms.category !== '') {
       tenderForms.opportunity_code = code;
@@ -174,21 +174,25 @@ const TenderDetails = () => {
                       Company Name <span className="required"> *</span>{' '}
                     </Label>
                     <Input
-                      type="select"
+                    type="select"
+                    onChange={(e) => {
+                      handleInputsTenderForms(e);
+                                        }}
+                                          //getContact(e.target.value);
+                      value={tenderForms && tenderForms.company_id}
                       name="company_id"
-                      //value={tenderForms && tenderForms.company_id}
-                      onChange={handleInputsTenderForms}
-                    >
-                      <option>Please Select</option>
-                      {company &&
-                        company.map((ele) => {
-                          return (
-                            <option key={ele.company_id} value={ele.company_id}>
-                              {ele.company_name}
-                            </option>
-                          );
-                        })}
-                    </Input>
+                   >
+                      <option >Please Select</option>
+                    {company &&
+                      company.map((e) => {
+                        return (
+                          <option key={e.company_id} value={e.company_id}>
+                            {' '}
+                            {e.company_name}{' '}
+                          </option>
+                        );
+                      })}
+                  </Input>
                   </Col>
                   <Col md="3" className="addNew">
                     <Label>Add New Name</Label>
@@ -227,6 +231,7 @@ const TenderDetails = () => {
               </FormGroup>
               <TenderCompanyDetails
                 allCountries={allCountries}
+                companyInsertData={companyInsertData}
                 insertCompany={insertCompany}
                 handleInputs={handleInputs}
                 toggle={toggle}

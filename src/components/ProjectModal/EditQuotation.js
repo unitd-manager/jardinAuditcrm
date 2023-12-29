@@ -176,7 +176,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                     </FormGroup>
                   </Col> */}
                   <Row>
-                  <Col md="4">
+                  {/* <Col md="4">
                     <FormGroup>
                       <Label>Project Reference</Label>
                       <Input
@@ -186,7 +186,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                         value={quoteData && quoteData.project_reference}
                       />
                     </FormGroup>
-                  </Col>
+                  </Col> */}
                                   <Col md="4">
                     <FormGroup>
                       <Label>Mode of Payment</Label>
@@ -207,7 +207,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                     </FormGroup>
                   </Col>
                  
-                  <Col md="4">
+                  {/* <Col md="4">
                     <FormGroup>
                       <Label>Ref No</Label>
                       <Input
@@ -217,9 +217,8 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                         value={quoteData && quoteData.ref_no_quote}
                       />
                     </FormGroup>
-                  </Col>
-                  </Row>
-                  <Row>
+                  </Col> */}
+                 
                   <Col md="4">
                     <FormGroup>
                       <Label>Quote Revision</Label>

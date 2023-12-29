@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import FinanceInvoiceData from '../finance/FinanceInvoiceData';
 import FinanceReceiptData from '../finance/FinanceReceiptData';
 import InvoiceModal from '../finance/InvoiceModal';
-import ReceiptModal from '../finance/ReceiptModal';
+// import ReceiptModal from '../finance/ReceiptModal';
 import CustomerFinanceInvoice from '../finance/CustomerFinanceInvoice';
 import CustomerFinanceReceipt from '../finance/CustomerFinanceReceipt';
 import api from '../../constants/api';
@@ -22,7 +22,7 @@ export default function FinanceTab({ projectDetail }) {
   const [editCreateReceipt, setEditCreateReceipt] = useState(false);
   const [createInvoice, setCreateInvoice] = useState(null);
   const [cancelInvoice, setCancelInvoice] = useState(null);
-  const [cancelReceipt, setCancelReceipt] = useState(null);
+  // const [cancelReceipt, setCancelReceipt] = useState(null);
   const [receipt, setReceipt] = useState(null);
   const [orderId, setOrderId] = useState(null);
   const [receiveble, setReceiveble] = useState(null);
@@ -40,19 +40,10 @@ export default function FinanceTab({ projectDetail }) {
         setCreateInvoice(res.data.data);
       })
       .catch(() => {
-       
+
       });
   };
-  const getAmountById = () => {
-    api
-      .post('/project/getAmountByProjectIds', { project_id: id })
-      .then((res) => {
-        setReceiveble(res.data.data);
-      })
-      .catch(() => {
-       
-      });
-  };
+
   // const getSupplierById = () => {
   //   api
   //     .post('/project/getSupplierById', { project_id: id })
@@ -60,7 +51,7 @@ export default function FinanceTab({ projectDetail }) {
   //       setSupplierAmount(res.data.data);
   //     })
   //     .catch(() => {
-       
+
   //     });
   // };
   // const getSubconById = () => {
@@ -70,7 +61,7 @@ export default function FinanceTab({ projectDetail }) {
   //       setSubConAmount(res.data.data);
   //     })
   //     .catch(() => {
-        
+
   //     });
   // };
 
@@ -82,7 +73,7 @@ export default function FinanceTab({ projectDetail }) {
         console.log('order', res.data.data);
       })
       .catch(() => {
-        
+
       });
   };
   const getInvoiceCancel = () => {
@@ -92,7 +83,7 @@ export default function FinanceTab({ projectDetail }) {
         setCancelInvoice(res.data.data);
       })
       .catch(() => {
-       
+
       });
   };
   const invoiceCancel = (obj) => {
@@ -108,16 +99,16 @@ export default function FinanceTab({ projectDetail }) {
       });
   };
   //get receipt
-  const getReceiptCancel = () => {
-    api
-      .post('/invoice/getReceiptCancel', { order_id: id })
-      .then((res) => {
-        setCancelReceipt(res.data.data);
-      })
-      .catch(() => {
-        
-      });
-  };
+  // const getReceiptCancel = () => {
+  //   api
+  //     .post('/invoice/getReceiptCancel', { order_id: id })
+  //     .then((res) => {
+  //       setCancelReceipt(res.data.data);
+  //     })
+  //     .catch(() => {
+
+  //     });
+  // };
   const getReceiptById = () => {
     api
       .post('/invoice/getProjectReceiptById', { project_id: id })
@@ -125,25 +116,42 @@ export default function FinanceTab({ projectDetail }) {
         setReceipt(res.data.data);
       })
       .catch(() => {
-       
+
+      });
+  };
+  const getAmountById = () => {
+    api
+      .post('/project/getAmountByProjectIds', { project_id: id })
+      .then((res) => {
+        setReceiveble(res.data.data);
+
+      })
+      .catch(() => {
+
       });
   };
   //receipt Cancel
   const receiptCancel = (obj) => {
+    const updatedReceipts = receipt.map((receiptItem) =>
+      receiptItem.receipt_id === obj.receipt_id ? { ...receiptItem, receipt_status: 'cancelled' } : receiptItem
+    );
+    setReceipt(updatedReceipts);
     obj.receipt_status = 'cancelled';
     api
       .post('/Finance/editTabReceiptPortalDisplay', obj)
       .then(() => {
+        getAmountById();
         message('Record editted successfully', 'success');
       })
       .catch(() => {
         message('Unable to edit record.', 'error');
       });
   };
+
   useEffect(() => {
     getInvoiceCancel();
     getInvoiceById();
-    getReceiptCancel();
+    // getReceiptCancel();
     getReceiptById();
     getOrdersById();
     getAmountById();
@@ -297,6 +305,8 @@ export default function FinanceTab({ projectDetail }) {
       />
       {editCreateReceipt && (
         <FinanceReceiptData
+          getReceiptById={getReceiptById}
+          getAmountById={getAmountById}
           editCreateReceipt={editCreateReceipt}
           setEditCreateReceipt={setEditCreateReceipt}
           orderId={orderId}
@@ -334,11 +344,11 @@ export default function FinanceTab({ projectDetail }) {
         setInvoiceDatas={setInvoiceDatas}
         invoiceDatas={invoiceDatas}
       />
-      <ReceiptModal
+      {/* <ReceiptModal
         editReceiptModal={editReceiptModal}
         setReceiptDataModal={setReceiptDataModal}
         editReceiptDataModal={editReceiptDataModal}
-      />
+      /> */}
       <Row className="mt-4">
         <CardTitle tag="h4" className="border-bottom bg-secondary p-2 mb-0 text-white">
           {' '}
@@ -355,9 +365,9 @@ export default function FinanceTab({ projectDetail }) {
             setEditModal={setEditModal}
             setEditInvoiceModal={setEditInvoiceModal}
             setInvoiceDatas={setInvoiceDatas}
-          
-            
-            
+
+
+
           ></CustomerFinanceInvoice>
         </Row>
       </Form>
@@ -368,17 +378,25 @@ export default function FinanceTab({ projectDetail }) {
         </CardTitle>
       </Row>
 
-      <Form className="mt-4">
-        <Row className="border-bottom mb-3">
-          <CustomerFinanceReceipt
+
+      {/* <CustomerFinanceReceipt
             receipt={receipt}
             cancelReceipt={cancelReceipt}
             receiptCancel={receiptCancel}
             setEditReceiptModal={setEditReceiptModal}
             setReceiptDataModal={setReceiptDataModal}
-          ></CustomerFinanceReceipt>
-        </Row>
-      </Form>
+            editReceiptDataModal={editReceiptDataModal}
+              editReceiptModal={editReceiptModal}
+          ></CustomerFinanceReceipt> */}
+      <CustomerFinanceReceipt
+        receiptCancel={receiptCancel}
+        receipt={receipt}
+        setEditReceiptModal={setEditReceiptModal}
+        setReceiptDataModal={setReceiptDataModal}
+        editReceiptDataModal={editReceiptDataModal}
+        editReceiptModal={editReceiptModal}
+      ></CustomerFinanceReceipt>
+
     </>
   );
 }

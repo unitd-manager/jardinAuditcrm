@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Input, Button } from 'reactstrap';
-import { useParams, } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import random from 'random'
 import * as $ from "jquery";
 import Select from 'react-select';
+import Swal from 'sweetalert2';
 import PropTypes from 'prop-types';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import ComponentCard from '../ComponentCard';
@@ -13,48 +14,93 @@ import api from '../../constants/api';
 
 const TaskEmployee = ({
   projectId,
-  
+
 }) => {
   TaskEmployee.propTypes = {
-   
+
     projectId: PropTypes.any,
   };
 
   //All state variables
   const [employeeLinked, setEmployeeLinked] = useState();
   const [prevEmployee, setPreviousEmployee] = useState()
-  
 
-    // Navigation and Parameter Constants
-    const { id } = useParams();
-    
-    // Addline item in Link employee
-    const [addLineItem, setAddLineItem] = useState([{
+
+  // Navigation and Parameter Constants
+  const { id } = useParams();
+
+  // Addline item in Link employee
+  const [addLineItem, setAddLineItem] = useState([{
     "id": random.int(1, 99),
     "employee_name": "",
     "employee_id": "",
-   },])
-//Onchange item in training staff employee name selectfield
-   const onchangeItem = (str, itemId) => {
-    const element = addLineItem.find(el => el.id === itemId)
-    element.employee_name = str.label
-    element.employee_id = str.value.toString()
-    setAddLineItem(addLineItem)
-  }
+  },])
+  //Onchange item in training staff employee name selectfield
+  const onchangeItem = (str, itemId) => {
+    // Check if the selected employee name already exists in prevEmployee
+    const isEmployeeNameAlreadySelected = prevEmployee.some(
+      (item) => item.employee_name === str.label,
+    );
+
+    if (isEmployeeNameAlreadySelected) {
+      alert('Employee name already exists in the list.');
+      // Reset addLineItem
+      setAddLineItem([
+        {
+          id: random.int(1, 99),
+          employee_name: '',
+          employee_id: '',
+          from_date: '',
+          to_date: '',
+        },
+      ]);
+    } else {
+      const element = addLineItem.find((el) => el.id === itemId);
+      const isNameInAddLineItem = addLineItem.some((item) => item.employee_name === str.label);
+
+      if (!isNameInAddLineItem) {
+        // Update the selected employee name
+        element.employee_name = str.label;
+        element.employee_id = str.value.toString();
+        setAddLineItem([...addLineItem]);
+      } else {
+        alert('Employee name already exists in the addLineItem.');
+        // Reset addLineItem
+        setAddLineItem([
+          {
+            id: random.int(1, 99),
+            employee_name: '',
+            employee_id: '',
+            from_date: '',
+            to_date: '',
+          },
+        ]);
+      }
+    }
+  };
+
+  //Onchange item in training staff employee name selectfield
+  //  const onchangeItem = (str, itemId) => {
+  //   const element = addLineItem.find(el => el.id === itemId)
+  //   element.employee_name = str.label
+  //   element.employee_id = str.value.toString()
+  //   setAddLineItem(addLineItem)
+  // }
   // Add new line item in link Employee
   const AddNewLineItem = () => {
-      setAddLineItem([...addLineItem, {
+    setAddLineItem([...addLineItem, {
       "id": random.int(1, 99),
       "employee_name": "",
       "employee_id": "",
-    },])}
+    },])
+  }
   //getting Training Staff data by training id
   const getLinkedEmployee = () => {
-    
+
     // eslint-disable-next-line
     api.post('/project/getTaskStaffById', { project_id: parseInt(id) })
       .then((res) => {
-        
+
         const resData = res.data.data
         const empArray = []
         resData.forEach(element => {
@@ -65,7 +111,7 @@ const TaskEmployee = ({
             "task_staff_id": element.task_staff_id
           })
         });
-        
+
         setPreviousEmployee([...empArray])
       })
       .catch(() => {
@@ -85,11 +131,11 @@ const TaskEmployee = ({
       })
   }
   //edit data in link employee 
-  const insertTrainingStaff = ( staffObj) => {
+  const insertTrainingStaff = (staffObj) => {
     api.post('/project/insertTaskStaff', {
-    
+
       employee_id: staffObj.employee_id
-      ,project_id:projectId
+      , project_id: projectId
     })
       .then(() => {
         message('Project Employee Added!', 'success')
@@ -99,7 +145,14 @@ const TaskEmployee = ({
         message('Unable to insert record.', 'error')
       })
   }
-
+  // Clear row value
+  const ClearValue = (ind) => {
+    setAddLineItem((current) =>
+      current.filter((obj) => {
+        return obj.id !== ind.id;
+      }),
+    );
+  };
   //Insert Training
   const insertTrainingData = () => {
     const result = [];
@@ -113,7 +166,7 @@ const TaskEmployee = ({
       result.push(allValues);
     })
     result.forEach(obj => {
-         if (obj.id) {
+      if (obj.id) {
         /* eslint-disable */
         // const objId = parseInt(obj.id)
         const foundObj = oldArray.find(el => el.id === parseInt(obj.id))
@@ -123,52 +176,77 @@ const TaskEmployee = ({
         insertTrainingStaff(obj)
       }
     })
-     }
-  
+  }
+
+
 
   useEffect(() => {
     getEmployee();
     getLinkedEmployee();
-   
+
   }, [projectId])
 
-//Delete Training staff data by training staff id
-  const deleteTrainingStaffData = (staffId) => {
-    api.post('/project/deleteTaskStaff', { task_staff_id: staffId })
-      .then(() => {
-        message('Record deleted successfully', 'success')
-        setTimeout(() => {
-          window.location.reload()
-        }, 300);
-      })
-      .catch(() => {
-        message('Unable to delete record.', 'error')
-      })
-  }
+   //Delete Training staff data by training staff id
+   const deleteTrainingStaffData = (staffId) => {
+    Swal.fire({
+      title: `Are you sure? `,
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        api.post('/project/deleteTaskStaff', { task_staff_id: staffId }).then(() => {
+          // Swal.fire('Deleted!', 'Your employee has been deleted.', 'success');
+          // Remove the deleted employee from the prevEmployee state
+          setPreviousEmployee(prevEmployee.filter(item => item.task_staff_id !== staffId));
+        }).catch(() => {
+          Swal.fire('Error!', 'Failed to delete the employee.', 'error');
+        });
+      }
+    });
+  };
+  
+  
+  // //Delete Training staff data by training staff id
+  // const deleteTrainingStaffData = (staffId) => {
+  //   api.post('/project/deleteTaskStaff', { task_staff_id: staffId })
+  //     .then(() => {
+  //       message('Record deleted successfully', 'success')
+  //       setTimeout(() => {
+  //         window.location.reload()
+  //       }, 300);
+  //     })
+  //     .catch(() => {
+  //       message('Unable to delete record.', 'error')
+  //     })
+  // }
   return (
     <>
-      
 
-      <ComponentCard> 
 
-      <Row>
+      <ComponentCard>
+
+        <Row>
           <Col md="2">
             <Button color="primary" className='shadow-none'
               type='button'
-              onClick={  () => { AddNewLineItem() }}>Add Employee</Button>
+              onClick={() => { AddNewLineItem() }}>Add Employee</Button>
           </Col>
-        <Col md ="2">
-              <Button
-                className="shadow-none"
-                color="primary"
-                onClick={() => {
-                  insertTrainingData();
-               
-                }}
-              >
-                Save
-              </Button>
-            </Col>
+          <Col md="2">
+            <Button
+              className="shadow-none"
+              color="primary"
+              onClick={() => {
+                insertTrainingData();
+
+              }}
+            >
+              Save
+            </Button>
+          </Col>
         </Row>
         <br />
         <Row>
@@ -189,11 +267,23 @@ const TaskEmployee = ({
                         onChange={(e) => {
                           onchangeItem(e, item.id)
                         }}
-                        options={employeeLinked}/>
+                        options={employeeLinked} />
                       <Input value={item.employee_id.toString()} type="hidden" name="employee_id"></Input>
                     </td>
                     <td>
                       <Input type='hidden' name="id" defaultValue={item.id}></Input>
+                    </td>
+                    <td data-label="Action">
+
+                      <Input type="hidden" name="id" defaultValue={item.id}></Input>
+                      <span
+                        onClick={() => {
+                          ClearValue(item);
+                        }}
+                      >
+                        Clear
+                      </span>
+
                     </td>
                   </tr>
                 );
@@ -201,7 +291,7 @@ const TaskEmployee = ({
             </tbody>
           </table>
         </Row>
-        
+
 
         {/* Training Staff */}
         <Row>
@@ -220,7 +310,7 @@ const TaskEmployee = ({
                         key={item.id}
                         defaultValue={{ value: item.employee_id, label: item.employee_name }}
                         isDisabled={true}
-                        options={employeeLinked}/>
+                        options={employeeLinked} />
                       <Input value={item.employee_id.toString()} type="hidden" name="employee_id"></Input>
                     </td>
                     <td>
@@ -228,16 +318,16 @@ const TaskEmployee = ({
                     </td>
                     {/* delete button from training staff*/}
                     <td><Button color="danger" className='shadow-none'
-                    onClick={() => {{deleteTrainingStaffData(item.task_staff_id);}  }}>Delete</Button></td>
+                      onClick={() => { { deleteTrainingStaffData(item.task_staff_id); } }}>Delete</Button></td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
         </Row>
-        <br/>
-        
-        
+        <br />
+
+
       </ComponentCard>
 
     </>

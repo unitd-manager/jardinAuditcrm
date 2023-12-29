@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../form-editor/editor.scss';
+import Swal from 'sweetalert2';
 import { ToastContainer } from 'react-toastify';
 import BreadCrumbs from '../../layouts/breadcrumbs/BreadCrumbs';
-import ValueListButton from '../../components/ValueListTable/ValueListButton';
+//import ValueListButton from '../../components/ValueListTable/ValueListButton';
 import ValueListEditDetails from '../../components/ValueListTable/ValueListEditDetails';
-// import CreationModification from '../../components/ValueListTable/CreationModification';
 import message from '../../components/Message';
 import api from '../../constants/api';
 import creationdatetime from '../../constants/creationdatetime';
+import ApiButton from '../../components/ApiButton';
 
 const ValueListEdit = () => {
   // All state variables
@@ -27,13 +29,13 @@ const ValueListEdit = () => {
   };
 
   // Route Change
-  const applyChanges = () => {};
-  const saveChanges = () => {
-    if (valuelisteditdetails.key_text !== '' && valuelisteditdetails.value !== '') {
-      navigate('/ValueList');
-    }
-    window.location.reload();
-  };
+  // const applyChanges = () => {};
+  // const saveChanges = () => {
+  //   if (valuelisteditdetails.key_text !== '' && valuelisteditdetails.value !== '') {
+  //     navigate('/ValueList');
+  //   }
+  //   window.location.reload();
+  // };
   const backToList = () => {
     navigate('/ValueList');
   };
@@ -65,12 +67,12 @@ const ValueListEdit = () => {
   //Api call for  Editting ValueList
   const editValueListData = () => {
     if (valuelisteditdetails.key_text !== '' && valuelisteditdetails.value !== '') {
-      valuelisteditdetails.modification_date = creationdatetime
+      valuelisteditdetails.modification_date = creationdatetime;
       api
         .post('/valuelist/editValueList', valuelisteditdetails)
         .then(() => {
           message('Record editted successfully', 'success');
-          getValueListById()
+          getValueListById();
         })
         .catch(() => {
           message('Unable to edit record.', 'error');
@@ -79,18 +81,36 @@ const ValueListEdit = () => {
       message('Please fill all required fields', 'warning');
     }
   };
-
-  //Api call for  Deletting ValueList
   const deleteValueListData = () => {
-    api
-      .post('/valuelist/deleteValueList', { valuelist_id: id })
-      .then(() => {
-        message('Record editted successfully', 'success');
-      })
-      .catch(() => {
-        message('Unable to edit record.', 'error');
-      });
+    Swal.fire({
+      title: `Are you sure? ${id}`,
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        api.post('/valuelist/deleteValueList', { valuelist_id: id }).then(() => {
+          Swal.fire('Deleted!', 'Your Valuelist has been deleted.', 'success');
+         
+        });
+      }
+    });
   };
+
+  // //Api call for  Deletting ValueList
+  // const deleteValueListData = () => {
+  //   api
+  //     .post('/valuelist/deleteValueList', { valuelist_id: id })
+  //     .then(() => {
+  //       message('Record editted successfully', 'success');
+  //     })
+  //     .catch(() => {
+  //       message('Unable to edit record.', 'error');
+  //     });
+  // };
 
   useEffect(() => {
     getValueListName();
@@ -103,7 +123,7 @@ const ValueListEdit = () => {
       <ToastContainer></ToastContainer>
 
       {/* ValueList Button Details */}
-      <ValueListButton
+      {/* <ValueListButton
         saveChanges={saveChanges}
         applyChanges={applyChanges}
         backToList={backToList}
@@ -111,7 +131,15 @@ const ValueListEdit = () => {
         deleteValueListData={deleteValueListData}
         navigate={navigate}
         id={id}
-      ></ValueListButton>
+      ></ValueListButton> */}
+        <ApiButton
+              editData={editValueListData}
+              navigate={navigate}
+              applyChanges={editValueListData}
+              backToList={backToList}
+              deleteData={deleteValueListData}
+              module="Vehicle"
+            ></ApiButton>
 
       {/* ValueList Edit Details */}
       <ValueListEditDetails
@@ -120,9 +148,6 @@ const ValueListEdit = () => {
         valuelistname={valuelistname}
         id={id}
       ></ValueListEditDetails>
-
-      {/* Creation and Modification Form */}
-      {/* <CreationModification valuelisteditdetails={valuelisteditdetails}></CreationModification> */}
     </>
   );
 };

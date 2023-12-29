@@ -13,7 +13,8 @@ export default function TenderMoreDetails({
   contact,
   addCompanyModal,
   getContact,
-  incharge,
+  newContactData,
+  companyInsertData,
   addCompanyToggle,
   addContactModal,
   addContactToggle,
@@ -26,6 +27,8 @@ export default function TenderMoreDetails({
 }) {
   TenderMoreDetails.propTypes = {
     tenderDetails: PropTypes.object,
+    newContactData:PropTypes.any,
+    companyInsertData:PropTypes.object,
     handleInputs: PropTypes.object,
     handleAddNewContact: PropTypes.object,
     contact: PropTypes.object,
@@ -38,11 +41,12 @@ export default function TenderMoreDetails({
     insertCompany: PropTypes.object,
     companyhandleInputs: PropTypes.object,
     setAddCompanyModal: PropTypes.object,
-    incharge: PropTypes.object,
+    // incharge: PropTypes.object,
     getContact: PropTypes.object,
     //setAddContactModal: PropTypes.object,
     allCountries: PropTypes.object,
   };
+  
   return (
     <div>
       {' '}
@@ -137,6 +141,7 @@ export default function TenderMoreDetails({
                   insertCompany={insertCompany}
                   allCountries={allCountries}
                   companyhandleInputs={companyhandleInputs}
+                  companyInsertData={companyInsertData}
                 ></TenderCompanyEditDetails>
               </Col>
             </Row>
@@ -173,6 +178,7 @@ export default function TenderMoreDetails({
                       addContactToggle={addContactToggle}
                       AddNewContact={AddNewContact}
                       handleAddNewContact={handleAddNewContact}
+                      newContactData={newContactData}
                     ></TenderContactDetails>
                   </Input>
                 </FormGroup>
@@ -212,7 +218,7 @@ export default function TenderMoreDetails({
               </Col>
             </Row>
             <Row>
-              <Col md="3">
+              {/* <Col md="3">
                 <FormGroup>
                   <Label>Project Incharge</Label>
                   <Input
@@ -234,7 +240,7 @@ export default function TenderMoreDetails({
                       })}
                   </Input>
                 </FormGroup>
-              </Col>
+              </Col> */}
 
               <Col md="3">
                 <FormGroup>

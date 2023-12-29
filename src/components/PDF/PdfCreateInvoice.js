@@ -4,6 +4,7 @@ import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Button } from 'reactstrap';
 import moment from 'moment';
+import * as numberToWords from 'number-to-words';
 // //import { useParams } from 'react-router-dom';
 // import Converter from 'number-to-words';
 import api from '../../constants/api';
@@ -13,6 +14,18 @@ import message from '../Message';
 const PdfCreateInvoice = ({ invoiceId}) => {
   PdfCreateInvoice.propTypes = {
     invoiceId:PropTypes.any,
+  };
+  const [hfdata, setHeaderFooterData] = React.useState();
+
+  React.useEffect(() => {
+    api.get('/setting/getSettingsForCompany').then((res) => {
+      setHeaderFooterData(res.data.data);
+    });
+  }, []);
+
+  const findCompany = (key) => {
+    const filteredResult = hfdata.find((e) => e.key_text === key);
+    return filteredResult.value;
   };
 
   const [cancelInvoice, setCancelInvoice] = React.useState([]);
@@ -79,6 +92,7 @@ const PdfCreateInvoice = ({ invoiceId}) => {
         {
           text: 'Total Amount',
           style: 'tableHead',
+         
         },
       ],
     ];
@@ -104,6 +118,7 @@ const PdfCreateInvoice = ({ invoiceId}) => {
           border: [false, false, false, true],
           fillColor: '#f5f5f5',
           style: 'tableBody2',
+          alignment:'right'
         },
       ]);
     });
@@ -216,13 +231,13 @@ const PdfCreateInvoice = ({ invoiceId}) => {
         {
           columns: [
             {
-              text: `ATTN :${
+              text: `ATTN : ${
                 createInvoice.attention ? createInvoice.attention : ''
-              }\n Dear Sir,\n Site Name : ${
+              }\n Site Name : ${
                 createInvoice.title ? createInvoice.title : ''
               } \n Reference :  ${
                 createInvoice.reference ? createInvoice.reference : ''
-              }\n `,
+              }\n \n`,
               style: 'textSize',
               bold: true,
             },
@@ -306,25 +321,50 @@ const PdfCreateInvoice = ({ invoiceId}) => {
               style: 'textSize',
                 },
                 '\n\n\n\n',
-                // { text: `TOTAL : ${Converter.toWords(Total)}`, style: 'bold', margin: [40, 0, 0, 0] },
+                {
+                  text: `TOTAL :  ${numberToWords.toWords(calculateTotal()).toUpperCase()}`, // Convert total to words in uppercase
+                  bold:'true',
+                  fontSize:'11',
+                  margin: [40, 0, 0, 0],
+                },
+              
               ],
             },
             '\n\n',
-            '\n',
+            
         
          //{ text: `Total $ :${Converter.toWords(Total)}` },
  
+        //  {
+        //   text: `Terms and Condition:-`,
+        //   decoration: 'underline',
+        //   alignment:'Left',
+          
+        //              },'\n',
+        // {
+        //   text: `${findCompany("cp.quoteTermsAndCondition")}`,
+        //   style: ['notesText', 'textSize'],
+        //   margin:[30,0,0,0]
+        // },
+        // {
+        //   text: 'Terms and conditions : \n\n 1.The above rates are in Singapore Dollars. \n\n 2. Payment Terms 30 days from the date of Invoice \n\n  3.Payment should be made in favor of " CUBOSALE ENGINEERING PTE LTD " \n\n 4.Any discrepancies please write to us within 3 days from the date of invoice  \n\n\n 5. For Account transfer \n\n \n\n',
+        //   style: 'textSize',
+        //   // margin: [0, 5, 0, 10],
+        // },
+         {
+          text: `Terms and Condition:-`,
+          style: ['notesText', 'textSize'],
+          decoration: 'underline',
+          alignment: 'Left',
 
+        }, '\n',
         {
-          text: 'Terms and conditions : \n\n 1.The above rates are in Singapore Dollars. \n\n 2. Payment Terms 30 days from the date of Invoice \n\n  3.Payment should be made in favor of " CUBOSALE ENGINEERING PTE LTD " \n\n 4.Any discrepancies please write to us within 3 days from the date of invoice  \n\n\n 5. For Account transfer \n\n \n\n',
-          style: 'textSize',
-          // margin: [0, 5, 0, 10],
+          text: `${findCompany("cp.paymentTermsInvoice")}`,
+          style: ['notesText', 'textSize'],
+          fontSize:10,
+          margin: [20, 0, 0, 0]
         },
-        {
-          text: 'UNITED OVERSEAS BANK \n ACCT NAME: CUBOSALE ENGINEERING PTE LTD \n ACCT NO.:- 3923023427 \n Paynow By UEN : 201222688M   \n\n',
-          style: 'textSize',
-          bold: true,
-        },
+       
 
         '\n\n',
       ],
@@ -362,7 +402,7 @@ const PdfCreateInvoice = ({ invoiceId}) => {
         tableBody: {
           border: [false, false, false, true],
           margin: [0, 5, 0, 5],
-          alignment: 'left',
+          alignment: 'center',
           fontSize: 10,
         },
         tableBody1: {

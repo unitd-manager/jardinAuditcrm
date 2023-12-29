@@ -23,6 +23,7 @@ export default function TenderCompanyDetails({
   insertCompany,
   modal,
   toggle,
+  companyInsertData,
 }) {
   TenderCompanyDetails.propTypes = {
     handleInputs: PropTypes.any,
@@ -30,6 +31,7 @@ export default function TenderCompanyDetails({
     allCountries: PropTypes.any,
     modal: PropTypes.any,
     toggle: PropTypes.any,
+    companyInsertData:PropTypes.any,
   };
 
   const [modal1, setModal1] = useState(false);
@@ -123,7 +125,8 @@ export default function TenderCompanyDetails({
                       <FormGroup>
                         {' '}
                         <Label>Country<span className="required"> *</span></Label>
-                        <Input type="select" name="address_country" onChange={handleInputs}>
+                        <Input type="select" name="address_country" onChange={handleInputs}
+                        value={companyInsertData && companyInsertData.address_country}>
                           <option defaultValue="selected" value="">
                             Please Select
                           </option>

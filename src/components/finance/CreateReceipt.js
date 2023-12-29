@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useContext} from 'react';
 import {
   Row,
   Col,
@@ -17,6 +17,8 @@ import { useParams } from 'react-router-dom';
 import moment from 'moment';
 import api from '../../constants/api';
 import message from '../Message';
+import creationdatetime from '../../constants/creationdatetime';
+import AppContext from '../../context/AppContext';
 
 const CreateReceipt = ({ editCreateReceipt, setEditCreateReceipt }) => {
   CreateReceipt.propTypes = {
@@ -32,7 +34,7 @@ const CreateReceipt = ({ editCreateReceipt, setEditCreateReceipt }) => {
     amount: 0,
     order_id:id,
     receipt_status:"Paid",
-    receipt_date:moment(),
+    receipt_date:'',
     receipt_code: '',
   });
   const [selectedInvoice, setSelectedInvoice] = useState([]);
@@ -44,7 +46,8 @@ const CreateReceipt = ({ editCreateReceipt, setEditCreateReceipt }) => {
     }
     setCreateReceipt({ ...createReceipt, [e.target.name]: e.target.value });
   };
-
+//get staff details
+const { loggedInuser } = useContext(AppContext);
   const editInvoiceStatus = (invoiceId, Status) => {
     api
       .post('/invoice/editInvoiceStatus', {
@@ -77,7 +80,7 @@ const CreateReceipt = ({ editCreateReceipt, setEditCreateReceipt }) => {
       .post('/finance/insertInvoiceReceiptHistory', createReceiptHistory)
       .then(() => {
         message('data  History inserted successfully.');
-        window.location.reload()
+        //window.location.reload()
       })
       .catch(() => {
         message('Network connection error.');
@@ -109,8 +112,8 @@ const CreateReceipt = ({ editCreateReceipt, setEditCreateReceipt }) => {
               flag: '1',
               creation_date: '',
               modification_date: '',
-              created_by: 'admin',
-              modified_by: 'admin',
+              created_by: '',
+              modified_by: '',
               amount: selectedInvoice[j].remainingAmount,
               site_id: '1'
         })
@@ -125,8 +128,8 @@ const CreateReceipt = ({ editCreateReceipt, setEditCreateReceipt }) => {
               flag: '1',
               creation_date: '',
               modification_date: '',
-              created_by: 'admin',
-              modified_by: 'admin',
+              created_by: '',
+              modified_by: '',
               amount:leftamount,
               site_id: '1',
              
@@ -139,6 +142,8 @@ const CreateReceipt = ({ editCreateReceipt, setEditCreateReceipt }) => {
   //Insert Receipt
   const insertReceipt =async (code)=> {
     createReceipt.receipt_code = code;
+    createReceipt.creation_date = creationdatetime;
+    createReceipt.created_by = loggedInuser.first_name;
     // createReceipt.receipt_date = moment()
     if ( createReceipt.mode_of_payment && createReceipt.amount && (selectedInvoice.length>0)){
     if(totalAmount>=createReceipt.amount) {

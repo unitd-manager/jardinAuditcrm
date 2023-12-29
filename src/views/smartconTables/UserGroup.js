@@ -17,8 +17,7 @@ import CommonTable from '../../components/CommonTable';
 
 function UserGroup() {
   const [userGroups, setUserGroups] = useState();
-  const [loading, setLoading] = useState(false)
-
+  const [loading, setLoading] = useState(false);
 
   //get api for usergroups
   const getAllUserGroups = () => {
@@ -31,18 +30,20 @@ function UserGroup() {
           pageLength: 20,
           processing: true,
           dom: 'Bfrtip',
-          buttons: [ {
-            extend: 'print',
-            text: "Print",
-            className:"shadow-none btn btn-primary",
-        }],
+          buttons: [
+            {
+              extend: 'print',
+              text: 'Print',
+              className: 'shadow-none btn btn-primary',
+            },
+          ],
         });
-        setLoading(false)
-      }).catch(()=>{
-        setLoading(false)
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
       });
-    };
-  
+  };
 
   useEffect(() => {
     // setTimeout(() => {
@@ -98,10 +99,6 @@ function UserGroup() {
   return (
     <>
       <div className="MainDiv">
-        {/* <div className="jumbotron text-center bg-sky">
-        <h3>Therichpost.com</h3>
-    </div> */}
-
         <div className="">
           <CommonTable
             title="UserGroup List"

@@ -23,6 +23,7 @@ export default function TenderCompanyEditDetails({
   companyhandleInputs,
   addCompanyToggle,
   addCompanyModal,
+  companyInsertData,
 }) {
   TenderCompanyEditDetails.propTypes = {
     allCountries: PropTypes.any,
@@ -30,6 +31,7 @@ export default function TenderCompanyEditDetails({
     companyhandleInputs: PropTypes.any,
     addCompanyModal: PropTypes.any,
     addCompanyToggle: PropTypes.any,
+    companyInsertData:PropTypes.any,
   };
   return (
     <div>
@@ -128,7 +130,23 @@ export default function TenderCompanyEditDetails({
                         <Label>
                           Country<span className="required"> *</span>
                         </Label>
-                        <Input type="select" name="address_country" onChange={companyhandleInputs}>
+                        <Input
+                              type="select"
+                              name="address_country"
+                              onChange={companyhandleInputs}
+                              value={companyInsertData && companyInsertData.address_country}
+                            >
+                              <option defaultValue="selected" value="">
+                                Please Select
+                              </option>
+                              {allCountries &&
+                                allCountries.map((country) => (
+                                  <option key={country.country_code} value={country.name}>
+                                    {country.name}
+                                  </option>
+                                ))}
+                            </Input>
+                        {/* <Input type="select" name="address_country" onChange={companyhandleInputs}>
                           <option defaultValue="selected" value="">
                             Please Select
                           </option>
@@ -138,7 +156,7 @@ export default function TenderCompanyEditDetails({
                                 {country.name}
                               </option>
                             ))}
-                        </Input>
+                        </Input> */}
                       </FormGroup>
                     </Col>
                     <Col md="4">

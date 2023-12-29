@@ -44,6 +44,7 @@ export default function CustomerFinanceInvoice({
     { name: 'Amount' },
     
   ];
+  console.log("inv",createInvoice)
   return (
     // Invoice Tab
    

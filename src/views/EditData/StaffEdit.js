@@ -3,62 +3,67 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Row, Col, Form, FormGroup, Button } from 'reactstrap';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import '../form-editor/editor.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import * as Icon from 'react-feather';
 import { ToastContainer } from 'react-toastify';
 import BreadCrumbs from '../../layouts/breadcrumbs/BreadCrumbs';
 import ComponentCard from '../../components/ComponentCard';
 import AttachmentModalV2 from '../../components/tender/AttachmentModalV2';
 import ViewFileComponentV2 from '../../components/ProjectModal/ViewFileComponentV2';
-// import CreationModification from '../../components/StaffTable/CreationModification';
 import message from '../../components/Message';
 import api from '../../constants/api';
 import KeyStaffDetails from '../../components/StaffTable/KeyStaffDetails';
 import KeyStaffAddress from '../../components/StaffTable/KeyStaffAddress';
-import StaffButton from '../../components/StaffTable/StaffButton';
+//import StaffButton from '../../components/StaffTable/StaffButton';
 import creationdatetime from '../../constants/creationdatetime';
+import ApiButton from '../../components/ApiButton';
 
 const StaffEdit = () => {
   // All state variables
-  const [staffeditdetails, setStaffEditDetails] = useState("");
+  const [staffeditdetails, setStaffEditDetails] = useState('');
   const [stafftypedetails, setStaffTypetDetails] = useState();
   const [staffteamdetails, setStaffTeamDetails] = useState();
   const [userdetails, setUserDetails] = useState();
-  const [RoomName, setRoomName] = useState('');
-  const [fileTypes, setFileTypes] = useState('');
   const [attachmentModal, setAttachmentModal] = useState(false);
   const [allCountries, setallCountries] = useState([]);
-  const [pictureData, setDataForPicture] = useState({
-    modelType: '',
-  });
+  const [RoomName, setRoomName] = useState('');
+  const [fileTypes, setFileTypes] = useState('');
+  const [update, setUpdate] = useState(false);
+
   // Navigation and Parameter Constants
   const { id } = useParams();
   const navigate = useNavigate();
 
   //All Functions/Methods
+  //  AttachmentModal
+  const [attachmentData, setDataForAttachment] = useState({
+    modelType: '',
+  });
+  //attachment for upload file
+  const dataForAttachment = () => {
+    setDataForAttachment({
+      modelType: 'attachment',
+    });
+  };
 
   //Setting Data in Staff Details
   const handleInputs = (e) => {
     setStaffEditDetails({ ...staffeditdetails, [e.target.name]: e.target.value });
   };
-  //Setting Picture Data
-  const dataForPicture = () => {
-    setDataForPicture({
-      modelType: 'picture',
-    });
-  };
+ 
 
   // Route Change
-  const applyChanges = () => {};
-  const saveChanges = () => {
-    if (!staffeditdetails.email) {
-      message('Email is required', 'warning');
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(staffeditdetails.email)) {
-      message('Enter valid email', 'warning');
-    } else if (staffeditdetails.email !== '' && staffeditdetails.first_name !== '') {
-      navigate('/Staff');
-    }
-    window.location.reload();
-  };
+  // const applyChanges = () => {};
+  // const saveChanges = () => {
+  //   if (!staffeditdetails.email) {
+  //     message('Email is required', 'warning');
+  //   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(staffeditdetails.email)) {
+  //     message('Enter valid email', 'warning');
+  //   } else if (staffeditdetails.email !== '' && staffeditdetails.first_name !== '') {
+  //     navigate('/Staff');
+  //   }
+  //   window.location.reload();
+  // };
   const backToList = () => {
     navigate('/Staff');
   };
@@ -95,7 +100,7 @@ const StaffEdit = () => {
         .post('/staff/editStaff', staffeditdetails)
         .then(() => {
           message('Record editted successfully', 'success');
-          editStaffById()
+          editStaffById();
         })
         .catch(() => {
           message('Unable to edit record.', 'error');
@@ -178,7 +183,7 @@ const StaffEdit = () => {
       <ToastContainer />
 
       {/* Staff Edit Buttons */}
-      <StaffButton
+      {/* <StaffButton
         navigate={navigate}
         saveChanges={saveChanges}
         applyChanges={applyChanges}
@@ -186,10 +191,17 @@ const StaffEdit = () => {
         editStaffData={editStaffData}
         deleteStaffData={deleteStaffData}
         id={id}
-      ></StaffButton>
-
+      ></StaffButton> */}
+      <ApiButton
+        editData={editStaffData}
+        navigate={navigate}
+        applyChanges={editStaffData}
+        backToList={backToList}
+        deleteData={deleteStaffData}
+        module="Staff"
+      ></ApiButton>
       {/* KeyStaffDetails */}
-      <BreadCrumbs heading={staffeditdetails && staffeditdetails.staff_id} />
+      {/* <BreadCrumbs heading={staffeditdetails && staffeditdetails.staff_id} /> */}
       <KeyStaffDetails
         stafftypedetails={stafftypedetails}
         staffeditdetails={staffeditdetails}
@@ -205,9 +217,6 @@ const StaffEdit = () => {
         allCountries={allCountries}
       ></KeyStaffAddress>
 
-      {/* Creation and Modification Form */}
-      {/* <CreationModification staffeditdetails={staffeditdetails}></CreationModification> */}
-
       {/* Picture Attachment */}
       <Form>
         <FormGroup>
@@ -218,13 +227,13 @@ const StaffEdit = () => {
                   className="shadow-none"
                   color="primary"
                   onClick={() => {
-                    setRoomName('StaffPic');
-                    setFileTypes(['JPG', 'PNG', 'GIF']);
-                    dataForPicture();
+                    setRoomName('Staff');
+                    setFileTypes(['JPG', 'JPEG', 'PNG', 'GIF', 'PDF']);
+                    dataForAttachment();
                     setAttachmentModal(true);
                   }}
                 >
-                  <Icon.Image className="rounded-circle" width="20" />
+                  <Icon.File className="rounded-circle" width="20" />
                 </Button>
               </Col>
             </Row>
@@ -234,12 +243,20 @@ const StaffEdit = () => {
               setAttachmentModal={setAttachmentModal}
               roomName={RoomName}
               fileTypes={fileTypes}
-              altTagData="Staff Data"
-              desc="Staff Data"
-              recordType="Picture"
-              mediaType={pictureData.modelType}
+              altTagData="StaffRelated Data"
+              desc="StaffRelated Data"
+              recordType="RelatedPicture"
+              mediaType={attachmentData.modelType}
+              update={update}
+              setUpdate={setUpdate}
             />
-            <ViewFileComponentV2 moduleId={id} roomName="StaffPic" recordType="Picture" />
+            <ViewFileComponentV2
+              moduleId={id}
+              roomName="Staff"
+              recordType="RelatedPicture"
+              update={update}
+              setUpdate={setUpdate}
+            />
           </ComponentCard>
         </FormGroup>
       </Form>

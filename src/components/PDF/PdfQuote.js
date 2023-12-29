@@ -2,25 +2,33 @@ import React, { useState } from 'react';
 //import PropTypes from 'prop-types';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import Converter from 'number-to-words';
+import * as numberToWords from 'number-to-words';
 import PropTypes from 'prop-types';
 import * as Icon from 'react-feather';
 import moment from 'moment';
+import message from '../Message';
 import api from '../../constants/api';
 
-const PdfQuote = ({id,quoteId}) => {
+const PdfQuote = ({ id, quoteId }) => {
   PdfQuote.propTypes = {
     id: PropTypes.any,
-    quoteId:PropTypes.any,
+    quoteId: PropTypes.any,
   }
   const [quote, setQuote] = React.useState([]);
   const [tenderDetails, setTenderDetails] = useState(null);
   const [lineItem, setLineItem] = useState([]);
-  const [gTotal, setGtotal] = React.useState(0);
-  const [gstTotal, setGsttotal] = React.useState(0);
-  const [Total, setTotal] = React.useState(0);
-  //const [lineItem, setLineItem] = useState(null);
+  // const [gTotal, setGtotal] = React.useState(0);
+  const [hfdata, setHeaderFooterData] = React.useState();
 
+  React.useEffect(() => {
+    api.get('/setting/getSettingsForCompany').then((res) => {
+      setHeaderFooterData(res.data.data);
+    });
+  }, []);
+  const findCompany = (key) => {
+    const filteredResult = hfdata.find((e) => e.key_text === key);
+    return filteredResult.value;
+  };
 
   const getCompany = () => {
     api
@@ -29,7 +37,7 @@ const PdfQuote = ({id,quoteId}) => {
         setTenderDetails(res.data.data);
         console.log(res);
       })
-      .catch(() => {});
+      .catch(() => { });
   };
 
   // Get Quote By Id
@@ -39,27 +47,28 @@ const PdfQuote = ({id,quoteId}) => {
       console.log('quote', res.data.data[0]);
     });
   };
+  const calculateTotal = () => {
+    const grandTotal = lineItem.reduce((acc, element) => acc + element.amount, 0);
+    return grandTotal;
+    // const gstValue = quote.gst_value || 0;
+    // const total = grandTotal + gstValue;
+    // return total;
+  };
   const getQuoteById = () => {
     api
       .post('/tender/getQuoteLineItemsById', { quote_id: quoteId })
       .then((res) => {
         setLineItem(res.data.data);
         console.log('quote1', res.data.data);
-        let grandTotal = 0;
-        let grand = 0;
-        let gst = 0;
-        res.data.data.forEach((elem) => {
-          grandTotal += elem.amount;
-          //  grand += elem.actual_value;
-        });
-        setGtotal(grandTotal);
-        gst = grandTotal * 0.07;
-        setGsttotal(gst);
-        grand = grandTotal + gst;
-        setTotal(grand);
-        //setViewLineModal(true);
+        // let grandTotal = 0;
+        // res.data.data.forEach((elem) => {
+        //   grandTotal += elem.amount;
+        // });
+        //setGtotal(grandTotal);
       })
-      .catch(() => {});
+      .catch(() => {
+        message('Invoice Data Not Found', 'info');
+      });
   };
   React.useEffect(() => {
     getQuote();
@@ -82,15 +91,15 @@ const PdfQuote = ({id,quoteId}) => {
           text: 'Description',
           style: 'tableHead',
         },
-    
+
         {
           text: 'Amt S$',
           style: 'tableHead',
         },
-       
+
       ],
     ];
-    lineItem.forEach((element,index) => {
+    lineItem.forEach((element, index) => {
       lineItemBody.push([
         {
           text: `${index + 1}`,
@@ -107,20 +116,20 @@ const PdfQuote = ({id,quoteId}) => {
           border: [false, false, false, true],
           style: 'tableBody',
         },
-      
+
         {
           text: `${element.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
           border: [false, false, false, true],
           fillColor: '#f5f5f5',
           style: 'tableBody',
         },
-      
+
       ]);
     });
 
     const dd = {
-      
-        pageSize: 'A4',
+
+      pageSize: 'A4',
       content: [
         {
           layout: {
@@ -183,42 +192,42 @@ const PdfQuote = ({id,quoteId}) => {
             {
               text: `TO`,
               style: ['notesText', 'textSize'],
-              bold:'true'
+              bold: 'true'
             },
             {
-                text:`${tenderDetails.company_name ? tenderDetails.company_name : ''}
+              text: `${tenderDetails.company_name ? tenderDetails.company_name : ''}
                               ${tenderDetails.address_flat ? tenderDetails.address_flat : ''}
                               ${tenderDetails.address_country ? tenderDetails.address_country : ''}
                               ${tenderDetails.address_po_code ? tenderDetails.address_po_code : ''}`,
               style: ['notesText', 'textSize'],
-              margin:[-250,20,0,0],
-           
-              
-              bold:'true'
+              margin: [-250, 20, 0, 0],
+
+
+              bold: 'true'
             },
           ],
         },
 
         {
-          text: `Date :   ${(quote.quote_date)? moment(quote.quote_date).format('DD-MM-YYYY'):''}
+          text: `Date :   ${(quote.quote_date) ? moment(quote.quote_date).format('DD-MM-YYYY') : ''}
            Quote Code :  ${quote.quote_code ? quote.quote_code : ''
-          }\n \n  `,
+            }\n \n  `,
           style: ['invoiceAdd', 'textSize'],
-          margin:[0,-60,0,0]
+          margin: [0, -60, 0, 0]
         },
 
         '\n\n\n',
         {
           text: `Att : ${tenderDetails.first_name ? tenderDetails.first_name : ''}`,
           style: ['notesText', 'textSize'],
-          bold:'true'
+          bold: 'true'
         },
 
         '\n',
 
         {
           text: `Project :-    ${tenderDetails.title ? tenderDetails.title : ''}`,
-          bold:'true' ,
+          bold: 'true',
           style: ['notesText', 'textSize'],
         },
         {
@@ -283,47 +292,70 @@ const PdfQuote = ({id,quoteId}) => {
         '\n',
         {
           stack: [
+            // {
+            //   text: `SubTotal $ :     ${gTotal.toLocaleString('en-IN', {
+            //     minimumFractionDigits: 2,
+            //   })}`,
+            //   alignment: 'right',
+            //   margin: [0, 0, 60, 0],
+            //   style: 'textSize',
+            // },
+            // '\n',
+            // {
+            //   text: `Discount  :         ${quote.discount ? quote.discount : ''}`,
+            //   alignment: 'right',
+            //   margin: [0, 0, 60, 0],
+            //   style: 'textSize',
+            // },
+            
+            // '\n',
+            //   {
+            //     text: `Total $ :     ${calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+            //     alignment: 'right',
+            // margin: [0, 0, 60, 0],
+            // style: 'textSize',
+            //   },
             {
-              text: `SubTotal $ :     ${gTotal.toLocaleString('en-IN', {
-                minimumFractionDigits: 2,
-              })}`,
+              text: `GRAND TOTAL ($) :  ${calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
               alignment: 'right',
-              margin: [0, 0,60, 0],
+              margin: [0, 0, 67, 0],
               style: 'textSize',
-            },
-            '\n',
-            {
-              text: `GST  :        ${gstTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
-              alignment: 'right',
-              margin: [0, 0, 60, 0],
-              style: 'textSize',
-            },
-            '\n',
-            {
-              text: `Total $ :     ${Total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
-              alignment: 'right',
-          margin: [0, 0, 60, 0],
-          style: 'textSize',
             },
             '\n\n\n',
-            { text: `TOTAL : ${Converter.toWords(Total)}`, style: 'bold', margin: [40, 0, 0, 0] },
+            {
+              text: `TOTAL :  ${numberToWords.toWords(calculateTotal()).toUpperCase()}`, // Convert total to words in uppercase
+              style: 'bold',
+              fontSize:12,
+              margin: [40, 0, 0, 0],
+            },
           ],
         },
         '\n\n',
         '\n',
-
         {
-          columns: [
-            {
-              text: `Terms and Condition:- \n
-:- Payment : COD \n
-:- The above quote does not cover replacement of any parts unless expressly stated above. \n
-:- We reserve the right to terminate any scope of work in event where there is a default to our Payment Schedule`,
+          text: `Terms and Condition:-`,
+          decoration: 'underline',
+          alignment: 'Left',
 
-              style: ['notesText', 'textSize'],
-            },
-          ],
+        }, '\n',
+        {
+          text: `${findCompany("cp.quoteTermsAndCondition")}`,
+          style: ['notesText', 'textSize'],
+          fontSize:10,
+          margin: [30, 0, 0, 0]
         },
+        //         {
+        //           columns: [
+        //             {
+        //               text: `Terms and Condition:- \n
+        // :- Payment : COD \n
+        // :- The above quote does not cover replacement of any parts unless expressly stated above. \n
+        // :- We reserve the right to terminate any scope of work in event where there is a default to our Payment Schedule`,
+
+        //               style: ['notesText', 'textSize'],
+        //             },
+        //           ],
+        //         },
 
         '\n',
         '\n',
