@@ -182,11 +182,14 @@ const ProjectEdit = () => {
     project_manager_id: '',
     description: '',
     select_date: '',
+    employee_id:''
   });
 
   const AddNewTask = () => {
     const newContactWithCompanyId = newTaskData;
     newContactWithCompanyId.project_id = id;
+    if (newContactWithCompanyId.title !== '' && newContactWithCompanyId.status !== '' && newContactWithCompanyId.category !== ''
+    && newContactWithCompanyId.due_date !== '' && newContactWithCompanyId.employee_id !== '') {
     api
       .post('/project/insertTask', newContactWithCompanyId)
       .then(() => {
@@ -197,6 +200,9 @@ const ProjectEdit = () => {
       .catch(() => {
         message('Network connection error.', 'error');
       });
+    } else {
+      message('Please fill all required fields.', 'warning');
+    }
   };
 
   //Contact Functions/Methods

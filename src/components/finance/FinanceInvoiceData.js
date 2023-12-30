@@ -239,7 +239,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
 
   return (
     <>
-      <Modal size="lg" isOpen={editInvoiceData}>
+      <Modal size="xl" isOpen={editInvoiceData}>
         <ModalHeader>
           Create Invoice
           <Button
@@ -258,6 +258,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
               <Form>
                 <Row>
                   
+
                   {/* Invoice Detail */}
                   <Row>
                     <InvoiceTable createInvoice={createInvoice} handleInserts={handleInserts} />

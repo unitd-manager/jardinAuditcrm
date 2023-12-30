@@ -303,10 +303,6 @@ const Project = () => {
                                   <option defaultValue="selected" value="WIP">
                                     WIP
                                   </option>
-                                  <option value=" C/O PARA THAI ADDICTION ">
-                                    {' '}
-                                    C/O PARA THAI ADDICTION{' '}
-                                  </option>
                                   <option value="Cancelled">Cancelled</option>
                                   <option value="Complete">Complete</option>
                                   <option value="Others">Others</option>

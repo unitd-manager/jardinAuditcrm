@@ -75,7 +75,7 @@ function UserGroup() {
       width: 'auto',
     },
     {
-      name: '',
+      name: 'Edit',
       selector: 'edit',
       sortable: true,
       grow: 0,

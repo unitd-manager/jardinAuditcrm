@@ -97,12 +97,12 @@ const Tender = () => {
       grow: 2,
       wrap: true,
     },
-    {
-      name: 'Quoted By',
-      selector: 'quote_ref',
-      sortable: true,
-      width: 'auto',
-    },
+    // {
+    //   name: 'Quoted By',
+    //   selector: 'quote_ref',
+    //   sortable: true,
+    //   width: 'auto',
+    // },
   ];
 
   return (
@@ -143,7 +143,7 @@ const Tender = () => {
                     <td>{element.office_ref_no}</td>
                     <td>{element.company_name}</td>
                     <td>{element.status}</td>
-                    <td>{element.quote_ref}</td>
+                    {/* <td>{element.quote_ref}</td> */}
                   </tr>
                 );
               })}

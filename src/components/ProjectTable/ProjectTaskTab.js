@@ -89,7 +89,7 @@ export default function ProjectTaskTab({
             <Button color="primary" className="shadow-none" onClick={addContactToggles.bind(null)}>
               Add New Task{' '}
             </Button>
-            <Modal size="xl" isOpen={addContactModals} toggle={addContactToggles.bind(null)}>
+            <Modal size="lg" isOpen={addContactModals} toggle={addContactToggles.bind(null)}>
               <ModalHeader toggle={addContactToggles.bind(null)}>New Task</ModalHeader>
               <ModalBody>
                 <Row>

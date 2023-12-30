@@ -110,17 +110,24 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal, invoiceDatas 
   };
   //editlineitem
   const editLineItemApi = () => {
-    // invoiceData.invoice_id = id;
     addLineItem.forEach((item) => {
       api
-        .post('/finance/editInvoiceItem', item)
+        .post('/finance/editInvoiceItem', {
+          // Send the invoice_item_id along with the item data
+          invoice_id: editInvoiceModal.invoice_id,
+          invoice_item_id: item.invoice_item_id, // Assuming invoice_item_id is available in your data
+          item_title: item.item_title,
+          description: item.description,
+          total_cost: item.total_cost,
+          // ... other item fields
+        })
         .then(() => {
-          message('Line Item Edited Successfully', 'sucess');
+          message('Line Item Edited Successfully', 'success');
         })
         .catch(() => {
           message('Cannot Edit Line Items', 'error');
         });
-    })
+    });
   };
 
   console.log('amountInvoice', addLineItem)
@@ -256,20 +263,20 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal, invoiceDatas 
                     {addLineItem &&
                       addLineItem.map((item, index) => (
                         <tr key={item.invoice_item_id}>
-                          <td data-label="Item">
-                            <Input
+                          <td>
+                        <Input
                               type="text"
                               name="item_title"
-                              defaultValue={item.item_title}
-                              onChange={(e) => handleLineInputs(e, index)}
+                              value={item.item_title}
+                              onChange={(e) => handleLineInputs(e, index, item.invoice_item_id)}
                             />
                           </td>
                           <td data-label="Description">
                             <Input
-                              defaultValue={item.description}
+                              value={item.description}
                               type="text"
                               name="description"
-                              onChange={(e) => handleLineInputs(e, index)}
+                              onChange={(e) => handleLineInputs(e, index, item.invoice_item_id)} // Pass invoice_item_id
                             />
                           </td>
                           <td data-label="Amount">
@@ -277,7 +284,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal, invoiceDatas 
                               value={item.total_cost}
                               type="text"
                               name="total_cost"
-                              onChange={(e) => handleLineInputs(e, index)}
+                              onChange={(e) => handleLineInputs(e, index, item.invoice_item_id)} // Pass invoice_item_id
                               disabled
                             />
                           </td>

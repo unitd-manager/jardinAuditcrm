@@ -61,7 +61,17 @@ const FinanceEdit = () => {
     setFinanceDetails({ ...financeDetails, [e.target.name]: e.target.value });
   };
 
-  
+   //For getting Finance By Order Id
+   const getFinancesById = () => {
+    api
+      .post('/finance/getFinancesById', { order_id: id })
+      .then((res) => {
+        setFinanceDetails(res.data.data);
+      })
+      .catch(() => {
+        //message('Fianance Data Not Found', 'info');
+      });
+  };
     // Method for getting Invoice By Order Id
   const getInvoiceById = () => {
     api
@@ -76,12 +86,18 @@ const FinanceEdit = () => {
 
   //receipt Cancel
   const receiptCancel = (obj) => {
+    const updatedReceipts = receipt.map((receiptItem) =>
+    receiptItem.receipt_id === obj.receipt_id ? { ...receiptItem, receipt_status: 'cancelled' } : receiptItem
+  );
+  setReceipt(updatedReceipts);
+ 
     obj.receipt_status = 'cancelled';
     api
       .post('/finance/editTabReceiptPortalDisplay', obj)
       .then(() => {
         message('Record editted successfully', 'success');
-        window.location.reload();
+        getFinancesById();
+        //window.location.reload();
       })
       .catch(() => {
         message('Unable to edit record.', 'error');
@@ -179,18 +195,7 @@ const FinanceEdit = () => {
       });
   };
 
-  //For getting Finance By Order Id
-  const getFinancesById = () => {
-    api
-      .post('/finance/getFinancesById', { order_id: id })
-      .then((res) => {
-        setFinanceDetails(res.data.data);
-      })
-      .catch(() => {
-        //message('Fianance Data Not Found', 'info');
-      });
-  };
-  // const getFinanceById = () => {
+   // const getFinanceById = () => {
   //   api
   //     .post('/finance/getFinanceAddressById', { order_id: id })
   //     .then((res) => {
@@ -274,6 +279,8 @@ const FinanceEdit = () => {
           <CreateReceipt
             editCreateReceipt={editCreateReceipt}
             setEditCreateReceipt={setEditCreateReceipt}
+            getReceiptById={getReceiptById}
+            getFinancesById={getFinancesById}
           />
 
           <CreateNote editCreateNote={editCreateNote} getCreditById={getCreditById} setEditCreateNote={setEditCreateNote} 

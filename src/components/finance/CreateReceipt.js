@@ -20,29 +20,45 @@ import message from '../Message';
 import creationdatetime from '../../constants/creationdatetime';
 import AppContext from '../../context/AppContext';
 
-const CreateReceipt = ({ editCreateReceipt, setEditCreateReceipt }) => {
+const CreateReceipt = ({ editCreateReceipt, setEditCreateReceipt ,getReceiptById,getFinancesById}) => {
   CreateReceipt.propTypes = {
     editCreateReceipt: PropTypes.bool,
+    getReceiptById:PropTypes.any,
     setEditCreateReceipt: PropTypes.func,
+    getFinancesById:PropTypes.func,
   };
   //All const Variable
   const [invoiceReceipt, setInvoiceReceipt] = useState();
   const [submitting, setSubmitting] = useState(false);
   const { id } = useParams();
   const [totalAmount, setTotalAmount] = useState(0);
-  const [createReceipt, setCreateReceipt] = useState({
+ 
+  const initialReceiptState = {
     amount: 0,
-    order_id:id,
-    receipt_status:"Paid",
-    receipt_date:'',
+    order_id: id,
+    receipt_status: "Paid",
+    receipt_date: '',
     receipt_code: '',
-  });
+    mode_of_payment: '',
+    cheque_no: '',
+    cheque_date: '',
+    bank_name: '',
+    remarks: '',
+  };
+  const [createReceipt, setCreateReceipt] =
+    useState({ ...initialReceiptState });
   const [selectedInvoice, setSelectedInvoice] = useState([]);
+   // Function to reset form fields
+ const resetFormFields = () => {
+  setTotalAmount(0);
+  setCreateReceipt({ ...initialReceiptState });
+  setSelectedInvoice([]);
+};
   //Setting Data in createReceipt
   const handleInputreceipt = (e) => {
     if(e.target.name === 'amount'){
       // eslint-disable-next-line
-      setTotalAmount(parseInt(e.target.value))
+      setTotalAmount(parseFloat(e.target.value))
     }
     setCreateReceipt({ ...createReceipt, [e.target.name]: e.target.value });
   };
@@ -55,7 +71,8 @@ const { loggedInuser } = useContext(AppContext);
         status: Status,
       })
       .then(() => {
-        message('data status inserted successfully.');
+        getReceiptById();
+        //message('data status inserted successfully.');
       })
       .catch(() => {
         message('Network connection error.');
@@ -68,7 +85,8 @@ const { loggedInuser } = useContext(AppContext);
         status: Status,
       })
       .then(() => {
-        message('data PartialStatus inserted successfully.');
+        getReceiptById();
+        //message('data PartialStatus inserted successfully.');
       })
       .catch(() => {
         message('Network connection error.');
@@ -79,7 +97,10 @@ const { loggedInuser } = useContext(AppContext);
     api
       .post('/finance/insertInvoiceReceiptHistory', createReceiptHistory)
       .then(() => {
-        message('data  History inserted successfully.');
+        getReceiptById();
+        getFinancesById();
+        message('data  History inserted successfully.');        message('data inserted successfully.');
+        setEditCreateReceipt(false); // Close the modal
         //window.location.reload()
       })
       .catch(() => {
@@ -145,29 +166,35 @@ const { loggedInuser } = useContext(AppContext);
     createReceipt.creation_date = creationdatetime;
     createReceipt.created_by = loggedInuser.first_name;
     // createReceipt.receipt_date = moment()
-    if ( createReceipt.mode_of_payment && createReceipt.amount && (selectedInvoice.length>0)){
-    if(totalAmount>=createReceipt.amount) {
+    // if ( createReceipt.mode_of_payment && createReceipt.amount && (selectedInvoice.length>0)){
+    // if(totalAmount>=createReceipt.amount) {
     api
       .post('/finance/insertreceipt', createReceipt)
       .then((res) => {
+        getReceiptById();
+        getFinancesById();
         message('data inserted successfully.');
-          finalCalculation(res.data.data.insertId)
+          finalCalculation(res.data.data.insertId);
+          resetFormFields();
+          setEditCreateReceipt(false); // Close the modal
       })
       .catch(() => {
         message('Network connection error.');
-      })  .finally(() => {
-        setSubmitting(false); // Reset the submitting state after the API call completes (success or error).
-      });
-    }
-    else {
-      message('Please fill all required fields', 'warning');
-   }
-  }
-  else {
-    message('Please fill mode of payment fields', 'warning');
-    setSubmitting(false);
- }
-  };
+      })  
+    };
+      // .finally(() => {
+      //   setSubmitting(false); // Reset the submitting state after the API call completes (success or error).
+      // });
+    // }
+  //   else {
+  //     message('Please fill all required fields', 'warning');
+  //  }
+  //}
+//   else {
+//     message('Please fill mode of payment fields', 'warning');
+//     setSubmitting(false);
+//  }
+
   const generateCode = () => {
     api
       .post('/commonApi/getCodeValue', { type:'receipt'})
@@ -221,20 +248,25 @@ const { loggedInuser } = useContext(AppContext);
   const addAndDeductAmount = (checkboxVal, receiptObj) => {
     const remainingAmount = receiptObj.invoice_amount - receiptObj.prev_amount
     if (checkboxVal.target.checked === true) {
-      setTotalAmount(parseFloat(totalAmount) + parseFloat(remainingAmount));
-      setCreateReceipt({
-        ...createReceipt,
-        amount: (parseFloat(createReceipt.amount) + parseFloat(remainingAmount)).toString(),
-      });
-      result.push(remainingAmount);
-    } else {
-      setTotalAmount(parseFloat(totalAmount) - parseFloat(remainingAmount));
-      setCreateReceipt({
-        ...createReceipt,
-        amount: parseFloat(createReceipt.amount) - parseFloat(remainingAmount),
-      });
-    }
-    
+      //setTotalAmount(parseFloat(totalAmount) + parseFloat(remainingAmount));
+      const newTotalAmount = parseFloat(totalAmount) + parseFloat(remainingAmount);
+      setTotalAmount(newTotalAmount);
+      const newReceiptAmount = (parseFloat(createReceipt.amount) + parseFloat(remainingAmount)).toString();
+    setCreateReceipt({
+      ...createReceipt,
+      amount: newReceiptAmount,
+    });
+  } else {
+    const newTotalAmount = parseFloat(totalAmount) - parseFloat(remainingAmount);
+    setTotalAmount(newTotalAmount >= 0 ? newTotalAmount : 0);
+
+    const newReceiptAmount = (parseFloat(createReceipt.amount) - parseFloat(remainingAmount)).toString();
+    setCreateReceipt({
+      ...createReceipt,
+      amount: newReceiptAmount >= 0 ? newReceiptAmount : '0',
+    });
+    result.push(remainingAmount);
+   }
   };
   
   useEffect(() => {
@@ -381,13 +413,33 @@ const { loggedInuser } = useContext(AppContext);
             onClick={() => {
               if (!submitting) {
                 setSubmitting(true);
+                //generateCode();
                 if (parseFloat(createReceipt.amount) > 0) {
-                generateCode();
-              } else {
-                // Show an error message indicating that the amount should be greater than 0
-                message('Pls select atleast one Invoice', 'warning');
-                setSubmitting(false); // Reset submitting state
-              }
+                  if (createReceipt.mode_of_payment && createReceipt.mode_of_payment !== 'Please Select') {
+                    const totalInvoiceAmount = selectedInvoice.reduce((total, invoice) => total + invoice.remainingAmount, 0);
+                    if (parseFloat(createReceipt.amount) <= totalInvoiceAmount) {
+
+                  generateCode();
+                } else {
+                  // Show an error message indicating that the amount should not exceed the invoice amount
+                  message('Amount should not be greater than the total invoice amount.', 'warning');
+                  setSubmitting(false); // Reset submitting state
+                }
+                } else {
+                  // Set the amount validation error message
+                  alert('Please select a valid mode of payment');
+                  setSubmitting(false); // Reset submitting state
+                }
+              // } else {
+              //     // Set the amount validation error message
+              //     alert('Amount should be less than or equal to the total invoice amount.');
+              //   }
+                } else {
+                  // Show an error message indicating that the amount should be greater than 0
+                  message('Pls select atleast one Invoice', 'warning');
+                  setSubmitting(false); // Reset submitting state
+                }
+             
               }
             }}
             disabled={submitting}

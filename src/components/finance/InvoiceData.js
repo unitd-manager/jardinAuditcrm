@@ -9,6 +9,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Label
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { Editor } from 'react-draft-wysiwyg';
@@ -19,7 +20,7 @@ import * as $ from 'jquery';
 import random from 'random';
 import api from '../../constants/api';
 import message from '../Message';
-import ComponentCard from '../ComponentCard';
+//import ComponentCard from '../ComponentCard';
 import InvoiceTable from './InvoiceTable';
 
 const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, orderId }) => {
@@ -227,7 +228,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
 
   return (
     <>
-      <Modal size="xl" isOpen={editInvoiceData}>
+      <Modal size="lg" isOpen={editInvoiceData}>
         <ModalHeader>
           Create Invoice
           <Button
@@ -250,7 +251,9 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
                   <Row>
                     <InvoiceTable createInvoice={createInvoice} handleInserts={handleInserts} />
                     {/* Description form */}
-                    <ComponentCard title="Description">
+                    <Row>
+                    <Label>Description</Label>
+                    </Row>
                       <Editor
                         editorState={paymentTerms}
                         wrapperClassName="demo-wrapper mb-0"
@@ -260,7 +263,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
                           setPaymentTerms(e);
                         }}
                       />
-                    </ComponentCard>
+                    {/* </ComponentCard> */}
                   </Row>
                   {/* Invoice Item */}
                   <Col md="3">
@@ -275,6 +278,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
                       Add Line Item
                     </Button>
                   </Col>
+                  <br/>
                   <Row>
                     <Col>
                       <table className="lineitem">

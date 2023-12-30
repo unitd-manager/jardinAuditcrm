@@ -119,6 +119,7 @@ export default function FinanceTab({ projectDetail }) {
 
       });
   };
+  
   const getAmountById = () => {
     api
       .post('/project/getAmountByProjectIds', { project_id: id })

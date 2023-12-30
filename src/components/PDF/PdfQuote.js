@@ -6,7 +6,7 @@ import * as numberToWords from 'number-to-words';
 import PropTypes from 'prop-types';
 import * as Icon from 'react-feather';
 import moment from 'moment';
-import message from '../Message';
+// import message from '../Message';
 import api from '../../constants/api';
 
 const PdfQuote = ({ id, quoteId }) => {
@@ -67,7 +67,7 @@ const PdfQuote = ({ id, quoteId }) => {
         //setGtotal(grandTotal);
       })
       .catch(() => {
-        message('Invoice Data Not Found', 'info');
+        //message('Invoice Data Not Found', 'info');
       });
   };
   React.useEffect(() => {
