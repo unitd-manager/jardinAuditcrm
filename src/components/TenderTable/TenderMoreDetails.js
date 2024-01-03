@@ -14,6 +14,7 @@ export default function TenderMoreDetails({
   addCompanyModal,
   getContact,
   newContactData,
+  setTenderDetails,
   companyInsertData,
   addCompanyToggle,
   addContactModal,
@@ -27,6 +28,7 @@ export default function TenderMoreDetails({
 }) {
   TenderMoreDetails.propTypes = {
     tenderDetails: PropTypes.object,
+    setTenderDetails:PropTypes.any,
     newContactData:PropTypes.any,
     companyInsertData:PropTypes.object,
     handleInputs: PropTypes.object,
@@ -156,12 +158,20 @@ export default function TenderMoreDetails({
                       </b>
                     </span>
                   </Label>
-                  <Input
+                  {/* <Input
                     type="select"
                     onChange={handleInputs}
                     value={tenderDetails && tenderDetails.contact_id}
                     name="contact_id"
-                  >
+                  > */}
+                     <Input
+                      type="select"
+                      name="contact_id"
+                      value={tenderDetails?.contact_id || ''}
+                      onChange={(e) => {
+                        setTenderDetails({ ...tenderDetails, contact_id: e.target.value });
+                        handleInputs(e);
+                      }}>
                     <option value="" selected>
                       Please Select
                     </option>

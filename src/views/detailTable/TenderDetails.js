@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Row, Col, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -20,8 +20,8 @@ const TenderDetails = () => {
   const toggle = () => {
     setModal(!modal);
   };
-   //get staff details
-   const { loggedInuser } = useContext(AppContext);
+  //get staff details
+  const { loggedInuser } = useContext(AppContext);
   //Api call for getting company dropdown
   const getCompany = () => {
     api.get('/company/getCompany').then((res) => {
@@ -29,52 +29,13 @@ const TenderDetails = () => {
     });
   };
 
-  //Logic for adding company in db
-  const [companyInsertData, setCompanyInsertData] = useState({
-    company_name: '',
-    address_street: '',
-    address_town: '',
-    address_country: 'Singapore',
-    address_po_code: '',
-    phone: '',
-    fax: '',
-    website: '',
-    supplier_type: '',
-    industry: '',
-    company_size: '',
-    source: '',
-  });
 
-  const handleInputs = (e) => {
-    setCompanyInsertData({ ...companyInsertData, [e.target.name]: e.target.value });
-  };
-
-  const insertCompany = () => {
-    if (
-      companyInsertData.company_name !== '' &&
-      companyInsertData.address_street !== '' &&
-      companyInsertData.address_po_code !== '' &&
-      companyInsertData.address_country !== ''
-    ) {
-      api
-        .post('/company/insertCompany', companyInsertData)
-        .then(() => {
-          message('Company inserted successfully.', 'success');
-          getCompany();
-        })
-        .catch(() => {
-          message('Network connection error.', 'error');
-        });
-    } else {
-      message('Please fill all required fields.', 'warning');
-    }
-  };
 
   //Logic for adding tender in db
   const [tenderForms, setTenderForms] = useState({
-    title: '',
-    company_name: '',
-    category: '',
+    title: '', // Default value for title
+    company_id: '', // Default value for company_id
+    category: '', // Default value for category
   });
 
   const handleInputsTenderForms = (e) => {
@@ -89,7 +50,7 @@ const TenderDetails = () => {
         setallCountries(res.data.data);
       })
       .catch(() => {
-        message('Country Data Not Found', 'info');
+        //message('Country Data Not Found', 'info');
       });
   };
   //const[tenderDetails,setTenderDetails]=useState();
@@ -100,7 +61,7 @@ const TenderDetails = () => {
         setTenderForms(res.data.data);
         // getContact(res.data.data.company_id);
       })
-      .catch(() => {});
+      .catch(() => { });
   };
   //console.log(tenderDetails);
   const insertTender = (code) => {
@@ -137,7 +98,51 @@ const TenderDetails = () => {
         insertTender('');
       });
   };
+  //Logic for adding company in db
+  const [companyInsertData, setCompanyInsertData] = useState({
+    company_name: '',
+    address_street: '',
+    address_town: '',
+    address_country: 'Singapore',
+    address_po_code: '',
+    phone: '',
+    fax: '',
+    website: '',
+    supplier_type: '',
+    industry: '',
+    company_size: '',
+    source: '',
+  });
 
+  const handleInputs = (e) => {
+    setCompanyInsertData({ ...companyInsertData, [e.target.name]: e.target.value });
+  };
+
+  const insertCompany = () => {
+    if (
+      companyInsertData.company_name !== '' &&
+      companyInsertData.address_street !== '' &&
+      companyInsertData.address_po_code !== '' &&
+      companyInsertData.address_country !== ''
+    ) {
+      api
+        .post('/company/insertCompany', companyInsertData)
+        .then((res) => {
+          getCompany();
+          const newlyAddedCompanyId = res.data.data.insertId;
+          setTenderForms({ ...tenderForms, company_id: newlyAddedCompanyId });
+          setTenderForms({ ...tenderForms, company_id: res.data.data.insertId }); // Set selected company ID after insertion
+          message('Company inserted successfully.', 'success');
+           toggle();
+
+        })
+        .catch(() => {
+          message('Network connection error.', 'error');
+        });
+    } else {
+      message('Please fill all required fields.', 'warning');
+    }
+  };
   useEffect(() => {
     getCompany();
     getAllCountries();
@@ -174,25 +179,31 @@ const TenderDetails = () => {
                       Company Name <span className="required"> *</span>{' '}
                     </Label>
                     <Input
-                    type="select"
-                    onChange={(e) => {
-                      handleInputsTenderForms(e);
-                                        }}
-                                          //getContact(e.target.value);
-                      value={tenderForms && tenderForms.company_id}
+                      type="select"
                       name="company_id"
-                   >
+                      value={tenderForms?.company_id || ''}
+                      onChange={(e) => {
+                        setTenderForms({ ...tenderForms, company_id: e.target.value });
+                        handleInputsTenderForms(e);
+                      }}
+                    // onChange={(e) => {
+                    //   handleInputsTenderForms(e);
+                    //                     }}
+                    //getContact(e.target.value);
+                    //value={tenderForms && tenderForms.company_id}
+                    >
+
                       <option >Please Select</option>
-                    {company &&
-                      company.map((e) => {
-                        return (
-                          <option key={e.company_id} value={e.company_id}>
-                            {' '}
-                            {e.company_name}{' '}
-                          </option>
-                        );
-                      })}
-                  </Input>
+                      {company &&
+                        company.map((e) => {
+                          return (
+                            <option key={e.company_id} value={e.company_id}>
+                              {' '}
+                              {e.company_name}{' '}
+                            </option>
+                          );
+                        })}
+                    </Input>
                   </Col>
                   <Col md="3" className="addNew">
                     <Label>Add New Name</Label>
@@ -282,7 +293,7 @@ const TenderDetails = () => {
                         )
                       ) {
                         navigate(-1);
-                      } 
+                      }
                     }}
                   >
                     Cancel

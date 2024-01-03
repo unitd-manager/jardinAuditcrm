@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { TabContent, TabPane } from 'reactstrap';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -38,11 +38,11 @@ const TenderEdit = () => {
     quote_date: '',
     quote_code: '',
   });
- //get staff details
- const { loggedInuser } = useContext(AppContext);
+  //get staff details
+  const { loggedInuser } = useContext(AppContext);
   const { id } = useParams();
   const navigate = useNavigate();
-  const applyChanges = () => {};
+  const applyChanges = () => { };
   const backToList = () => {
     navigate('/Tender');
   };
@@ -120,7 +120,7 @@ const TenderEdit = () => {
       .then((res) => {
         setIncharge(res.data.data);
       })
-      .catch(() => {});
+      .catch(() => { });
   };
 
   // Get Tenders By Id
@@ -132,7 +132,7 @@ const TenderEdit = () => {
         setTenderDetails(res.data.data);
         getContact(res.data.data.company_id);
       })
-      .catch(() => {});
+      .catch(() => { });
   };
 
   const handleInputs = (e) => {
@@ -150,7 +150,7 @@ const TenderEdit = () => {
           editTenderById();
           message('Record editted successfully', 'success');
         })
-        .catch(() => {});
+        .catch(() => { });
     else {
       message('Please fill all required fields', 'warning');
     }
@@ -167,10 +167,10 @@ const TenderEdit = () => {
     newDataWithCompanyId.quote_id = quote.quote_id;
     newDataWithCompanyId.project_code = code;
     api.post('/project/insertProject', newDataWithCompanyId)
-    .then(() => {
-      message('Project Converted Successfully', 'success');
-      window.location.reload();
-    });
+      .then(() => {
+        message('Project Converted Successfully', 'success');
+        window.location.reload();
+      });
   };
 
   // Add new Contact
@@ -188,16 +188,21 @@ const TenderEdit = () => {
   const handleAddNewContact = (e) => {
     setNewContactData({ ...newContactData, [e.target.name]: e.target.value });
   };
-  
+
 
   const AddNewContact = () => {
     const newDataWithCompanyId = newContactData;
     newDataWithCompanyId.company_id = selectedCompany;
     if (newDataWithCompanyId.salutation !== '' && newDataWithCompanyId.first_name !== '') {
-      api.post('/tender/insertContact', newDataWithCompanyId).then(() => {
+      api.post('/tender/insertContact', newDataWithCompanyId).then((res) => {
         getContact(newDataWithCompanyId.company_id);
         message('Contact Inserted Successfully', 'success');
-        window.location.reload();
+        const newlyAddedCompanyId = res.data.data.insertId;
+        setTenderDetails({ ...tenderDetails, contact_id: newlyAddedCompanyId });
+        setTenderDetails({ ...tenderDetails, contact_id: res.data.data.insertId }); // Set selected company ID after insertion
+        message('Company inserted successfully.', 'success');
+        addContactToggle();
+        //window.location.reload();
       });
     } else {
       message('All fields are required.', 'warning');
@@ -293,6 +298,7 @@ const TenderEdit = () => {
         backToList={backToList}
       ></TenderButtons>
       <TenderMoreDetails
+      setTenderDetails={setTenderDetails}
         companyInsertData={companyInsertData}
         newContactData={newContactData}
         handleInputs={handleInputs}
