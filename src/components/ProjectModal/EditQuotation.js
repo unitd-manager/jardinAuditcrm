@@ -21,16 +21,16 @@ import htmlToDraft from 'html-to-draftjs';
 import api from '../../constants/api';
 import message from '../Message';
 
-const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem,projectInfo}) => {
+const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem, projectInfo }) => {
   EditQuotation.propTypes = {
     editQuoteModal: PropTypes.bool,
     setEditQuoteModal: PropTypes.func,
     quoteDatas: PropTypes.object,
     lineItem: PropTypes.object,
-    projectInfo:PropTypes.object,
+    projectInfo: PropTypes.object,
   };
   const [quoteData, setQuoteData] = useState(quoteDatas);
-  const [conditions, setConditions] = useState('');
+  //const [conditions, setConditions] = useState('');
   const [lineItems, setLineItem] = useState('');
   //const [quoteData, setQuotations] = useState();
 
@@ -44,7 +44,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
   };
 
   const insertquote = () => {
-    quoteData.project_id= projectInfo;
+    quoteData.project_id = projectInfo;
     api.post('/project/insertLog', quoteData).then((res) => {
       message('quote inserted successfully.', 'success');
       lineItem.forEach((element) => {
@@ -62,7 +62,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
       .post('/project/editTabQuote', quoteData)
       .then(() => {
         message('quote editted successfully.', 'success');
-        //window.location.reload();
+        window.location.reload();
       })
       .catch(() => {
         message('Network connection error.');
@@ -71,6 +71,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
   const handleDataEditor = (e, type) => {
     setQuoteData({ ...quoteData, [type]: draftToHtml(convertToRaw(e.getCurrentContent())) });
   };
+  const [conditions, setConditions] = useState(EditorState.createEmpty()); // Initialize EditorState
   const convertHtmlToDraftcondition = (existingQuoteformal) => {
     if (existingQuoteformal && existingQuoteformal.quote_condition) {
       const contentBlock = htmlToDraft(existingQuoteformal && existingQuoteformal.quote_condition);
@@ -93,6 +94,34 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
       }
     }
   };
+
+  const fetchTermsAndConditions = () => {
+    api.get('/setting/getSettingsForTerms')
+      .then((res) => {
+        const settings = res.data.data;
+        if (settings && settings.length > 0) {
+          const fetchedTermsAndCondition = settings[0].value; // Assuming 'value' holds the terms and conditions
+          console.log("1", res.data.data);
+          // Update the quote condition in quoteData
+          setQuoteData({ ...quoteData, quote_condition: fetchedTermsAndCondition });
+          // Convert fetched terms and conditions to EditorState
+          const contentBlock = htmlToDraft(fetchedTermsAndCondition);
+          if (contentBlock) {
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            const editorState = EditorState.createWithContent(contentState);
+            setConditions(editorState);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching terms and conditions:', error);
+      });
+  };
+  // Call fetchTermsAndConditions within useEffect or when required
+  useEffect(() => {
+    fetchTermsAndConditions();
+    // Other useEffect logic
+  }, []);
 
   useEffect(() => {
     getQuote();
@@ -128,7 +157,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                         name="quote_status"
                         defaultValue={quoteData && quoteData.quote_status}
                         onChange={handleData}
-                      > 
+                      >
                         <option value="">Please Select</option>
                         <option value="New">New</option>
                         <option value="Quoted">Quoted</option>
@@ -151,8 +180,8 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                   </Col>
                 </Row>
 
-               
-                  {/* <Col md="4">
+
+                {/* <Col md="4">
                     <Label>Drawing Nos</Label>
                     <FormGroup>
                       <Input
@@ -175,7 +204,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                       <Label>No</Label>
                     </FormGroup>
                   </Col> */}
-                  <Row>
+                <Row>
                   {/* <Col md="4">
                     <FormGroup>
                       <Label>Project Reference</Label>
@@ -187,7 +216,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                       />
                     </FormGroup>
                   </Col> */}
-                                  <Col md="4">
+                  <Col md="4">
                     <FormGroup>
                       <Label>Mode of Payment</Label>
                       <Input
@@ -206,7 +235,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                       </Input>
                     </FormGroup>
                   </Col>
-                 
+
                   {/* <Col md="4">
                     <FormGroup>
                       <Label>Ref No</Label>
@@ -218,7 +247,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                       />
                     </FormGroup>
                   </Col> */}
-                 
+
                   <Col md="4">
                     <FormGroup>
                       <Label>Quote Revision</Label>
@@ -242,6 +271,8 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                     handleDataEditor(e, 'quote_condition');
                     setConditions(e);
                   }}
+                // Set initial content of the Editor to fetched terms and conditions
+                // initialContentState={quoteTermsAndCondition}
                 />
 
                 <Row>
@@ -253,7 +284,7 @@ const EditQuotation = ({ editQuoteModal, setEditQuoteModal, quoteDatas, lineItem
                       onClick={() => {
                         insertquote();
                         editQuotations();
-                        
+
                       }}
                     >
                       Save & Continue

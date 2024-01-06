@@ -189,7 +189,7 @@ const ProjectEdit = () => {
     const newContactWithCompanyId = newTaskData;
     newContactWithCompanyId.project_id = id;
     if (newContactWithCompanyId.title !== '' && newContactWithCompanyId.status !== '' && newContactWithCompanyId.category !== ''
-    && newContactWithCompanyId.due_date !== '' && newContactWithCompanyId.employee_id !== '') {
+    && newContactWithCompanyId.due_date !== '' ) {
     api
       .post('/project/insertTask', newContactWithCompanyId)
       .then(() => {

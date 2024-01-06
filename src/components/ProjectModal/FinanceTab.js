@@ -311,6 +311,7 @@ export default function FinanceTab({ projectDetail }) {
           editCreateReceipt={editCreateReceipt}
           setEditCreateReceipt={setEditCreateReceipt}
           orderId={orderId}
+          projectInfo={id}
         />
       )}
 

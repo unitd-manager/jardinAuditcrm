@@ -101,7 +101,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal, invoiceDatas 
     api
       .post('/finance/editInvoicePortalDisplay', invoiceData)
       .then(() => {
-        //window.location.reload();
+        window.location.reload();
         message('Invoice edited successfully.', 'success');
       })
       .catch(() => {
@@ -122,6 +122,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal, invoiceDatas 
           // ... other item fields
         })
         .then(() => {
+          window.location.reload();
           message('Line Item Edited Successfully', 'success');
         })
         .catch(() => {
@@ -141,7 +142,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal, invoiceDatas 
     <>
       <Modal size="lg" isOpen={editModal}>
         <ModalHeader>
-         Edit Invoice
+          Edit Invoice
           <Button
             className="shadow-none"
             color="secondary"
@@ -206,12 +207,12 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal, invoiceDatas 
                   </Col>
                   <Col md="4">
                     <FormGroup>
-                      <Label>Reference</Label>
+                      <Label>Invoice date</Label>
                       <Input
-                        type="text"
-                        value={invoiceData && invoiceData.reference}
+                        type="date"
                         onChange={handleInputs}
-                        name="reference"
+                        value={invoiceData && invoiceData.invoice_date}
+                        name="invoice_date"
                       />
                     </FormGroup>
                   </Col>
@@ -227,19 +228,19 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal, invoiceDatas 
                     </FormGroup>
                   </Col>
                   <Col>
-                  <Row>
-                    <Label>Description</Label>
+                    <Row>
+                      <Label>Description</Label>
                     </Row>
-                  <Editor
-                    editorState={conditions}
-                    wrapperClassName="demo-wrapper mb-0"
-                    editorClassName="demo-editor border mb-4 edi-height"
-                    onEditorStateChange={(e) => {
-                      handleDataEditor(e, 'payment_terms');
-                      setConditions(e);
-                    }}
-                  />
-                    </Col>
+                    <Editor
+                      editorState={conditions}
+                      wrapperClassName="demo-wrapper mb-0"
+                      editorClassName="demo-editor border mb-4 edi-height"
+                      onEditorStateChange={(e) => {
+                        handleDataEditor(e, 'payment_terms');
+                        setConditions(e);
+                      }}
+                    />
+                  </Col>
 
                   {/* <Editor
                             editorState={paymentTerms}
@@ -264,7 +265,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal, invoiceDatas 
                       addLineItem.map((item, index) => (
                         <tr key={item.invoice_item_id}>
                           <td>
-                        <Input
+                            <Input
                               type="text"
                               name="item_title"
                               value={item.item_title}

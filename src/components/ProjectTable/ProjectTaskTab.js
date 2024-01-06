@@ -256,7 +256,7 @@ export default function ProjectTaskTab({
                         <Col md="4">
                           <FormGroup>
                             <Label>
-                              Employee Linked<span className="required"> *</span>
+                              Employee Linked
                             </Label>
                             <Input
                               type="select"

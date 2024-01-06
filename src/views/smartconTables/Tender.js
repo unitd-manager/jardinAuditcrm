@@ -84,7 +84,7 @@ const Tender = () => {
       grow: 0,
     },
     {
-      name: 'Main Con',
+      name: 'Company Name',
       selector: 'company_name',
       sortable: true,
       width: 'auto',

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Row,
   Col,
@@ -13,8 +13,9 @@ import {
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { Editor } from 'react-draft-wysiwyg';
-import { convertToRaw } from 'draft-js';
+import { convertToRaw,EditorState,ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 import { useParams } from 'react-router-dom';
 import * as $ from 'jquery';
 import random from 'random';
@@ -35,7 +36,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
   //const [submitting, setSubmitting] = useState(false);
   const [gstValue, setGstValue] = useState();
   const [paymentTerms, setPaymentTerms] = useState('');
-  const gstPercentageValue = parseInt(gstValue?.value, 10) || 0; 
+  const gstPercentageValue = parseInt(gstValue?.value, 10) || 0;
   const [createInvoice, setCreateInvoice] = useState({
     discount: '',
     quote_code: '',
@@ -64,11 +65,11 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
       description: '',
     },
   ]);
- 
+
   const getGstValue = () => {
     api.get('/finance/getGst').then((res) => {
       setGstValue(res.data.data);
-      });
+    });
   };
   useEffect(() => {
     getGstValue();
@@ -83,14 +84,52 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
       [type]: draftToHtml(convertToRaw(e.getCurrentContent())),
     });
   };
+  const convertHtmlToDraftcondition = (existingQuoteformal) => {
+    if (existingQuoteformal && existingQuoteformal.payment_terms) {
+      const contentBlock = htmlToDraft(existingQuoteformal && existingQuoteformal.payment_terms);
+      if (contentBlock) {
+        const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+        const editorState = EditorState.createWithContent(contentState);
+        setPaymentTerms(editorState);
+      }
+    }
+  };
+  useEffect(() => {
 
+    convertHtmlToDraftcondition();
+  }, []);
+  const fetchTermsAndConditions = () => {
+    api.get('/setting/getSettingsForPaymentTerms')
+      .then((res) => {
+        const settings = res.data.data;
+        if (settings && settings.length > 0) {
+          const fetchedTermsAndCondition = settings[0].value; // Assuming 'value' holds the terms and conditions
+          // Update the payment terms in createInvoice
+          setCreateInvoice({ ...createInvoice, payment_terms: fetchedTermsAndCondition });
+          const contentBlock = htmlToDraft(fetchedTermsAndCondition);
+          if (contentBlock) {
+            const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+            const editorState = EditorState.createWithContent(contentState);
+            setPaymentTerms(editorState);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching terms and conditions:', error);
+      });
+  };
+
+  useEffect(() => {
+    fetchTermsAndConditions();
+    // Other useEffect logic
+  }, []);
   //Insert Invoice Item
   const addLineItemApi = (obj) => {
     obj.order_id = projectInfo;
     api
       .post('/Finance/insertInvoiceItem', obj)
       .then(() => {
-         window.location.reload();
+        window.location.reload();
         message('Line Item Added Successfully', 'sucess');
       })
       .catch(() => {
@@ -99,18 +138,18 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
   };
   //final api call
   const finalinsertapi = (receipt, results) => {
-    console.log('invoiceid',receipt)
-    results.forEach((el)=>{
-   if(el.total_cost){
-     addLineItemApi({
-    description:el.description,
-    invoice_id: receipt,
-    total_cost:el.total_cost,
-    item_title:el.item_title,
-    item_code: projectInfo.item_code,
-  
-  });
-}
+    console.log('invoiceid', receipt)
+    results.forEach((el) => {
+      if (el.total_cost) {
+        addLineItemApi({
+          description: el.description,
+          invoice_id: receipt,
+          total_cost: el.total_cost,
+          item_title: el.item_title,
+          item_code: projectInfo.item_code,
+
+        });
+      }
     })
     // for (let j = 0; j < results.length; j++) {
     //   if(results[j].item_title !==''){
@@ -120,20 +159,20 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
     //     total_cost: results[j].total_cost,
     //     item_title: results[j].item_title,
     //     item_code: projectInfo.item_code,
-      
+
     //   });
     // }
     // }
   };
   //Insert Invoice
-  const insertInvoice = async (results, code,totalamount) => {
+  const insertInvoice = async (results, code, totalamount) => {
     createInvoice.invoice_amount = totalamount + (gstPercentageValue / 100) * totalamount;
     createInvoice.gst_value = (gstPercentageValue / 100) * totalamount;
     createInvoice.gst_percentage = gstPercentageValue;
     createInvoice.project_id = projectInfo;
     createInvoice.order_id = orderId;
     createInvoice.invoice_code = code;
-    console.log('invamount',createInvoice.invoice_amount)
+    console.log('invamount', createInvoice.invoice_amount)
     const now = new Date();
     if (now.getMonth() === 11) {
       const current = new Date(now.getFullYear() + 1, 0, now.getDate());
@@ -142,7 +181,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
       const current = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
       createInvoice.invoice_due_date = current;
     }
-    console.log('results',results)
+    console.log('results', results)
     api
       .post('/Finance/insertInvoice', createInvoice)
       .then((res) => {
@@ -157,12 +196,12 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
       });
   };
   //generateCode
-  const generateCode = (results, type,amount) => {
+  const generateCode = (results, type, amount) => {
     api
-      .post('/commonApi/getCodeValue', { type:'invoice' })
+      .post('/commonApi/getCodeValue', { type: 'invoice' })
       .then((res) => {
-        console.log('results',results)
-        insertInvoice(results, res.data.data,amount);
+        console.log('results', results)
+        insertInvoice(results, res.data.data, amount);
       })
       .catch(() => {
         insertInvoice(results, '');
@@ -184,7 +223,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
 
   //Invoice item values
   const getAllValues = () => {
-    let totalValue=0;
+    let totalValue = 0;
     const result = [];
     let isValid = true; // Initialize a validation flag
     $('.lineitem tbody tr').each(function input() {
@@ -208,21 +247,21 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
       alert('Please fill in Amount for all invoice items.');
       return; // Prevent further processing if validation fails
     }
-    
+
     console.log(result);
-    
+
     result.forEach((e) => {
       if (e.total_cost) {
         totalValue += parseFloat(e.total_cost);
       }
-    }); 
+    });
     setTotalAmount(totalValue)
-    console.log('totamount',totalValue);
-    generateCode(result, 'invoice',totalValue).finally(() => {
+    console.log('totamount', totalValue);
+    generateCode(result, 'invoice', totalValue).finally(() => {
       //setSubmitting(false); // Reset the submitting state after the API call completes (success or error).
     });
   };
-  
+
 
   // Clear row value
   const ClearValue = (ind) => {
@@ -239,7 +278,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
 
   return (
     <>
-      <Modal size="xl" isOpen={editInvoiceData}>
+      <Modal size="lg" isOpen={editInvoiceData}>
         <ModalHeader>
           Create Invoice
           <Button
@@ -257,25 +296,25 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
             <Col md="12">
               <Form>
                 <Row>
-                  
+
 
                   {/* Invoice Detail */}
                   <Row>
                     <InvoiceTable createInvoice={createInvoice} handleInserts={handleInserts} />
                     {/* Description form */}
                     <Row>
-                    <Label>Description</Label>
+                      <Label>Description</Label>
                     </Row>
                     {/* <ComponentCard title="Description"> */}
-                      <Editor
-                        editorState={paymentTerms}
-                        wrapperClassName="demo-wrapper mb-0"
-                        editorClassName="demo-editor border mb-4 edi-height"
-                        onEditorStateChange={(e) => {
-                          handleDataEditor(e, 'payment_terms');
-                          setPaymentTerms(e);
-                        }}
-                      />
+                    <Editor
+                      editorState={paymentTerms}
+                      wrapperClassName="demo-wrapper mb-0"
+                      editorClassName="demo-editor border mb-4 edi-height"
+                      onEditorStateChange={(e) => {
+                        handleDataEditor(e, 'payment_terms');
+                        setPaymentTerms(e);
+                      }}
+                    />
                     {/* </ComponentCard> */}
                   </Row>
                   <Col md="3">
@@ -306,15 +345,15 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
                           {addLineItem && addLineItem.map((item) => {
                             return (
                               <tr key={item.id}>
-                               <td data-label="Item">
-                               <Input Value={item.item_title} type="text" name="item_title" />
-                               </td>
-                               <td data-label="Description">
-                               <Input Value={item.description} type="text" name="description" />
+                                <td data-label="Item">
+                                  <Input Value={item.item_title} type="text" name="item_title" />
+                                </td>
+                                <td data-label="Description">
+                                  <Input Value={item.description} type="text" name="description" />
                                 </td>
                                 <td data-label="Total Price">
-                                 <Input Value={item.total_cost} type="number" name="total_cost" />
-                                 </td>
+                                  <Input Value={item.total_cost} type="number" name="total_cost" />
+                                </td>
 
                                 <td data-label="Action">
                                   <div className="anchor">
@@ -347,7 +386,7 @@ const FinanceInvoiceData = ({ editInvoiceData, setEditInvoiceData, projectInfo, 
                         //   getAllValues();
                         // }
                       }}
-                      // disabled={submitting}
+                    // disabled={submitting}
                     >
                       {' '}
                       Submit{' '}

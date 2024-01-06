@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import PropTypes from 'prop-types';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -15,21 +15,9 @@ const PdfCreateInvoice = ({ invoiceId}) => {
   PdfCreateInvoice.propTypes = {
     invoiceId:PropTypes.any,
   };
-  const [hfdata, setHeaderFooterData] = React.useState();
-
-  React.useEffect(() => {
-    api.get('/setting/getSettingsForCompany').then((res) => {
-      setHeaderFooterData(res.data.data);
-    });
-  }, []);
-
-  const findCompany = (key) => {
-    const filteredResult = hfdata.find((e) => e.key_text === key);
-    return filteredResult.value;
-  };
-
+ 
   const [cancelInvoice, setCancelInvoice] = React.useState([]);
-  const [createInvoice, setCreateInvoice] = React.useState(null);
+  const [createInvoice, setCreateInvoice] = React.useState('');
   const [gTotal, setGtotal] = React.useState(0);
   
 
@@ -50,6 +38,42 @@ const PdfCreateInvoice = ({ invoiceId}) => {
     const total = grandTotal + gstValue;
     return total;
   };
+  const [parsedQuoteCondition, setParsedQuoteCondition] = useState('');
+  React.useEffect(() => {
+    // Other logic you have here...
+
+    // Update this part of your code to handle HTML content stored in the quote_condition field
+    const parseHTMLContent = (htmlContent) => {
+      if (htmlContent) {
+        // Remove HTML tags using a regular expression
+        const plainText = htmlContent.replace(/<[^>]*>?/gm, '');
+        setParsedQuoteCondition(plainText);
+      }
+    };
+
+    // Assuming quote.quote_condition contains your HTML content like "<p>Terms</p>"
+    parseHTMLContent(createInvoice.payment_terms);
+
+    // Other logic you have here...
+  }, [createInvoice.payment_terms]);
+  
+ //The quote_condition content and format it as bullet points
+  const formatQuoteConditions = (conditionsText) => {
+    const formattedConditions = conditionsText.split(':-').map((condition, index) => {
+      const trimmedCondition = condition.trim();
+      return index === 0 ? `${trimmedCondition}` : `:- ${trimmedCondition}`;
+    });
+    return formattedConditions;
+  };
+
+  // Format the conditions content for PDF
+  const conditions = formatQuoteConditions(parsedQuoteCondition);
+  const conditionsContent = conditions.map((condition) => ({
+    text: `${condition}`,
+    fontSize: 10,
+    margin: [15, 5, 0, 0],
+    style: ['notesText', 'textSize'],
+  }));
   const getInvoiceItemById = () => {
     api
       .post('/invoice/getProjectInvoicePdf', { invoice_id: invoiceId })
@@ -65,7 +89,7 @@ const PdfCreateInvoice = ({ invoiceId}) => {
         setGtotal(grandTotal);
       })
       .catch(() => {
-        message('Invoice Data Not Found', 'info');
+       // message('Invoice Data Not Found', 'info');
       });
   };
   React.useEffect(() => {
@@ -333,38 +357,15 @@ const PdfCreateInvoice = ({ invoiceId}) => {
             '\n\n',
             
         
-         //{ text: `Total $ :${Converter.toWords(Total)}` },
- 
-        //  {
-        //   text: `Terms and Condition:-`,
-        //   decoration: 'underline',
-        //   alignment:'Left',
-          
-        //              },'\n',
-        // {
-        //   text: `${findCompany("cp.quoteTermsAndCondition")}`,
-        //   style: ['notesText', 'textSize'],
-        //   margin:[30,0,0,0]
-        // },
-        // {
-        //   text: 'Terms and conditions : \n\n 1.The above rates are in Singapore Dollars. \n\n 2. Payment Terms 30 days from the date of Invoice \n\n  3.Payment should be made in favor of " CUBOSALE ENGINEERING PTE LTD " \n\n 4.Any discrepancies please write to us within 3 days from the date of invoice  \n\n\n 5. For Account transfer \n\n \n\n',
-        //   style: 'textSize',
-        //   // margin: [0, 5, 0, 10],
-        // },
-         {
-          text: `Terms and Condition:-`,
-          style: ['notesText', 'textSize'],
+            {
+          text: `Terms and Conditions: `,
+          fontSize: 11,
           decoration: 'underline',
-          alignment: 'Left',
-
-        }, '\n',
-        {
-          text: `${findCompany("cp.paymentTermsInvoice")}`,
+          margin: [0, 5, 0, 0],
           style: ['notesText', 'textSize'],
-          fontSize:10,
-          margin: [20, 0, 0, 0]
         },
-       
+        ...conditionsContent, // Add each condition as a separate paragraph
+
 
         '\n\n',
       ],

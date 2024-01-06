@@ -10,7 +10,7 @@ const PdfProjectIncorporationDetails = () => {
 
   const [companyaddressDetails, setCompanyAddressDetails] = useState();
   const [shareholdernameDetails, setShareholderNameDetails] = useState([]);
-  const [directornameDetails, setDirectorNameDetails] = useState();
+  const [directornameDetails, setDirectorNameDetails] = useState([]);
 
   const getShareHolder = () => {
     api.post('/project/getShareholdernamePdf', { project_id: id }).then((res) => {

@@ -17,18 +17,7 @@ const PdfQuote = ({ id, quoteId }) => {
   const [quote, setQuote] = React.useState([]);
   const [tenderDetails, setTenderDetails] = useState(null);
   const [lineItem, setLineItem] = useState([]);
-  // const [gTotal, setGtotal] = React.useState(0);
-  const [hfdata, setHeaderFooterData] = React.useState();
-
-  React.useEffect(() => {
-    api.get('/setting/getSettingsForCompany').then((res) => {
-      setHeaderFooterData(res.data.data);
-    });
-  }, []);
-  const findCompany = (key) => {
-    const filteredResult = hfdata.find((e) => e.key_text === key);
-    return filteredResult.value;
-  };
+  const [parsedQuoteCondition, setParsedQuoteCondition] = useState('');
 
   const getCompany = () => {
     api
@@ -70,6 +59,37 @@ const PdfQuote = ({ id, quoteId }) => {
         //message('Invoice Data Not Found', 'info');
       });
   };
+  // Split the quote_condition content and format it as bullet points
+  const formatQuoteConditions = (conditionsText) => {
+    const formattedConditions = conditionsText.split(':-').map((condition, index) => {
+      const trimmedCondition = condition.trim();
+      return index === 0 ? `${trimmedCondition}` : `:- ${trimmedCondition}`;
+    });
+    return formattedConditions;
+  };
+
+  // Format the conditions content for PDF
+  const conditions = formatQuoteConditions(parsedQuoteCondition);
+  const conditionsContent = conditions.map((condition) => ({
+    text: `${condition}`,
+    fontSize: 10,
+    margin: [15, 5, 0, 0],
+    style: ['notesText', 'textSize'],
+  }));
+
+  React.useEffect(() => {
+    // Update this part of your code to handle HTML content stored in the quote_condition field
+    const parseHTMLContent = (htmlContent) => {
+      if (htmlContent) {
+        // Remove HTML tags using a regular expression
+        const plainText = htmlContent.replace(/<[^>]*>?/gm, '');
+        setParsedQuoteCondition(plainText);
+      }
+    };
+    // Assuming quote.quote_condition contains your HTML content like "<p>Terms</p>"
+    parseHTMLContent(quote.quote_condition);
+  }, [quote.quote_condition]);
+
   React.useEffect(() => {
     getQuote();
     getQuoteById();
@@ -307,7 +327,7 @@ const PdfQuote = ({ id, quoteId }) => {
             //   margin: [0, 0, 60, 0],
             //   style: 'textSize',
             // },
-            
+
             // '\n',
             //   {
             //     text: `Total $ :     ${calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
@@ -318,44 +338,30 @@ const PdfQuote = ({ id, quoteId }) => {
             {
               text: `GRAND TOTAL ($) :  ${calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
               alignment: 'right',
-              margin: [0, 0, 67, 0],
+              margin: [0, 0, 61, 0],
               style: 'textSize',
             },
             '\n\n\n',
             {
               text: `TOTAL :  ${numberToWords.toWords(calculateTotal()).toUpperCase()}`, // Convert total to words in uppercase
               style: 'bold',
-              fontSize:12,
+              fontSize: 11,
               margin: [40, 0, 0, 0],
             },
           ],
         },
         '\n\n',
         '\n',
+
         {
-          text: `Terms and Condition:-`,
+          text: `Terms and Conditions: `,
+          fontSize: 11,
           decoration: 'underline',
-          alignment: 'Left',
-
-        }, '\n',
-        {
-          text: `${findCompany("cp.quoteTermsAndCondition")}`,
+          margin: [0, 5, 0, 0],
           style: ['notesText', 'textSize'],
-          fontSize:10,
-          margin: [30, 0, 0, 0]
         },
-        //         {
-        //           columns: [
-        //             {
-        //               text: `Terms and Condition:- \n
-        // :- Payment : COD \n
-        // :- The above quote does not cover replacement of any parts unless expressly stated above. \n
-        // :- We reserve the right to terminate any scope of work in event where there is a default to our Payment Schedule`,
+        ...conditionsContent, // Add each condition as a separate paragraph
 
-        //               style: ['notesText', 'textSize'],
-        //             },
-        //           ],
-        //         },
 
         '\n',
         '\n',

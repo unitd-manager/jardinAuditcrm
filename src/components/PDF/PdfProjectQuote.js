@@ -8,27 +8,27 @@ import * as Icon from 'react-feather';
 import moment from 'moment';
 import api from '../../constants/api';
 
-const PdfProjectQuote = ({id,quoteId}) => {
+const PdfProjectQuote = ({ id, quoteId }) => {
   PdfProjectQuote.propTypes = {
     id: PropTypes.any,
-    quoteId:PropTypes.any,
+    quoteId: PropTypes.any,
   }
   const [quote, setQuote] = React.useState([]);
   const [projectDetail, setProjectDetail] = useState();
   const [lineItem, setLineItem] = useState([]);
   const [gTotal, setGtotal] = React.useState(0);
-  const [hfdata, setHeaderFooterData] = React.useState();
+  // const [hfdata, setHeaderFooterData] = React.useState();
 
-  React.useEffect(() => {
-    api.get('/setting/getSettingsForCompany').then((res) => {
-      setHeaderFooterData(res.data.data);
-    });
-  }, []);
+  // React.useEffect(() => {
+  //   api.get('/setting/getSettingsForCompany').then((res) => {
+  //     setHeaderFooterData(res.data.data);
+  //   });
+  // }, []);
 
-  const findCompany = (key) => {
-    const filteredResult = hfdata.find((e) => e.key_text === key);
-    return filteredResult.value;
-  };
+  // const findCompany = (key) => {
+  //   const filteredResult = hfdata.find((e) => e.key_text === key);
+  //   return filteredResult.value;
+  // };
 
   const getProjectById = () => {
     api
@@ -36,7 +36,7 @@ const PdfProjectQuote = ({id,quoteId}) => {
       .then((res) => {
         setProjectDetail(res.data.data);
       })
-      .catch(() => {});
+      .catch(() => { });
   };
 
   // Get Quote By Id
@@ -56,9 +56,47 @@ const PdfProjectQuote = ({id,quoteId}) => {
     const grandTotal = lineItem.reduce((acc, element) => acc + element.amount, 0);
     const discount = quote.discount || 0; // Get the discount from the quote or default to 0 if not provided
     const total = grandTotal - discount; // Deduct the discount from the grand total
-  
+
     return total;
   };
+  const [parsedQuoteCondition, setParsedQuoteCondition] = useState('');
+  React.useEffect(() => {
+    // Other logic you have here...
+
+    // Update this part of your code to handle HTML content stored in the quote_condition field
+    const parseHTMLContent = (htmlContent) => {
+      if (htmlContent) {
+        // Remove HTML tags using a regular expression
+        const plainText = htmlContent.replace(/<[^>]*>?/gm, '');
+        setParsedQuoteCondition(plainText);
+      }
+    };
+
+    // Assuming quote.quote_condition contains your HTML content like "<p>Terms</p>"
+    parseHTMLContent(quote.quote_condition);
+
+    // Other logic you have here...
+  }, [quote.quote_condition]);
+  
+ //The quote_condition content and format it as bullet points
+  const formatQuoteConditions = (conditionsText) => {
+    const formattedConditions = conditionsText.split(':-').map((condition, index) => {
+      const trimmedCondition = condition.trim();
+      return index === 0 ? `${trimmedCondition}` : `:- ${trimmedCondition}`;
+    });
+    return formattedConditions;
+  };
+
+  // Format the conditions content for PDF
+  const conditions = formatQuoteConditions(parsedQuoteCondition);
+  const conditionsContent = conditions.map((condition) => ({
+    text: `${condition}`,
+    fontSize: 10,
+    margin: [15, 5, 0, 0],
+    style: ['notesText', 'textSize'],
+  }));
+
+  //const parsedQuoteConditionWithoutHTMLSpaces = replaceHTMLSpaces(parsedQuoteCondition);
   const getQuoteById = () => {
     api
       .post('/project/getQuoteLineItemsById', { quote_id: quoteId })
@@ -66,20 +104,12 @@ const PdfProjectQuote = ({id,quoteId}) => {
         setLineItem(res.data.data);
         console.log('quote1', res.data.data);
         let grandTotal = 0;
-        // let grand = 0;
-        // let gst = 0;
         res.data.data.forEach((elem) => {
           grandTotal += elem.amount;
-          //  grand += elem.actual_value;
         });
-         setGtotal(grandTotal);
-        // gst = grandTotal * 0.07;
-        // setGsttotal(gst);
-        // grand = grandTotal + gst;
-        // setTotal(grand);
-        //setViewLineModal(true);
+        setGtotal(grandTotal);
       })
-      .catch(() => {});
+      .catch(() => { });
   };
   React.useEffect(() => {
     getQuote();
@@ -102,15 +132,15 @@ const PdfProjectQuote = ({id,quoteId}) => {
           text: 'Description',
           style: 'tableHead',
         },
-    
+
         {
           text: 'Amt S$',
           style: 'tableHead',
         },
-       
+
       ],
     ];
-    lineItem.forEach((element,index) => {
+    lineItem.forEach((element, index) => {
       lineItemBody.push([
         {
           text: `${index + 1}`,
@@ -127,20 +157,20 @@ const PdfProjectQuote = ({id,quoteId}) => {
           border: [false, false, false, true],
           style: 'tableBody1',
         },
-      
+
         {
           text: `${element.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
           border: [false, false, false, true],
           fillColor: '#f5f5f5',
           style: 'tableBody2',
         },
-      
+
       ]);
     });
 
     const dd = {
-      
-        pageSize: 'A4',
+
+      pageSize: 'A4',
       content: [
         {
           layout: {
@@ -203,42 +233,42 @@ const PdfProjectQuote = ({id,quoteId}) => {
             {
               text: `TO`,
               style: ['notesText', 'textSize'],
-              bold:'true'
+              bold: 'true'
             },
             {
-                text:`${projectDetail.company_name ? projectDetail.company_name : ''}
+              text: `${projectDetail.company_name ? projectDetail.company_name : ''}
                               ${projectDetail.address_flat ? projectDetail.address_flat : ''}
                               ${projectDetail.address_country ? projectDetail.address_country : ''}
                               ${projectDetail.address_po_code ? projectDetail.address_po_code : ''}`,
               style: ['notesText', 'textSize'],
-              margin:[-250,20,0,0],
-           
-              
-              bold:'true'
+              margin: [-250, 20, 0, 0],
+
+
+              bold: 'true'
             },
           ],
         },
 
         {
-          text: `Date :   ${(quote.quote_date)? moment(quote.quote_date).format('DD-MM-YYYY'):''}
+          text: `Date :   ${(quote.quote_date) ? moment(quote.quote_date).format('DD-MM-YYYY') : ''}
            Quote Code :  ${quote.quote_code ? quote.quote_code : ''
-          }\n \n  `,
+            }\n \n  `,
           style: ['invoiceAdd', 'textSize'],
-          margin:[0,-60,0,0]
+          margin: [0, -60, 0, 0]
         },
 
         '\n\n\n',
         {
           text: `Att : ${projectDetail.first_name ? projectDetail.first_name : ''}`,
           style: ['notesText', 'textSize'],
-          bold:'true'
+          bold: 'true'
         },
 
         '\n',
 
         {
           text: `Project :-    ${projectDetail.title ? projectDetail.title : ''}`,
-          bold:'true' ,
+          bold: 'true',
           style: ['notesText', 'textSize'],
         },
         {
@@ -313,7 +343,7 @@ const PdfProjectQuote = ({id,quoteId}) => {
             },
             '\n',
             {
-              text: `Discount  :                ${quote.discount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+              text: `Discount  :           ${quote.discount ? quote.discount.toLocaleString('en-IN', { minimumFractionDigits: 2 }) : '0'}`,
               alignment: 'right',
               margin: [0, 0, 41, 0],
               style: 'textSize',
@@ -322,57 +352,45 @@ const PdfProjectQuote = ({id,quoteId}) => {
             {
               text: `Total $ :     ${calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
               alignment: 'right',
-          margin: [0, 0, 41, 0],
-          style: 'textSize',
+              margin: [0, 0, 41, 0],
+              style: 'textSize',
             },
             '\n',
-          //   {
-          //     text: `Total $ :     ${calculateTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
-          //     alignment: 'right',
-          // margin: [0, 0, 41, 0],
-          // style: 'textSize',
-          //   },
+            //   {
+            //     text: `Total $ :     ${calculateTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+            //     alignment: 'right',
+            // margin: [0, 0, 41, 0],
+            // style: 'textSize',
+            //   },
             '\n\n',
             // { text: `TOTAL : ${Converter.toWords(calculateTotal())}`, style: 'bold', margin: [40, 0, 0, 0] },
             {
               text: `TOTAL :  ${numberToWords.toWords(calculateTotal()).toUpperCase()}`, // Convert total to words in uppercase
-              bold:'true',
-              fontSize:'11',
+              bold: 'true',
+              fontSize: '11',
               margin: [40, 0, 0, 0],
             },
           ],
         },
         '\n\n',
+   
         
-
-//         {
-//           columns: [
-//             {
-//               text: `Terms and Condition:- \n
-// :- Payment : COD \n
-// :- The above quote does not cover replacement of any parts unless expressly stated above. \n
-// :- We reserve the right to terminate any scope of work in event where there is a default to our Payment Schedule`,
-
-//               style: ['notesText', 'textSize'],
-//             },
-//           ],
-//         },
         {
-          text: `Terms and Condition:-`,
-          style: ['notesText', 'textSize'],
+          text: `Terms and Conditions: `,
+          fontSize: 11,
           decoration: 'underline',
-          alignment: 'Left',
-
-        }, '\n',
-        {
-          text: `${findCompany("cp.quoteTermsAndCondition")}`,
+          margin: [0, 5, 0, 0],
           style: ['notesText', 'textSize'],
-          fontSize:10,
-          margin: [20, 0, 0, 0]
-        },
+        },  
+        ...conditionsContent, // Add each condition as a separate paragraph
+        // ... (remaining parts of the PDF content)
+        // {
+        //   text: ` ${parsedQuoteConditionWithoutHTMLSpaces}`,
+        //   fontSize: 10,
+        //   style: ['notesText', 'textSize'],
+        // },
         '\n',
         '\n',
-
         {
           width: '100%',
           alignment: 'center',
