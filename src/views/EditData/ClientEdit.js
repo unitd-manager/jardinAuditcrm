@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { TabPane, TabContent, Row, Col, Button } from 'reactstrap';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -83,8 +83,8 @@ const ClientsEdit = () => {
   const backToList = () => {
     navigate('/client');
   };
-//get staff details
-const { loggedInuser } = useContext(AppContext);
+  //get staff details
+  const { loggedInuser } = useContext(AppContext);
   //  AttachmentModal
   const [RoomName, setRoomName] = useState('');
   const [fileTypes, setFileTypes] = useState('');
@@ -124,8 +124,8 @@ const { loggedInuser } = useContext(AppContext);
     });
   };
 
-   //  Get Clients By Id
-   const editClientsnameById = () => {
+  //  Get Clients By Id
+  const editClientsnameById = () => {
     api.post('/clients/getClientnameById', { company_id: id }).then((res) => {
       //setClientsDetails(res.data.data[0]);
       setclientnameDetails(res.data.data[res.data.data.length - 1]);
@@ -134,37 +134,119 @@ const { loggedInuser } = useContext(AppContext);
   };
 
   //Logic for edit data in db
+  // const editClientsData = () => {
+  //   clientsDetails.modification_date = creationdatetime;
+  //   clientsDetails.modified_by = loggedInuser.first_name;
+  //   if (
+  //     clientsDetails.company_name !== '' &&
+  //     clientsDetails.category !== '' &&
+  //     clientsDetails.group_name !== ''
+  //   ) {
+  //   if ((clientsDetails.reg_no !== '' && clientsDetails.date_of_incorporation === '')
+  //   || (clientsDetails.date_of_incorporation !== '' && clientsDetails.reg_no === '')) {
+  //     // Display a message when Reg No is filled but Incorporation Date is empty
+  //       message('Please enter both Reg No and Incorporation Date', 'warning');
+  //       //message('Please enter Incorporation Date', 'warning');
+  //   } else {
+  //     api
+  //       .post('/clients/editClients', clientsDetails)
+  //       .then(() => {
+  //         message('Record editted successfully', 'success');
+  //         editClientsById();
+  //       })
+  //       .catch(() => {
+  //         message('Unable to edit record.', 'error');
+  //       });
+  //   // } else {
+  //   //   message('Please fill all required fields', 'warning');
+  //   // }
+  //     }
+  // }else {
+  //     message('Please fill reg_no and incorporation date fields', 'warning');
+  //   }
+  // };
+  
   const editClientsData = () => {
+    console.log('clietdetails',clientsDetails)
     clientsDetails.modification_date = creationdatetime;
     clientsDetails.modified_by = loggedInuser.first_name;
-    if (
-      clientsDetails.company_name !== '' &&
-      clientsDetails.category !== '' &&
-      clientsDetails.group_name !== ''
-    ) {
-    if ((clientsDetails.reg_no !== '' && clientsDetails.date_of_incorporation === '') 
-    || (clientsDetails.date_of_incorporation !== '' && clientsDetails.reg_no === '')) {
-      // Display a message when Reg No is filled but Incorporation Date is empty
-        message('Please enter both Reg No and Incorporation Date', 'warning');
-        //message('Please enter Incorporation Date', 'warning');
-    } else {
-      api
+    if((clientsDetails&& clientsDetails.category !==null) && (clientsDetails&& clientsDetails.company_name!==null) ){
+      if((clientsDetails&& clientsDetails.date_of_incorporation !==null) && (clientsDetails&& clientsDetails.reg_no!==null)&&(clientsDetails&& clientsDetails.group_name!==null) ){
+        api
         .post('/clients/editClients', clientsDetails)
         .then(() => {
-          message('Record editted successfully', 'success');
+          message('Record edited successfully', 'success');
           editClientsById();
         })
         .catch(() => {
           message('Unable to edit record.', 'error');
         });
-    // } else {
-    //   message('Please fill all required fields', 'warning');
-    // }
       }
-  }else {
-      message('Please fill reg_no and incorporation date fields', 'warning');
+      else if((clientsDetails&& clientsDetails.date_of_incorporation ===null)){
+        api
+        .post('/clients/editClients', clientsDetails)
+        .then(() => {
+          message('Record edited successfully', 'success');
+          editClientsById();
+        })
+        .catch(() => {
+          message('Unable to edit record.', 'error');
+        });
+      }else{
+        message('Please fill both Reg No and Group Name fields', 'warning');
+      }
+      
+    }else{
+      message('Please fill the category', 'warning');
     }
+    // api
+    //   .post('/clients/editClients', clientsDetails)
+    //   .then(() => {
+    //     message('Record edited successfully', 'success');
+    //     editClientsById();
+    //   })
+    //   .catch(() => {
+    //     message('Unable to edit record.', 'error');
+    //   });
   };
+
+ 
+
+  // const editClientsData = () => {
+  //   clientsDetails.modification_date = creationdatetime;
+  //   clientsDetails.modified_by = loggedInuser.first_name;
+  //   if (clientsDetails && clientsDetails.category !== '') {
+  //     message('Category is filled', 'warning');
+  //   }else{
+  //     message('Please fill the category', 'warning');
+  //   }
+  //     if (clientsDetails && clientsDetails.company_name !== '' ) {
+  //     if (clientsDetails && clientsDetails.category !== '') {
+  //       if (clientsDetails && clientsDetails.date_of_incorporation !== '') {
+  //         // If date_of_incorporation has a value
+  //         if (
+  //           (clientsDetails && clientsDetails.reg_no === '') ||
+  //           (clientsDetails && clientsDetails.group_name === '')
+  //         ) {
+  //           message('Please fill both Reg No and Group Name fields', 'warning');
+  //         } else {
+  //           // All conditions met, proceed with the edit
+  //           performEdit();
+  //         }
+  //       } else {
+  //         // If date_of_incorporation is empty
+  //         performEdit();
+  //       }
+  //     } else {
+  //       // All conditions met, proceed with the edit
+  //       message('Please fill both category fields', 'warning');
+  //     }
+  //   } else {
+  //     // All conditions met, proceed with the edit
+  //     message('Please fill company name  fields', 'warning');
+  //   }
+  // };
+
   //Logic for edit data in db
   // const editClientsData = () => {
 
@@ -250,12 +332,12 @@ const { loggedInuser } = useContext(AppContext);
     const newContactWithCompanyId = newContactData;
     newContactWithCompanyId.company_id = id;
     newContactData.position = newContactData.position.toString();
-    
+
     if (
       newContactData.salutation !== '' &&
       newContactData.first_name !== '' &&
       newContactData.id_card_type !== '' &&
-      newContactData.id_card_no !== ''  &&
+      newContactData.id_card_no !== '' &&
       newContactData.issued_share_capital !== ''
     ) {
       // Check if issued_share_capital exceeds paidup_capital
@@ -265,7 +347,7 @@ const { loggedInuser } = useContext(AppContext);
         message('Issued share capital cannot exceed paid-up capital', 'warning');
         return; // Stop execution if validation fails
       }
-      
+
       api
         .post('/clients/insertContact', newContactWithCompanyId)
         .then(() => {
@@ -594,7 +676,7 @@ const { loggedInuser } = useContext(AppContext);
           getCompanyAddressById();
           editClientsById();
           addcompanyaddressToggle(false);
-                //  window.location.reload();
+          //  window.location.reload();
 
           if (newAddressWithCompanyId.update_address === '1') {
             api
@@ -612,16 +694,16 @@ const { loggedInuser } = useContext(AppContext);
                 editClientsById();
                 getCompanyAddressById();
                 //setAddressDetails(res.data.data[res.data.data.length - 1]);
-                 //window.location.reload();
-              })
-            }
+                //window.location.reload();
+              });
+          }
         })
         .catch(() => {
           message('Network connection error.', 'error');
-          })
-        // }).finally(() => {
-        //   setSubmittings(false); // Reset the submitting state after the API call completes (success or error).
-        // });
+        });
+      // }).finally(() => {
+      //   setSubmittings(false); // Reset the submitting state after the API call completes (success or error).
+      // });
     } else {
       message('Please fill all required fields', 'warning');
     }
@@ -656,10 +738,10 @@ const { loggedInuser } = useContext(AppContext);
       const currentDate = new Date(); // Get today's date in YYYY-MM-DD format
       const newNameWithCompanyId = newcompanynameDetails;
       newNameWithCompanyId.company_id = id;
-      newNameWithCompanyId.date= currentDate; 
+      newNameWithCompanyId.date = currentDate;
       //newNameWithCompanyId.previous_company_name = clientnameDetails.company_name;
       //newNameWithCompanyId.previous_company_name = clientnameDetails.current_company_name;
-      if( !newNameWithCompanyId.previous_company_name){
+      if (!newNameWithCompanyId.previous_company_name) {
         newNameWithCompanyId.previous_company_name = clientnameDetails.company_name;
       }
       api
@@ -681,17 +763,16 @@ const { loggedInuser } = useContext(AppContext);
                 getCompanyNameById();
                 addcompanynameToggle(false);
                 editClientsById();
-                    //window.location.reload();
+                //window.location.reload();
               })
               .catch(() => {
                 message('Network connection error.', 'error');
               });
           }
-        })
-        // .finally(() => {
-        //   setSubmitting(false); // Reset the submitting state after the API call completes (success or error).
-        // });
-        
+        });
+      // .finally(() => {
+      //   setSubmitting(false); // Reset the submitting state after the API call completes (success or error).
+      // });
     } else {
       message('Please fill all required fields', 'warning');
     }
@@ -722,9 +803,9 @@ const { loggedInuser } = useContext(AppContext);
 
   const tabs = [
     { id: '1', name: 'Officers/Authorised Representative' },
-    { id: '2', name: 'Share Transfer'},
-    { id: '3', name: 'Share Increase'},
-    { id: '4', name: 'Company Address change'},
+    { id: '2', name: 'Share Transfer' },
+    { id: '3', name: 'Share Increase' },
+    { id: '4', name: 'Company Address change' },
     { id: '5', name: 'Company Name Change' },
     { id: '6', name: 'Projects' },
     { id: '7', name: 'Invoice ' },
@@ -735,7 +816,7 @@ const { loggedInuser } = useContext(AppContext);
   const toggle = (tab) => {
     setActiveTab(tab);
   };
-
+  console.log('company_name', clientsDetails && clientsDetails.company_name);
   return (
     <>
       {/* BreadCrumbs */}
@@ -751,14 +832,14 @@ const { loggedInuser } = useContext(AppContext);
       ></ClientButton>
 
       {/* Client Main details */}
-      <ComponentCard title="Client Details"  creationModificationDate={clientsDetails}>
+      <ComponentCard title="Client Details" creationModificationDate={clientsDetails}>
         <ClientMainDetails
           handleInputs={handleInputs}
           clientsDetails={clientsDetails}
           allCountries={allCountries}
         ></ClientMainDetails>
       </ComponentCard>
-      <ClientButtonPdf editClientsData={editClientsData} ></ClientButtonPdf>
+      <ClientButtonPdf editClientsData={editClientsData}></ClientButtonPdf>
 
       <ComponentCard>
         <ToastContainer></ToastContainer>
@@ -783,7 +864,7 @@ const { loggedInuser } = useContext(AppContext);
             ></ClientContactGetAndInsert>
             {/* Contact Linked Edit modal */}
             <ContactEditModal
-            getContactLinked={getContactLinked}
+              getContactLinked={getContactLinked}
               editContactEditModal={editContactEditModal}
               setEditContactEditModal={setEditContactEditModal}
               contactData={contactData}
@@ -845,7 +926,6 @@ const { loggedInuser } = useContext(AppContext);
           {/* Company Address change */}
           <TabPane tabId="4">
             <CompanyAddressChange
-           
               clientaddressDetails={clientaddressDetails}
               allCountries={allCountries}
               setCompanyAddressData={setCompanyAddressData}
@@ -891,14 +971,13 @@ const { loggedInuser } = useContext(AppContext);
             ></CompanyNameChange>
             {/* Company Address change Edit */}
             <ClientCompanyNameEdit
-             editClientsById={editClientsById}
+              editClientsById={editClientsById}
               allCountries={allCountries}
               setCompanyNameEditModal={setCompanyNameEditModal}
               companynameEditModal={companynameEditModal}
               companyNameData={companyNameData}
               getCompanyNameById={getCompanyNameById}
               id={id}
-              
             ></ClientCompanyNameEdit>
           </TabPane>
           {/* clientProject */}
@@ -943,10 +1022,15 @@ const { loggedInuser } = useContext(AppContext);
                 recordType="RelatedPicture"
                 mediaType={attachmentData.modelType}
                 update={update}
-              setUpdate={setUpdate}
+                setUpdate={setUpdate}
               />
-              <ViewFileComponentV2 moduleId={id} roomName="Client" recordType="RelatedPicture" update={update}
-              setUpdate={setUpdate}/>
+              <ViewFileComponentV2
+                moduleId={id}
+                roomName="Client"
+                recordType="RelatedPicture"
+                update={update}
+                setUpdate={setUpdate}
+              />
             </ComponentCard>
           </TabPane>
           {/* ADD NOTE */}
