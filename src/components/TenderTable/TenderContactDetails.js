@@ -70,7 +70,7 @@ export default function TenderContactDetails({
                       <Col md="4">
                         <FormGroup>
                           <Label>Email</Label>
-                          <Input type="text" name="email" onChange={handleAddNewContact} />
+                          <Input type="text" name="email" onChange={handleAddNewContact} value={newContactData && newContactData.email} />
                         </FormGroup>
                       </Col>
                       <Col md="4">
