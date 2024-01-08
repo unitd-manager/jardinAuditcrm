@@ -188,13 +188,15 @@ const FinanceReceiptData = ({ editCreateReceipt, setEditCreateReceipt,orderId })
   };
   const getInvoices = (checkboxVal, invObj) => {
     if (checkboxVal.target.checked === true) {
+      console.log('selectedInvoice', selectedInvoice)
       setSelectedInvoice([...selectedInvoice, invObj]);
     } else {
-      invoices = removeObjectWithId(invoiceReceipt, invObj.invoice_code);
+      console.log('selectedInvoice1', selectedInvoice)
+      invoices = removeObjectWithId(invoiceReceipt, invObj.invoice_id);
       setSelectedInvoice(invoices);
     }
   };
-
+   console.log('selectedInvoice', selectedInvoice)
 
 
   // const insertInvoices = () => {
@@ -290,6 +292,7 @@ const FinanceReceiptData = ({ editCreateReceipt, setEditCreateReceipt,orderId })
                             onChange={handleInputreceipt}
                             value={createReceipt && createReceipt.amount}
                             defaultValue={totalAmount.toString()}
+                            disabled
                             name="amount"
                           />
                         </FormGroup>
