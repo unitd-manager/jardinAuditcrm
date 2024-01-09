@@ -15,11 +15,13 @@ const ProjectReport = () => {
   const [userSearchData, setUserSearchData] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  
+  const [companyName, setCompanyName] = useState('');
+  const [projectStatus, setProjectStatus] = useState('');
+ 
   //Get data from Training table
   const getProject = () => {
     api
-      .get('/project/getProjectReport')
+      .get('/reports/getProjectReport')
       .then((res) => {
         setProjectReport(res.data.data);
         setUserSearchData(res.data.data);
@@ -31,6 +33,8 @@ const ProjectReport = () => {
 
   const handleSearch = () => {
     const newData = projectReport
+      .filter((y) => y.category === (companyName === '' ? y.category : companyName))
+      .filter((z) => z.status === (projectStatus === '' ? z.status : projectStatus))
       .filter(
         (x) => endDate && startDate  ? (x.actual_finish_date <= (endDate === '' ? x.actual_finish_date : endDate) &&
         x.start_date >= (startDate === '' ? x.start_date : startDate) ): startDate ? x.start_date === (startDate === '' ? x.start_date : startDate) :
@@ -60,15 +64,9 @@ const ProjectReport = () => {
       name: 'SN',
       selector:'s_no',
     },
-    {
-      name: 'Company Name',
-      selector: 'company_name',
-      sortable: true,
-      grow: 0,
-    },
    
     {
-      name: 'Reg No',
+      name: 'Project Code',
       selector: 'project_code',
       grow: 0,
       wrap: true,
@@ -76,15 +74,45 @@ const ProjectReport = () => {
     },
 
     {
-      name: 'Project Name',
+      name: 'Project Title',
       selector: 'Project_name',
       sortable: true,
       grow: 0,
       wrap: true,
     },
     {
+      name: 'Category',
+      selector: 'category',
+      sortable: true,
+      grow: 0,
+    },
+    {
       name: 'Start Date',
       selector: 'start_date',
+      sortable: true,
+      grow: 0,
+    },
+    {
+      name: 'End Date',
+      selector: 'actual_finish_date',
+      sortable: true,
+      grow: 0,
+    },
+    {
+      name: 'Client Company',
+      selector: 'company_name',
+      sortable: true,
+      grow: 0,
+    },
+    {
+      name: 'Contact',
+      selector: 'contact_name',
+      sortable: true,
+      grow: 0,
+    },
+    {
+      name: 'Status',
+      selector: 'status',
       sortable: true,
       grow: 0,
     },
@@ -102,16 +130,53 @@ const ProjectReport = () => {
                 <Input
                   type="date"
                   name="start_date"
-                  onChange={(e) => setStartDate(e.target.value)}
+                   onChange={(e) => setStartDate(e.target.value)}
                 />
               </FormGroup>
             </Col>
             <Col>
               <FormGroup>
                 <Label>End Date</Label>
-                <Input type="date" name="actual_finish_date" onChange={(e) => setEndDate(e.target.value)} />
+                <Input type="date" 
+                name="actual_finish_date" onChange={(e) => setEndDate(e.target.value)} />
               </FormGroup>
             </Col>
+              <Col>
+              <FormGroup>
+                <Label>Select Category</Label>
+                <Input
+                  type="select"
+                  name="project_type"
+                  onChange={(e) => setCompanyName(e.target.value)}
+                >
+                  <option value="">Select</option>
+                  <option value="Immigration">Immigration</option>
+                    <option value="Incorporation">Incorporation</option>
+                    <option value="Others">Others</option>
+                    <option value="Secretarial Services">Secretarial Services</option>
+                    <option value="Tax services">Tax services</option>
+                    <option value="Year End Accounts">Year End Accounts</option>
+                </Input>
+              </FormGroup>
+            </Col>
+              <Col>
+              <FormGroup>
+              <Label>Status</Label>
+                <Input type="select"  name="status"
+                  onChange={(e) => setProjectStatus(e.target.value)}>
+                <option value="">Please Select</option>
+                    <option defaultValue="selected" value="WIP">
+                      WIP
+                    </option>
+                    <option value="Billable">Billable</option>
+                    <option value="Billed">Billed</option>
+                    <option value="Complete">Complete</option>
+                    <option value="Cancelled">Cancelled</option>
+                    <option value="On Hold">On Hold</option>
+                    <option value="Latest">Latest</option>
+                </Input>
+                </FormGroup>
+              </Col>
               <Col md="1" className='mt-3'>
               <Button color="primary" className="shadow-none" onClick={() => handleSearch()}>Go</Button>
             </Col>
@@ -123,10 +188,16 @@ const ProjectReport = () => {
         <CardBody>
           <Row>
             <Col md="3">
+              <Label><b>Category:</b> {companyName}</Label>
+            </Col>
+            <Col md="3">
               <Label><b>Start Date:</b> {startDate}</Label>
             </Col>
             <Col md="3">
               <Label><b> End Date:</b> {endDate}</Label>
+            </Col>
+            <Col md="3">
+              <Label><b> Status:</b> {projectStatus}</Label>
             </Col>
           </Row>
         </CardBody>
@@ -156,10 +227,14 @@ const ProjectReport = () => {
                 return (
                   <tr key={element.project_id}>
                     <td>{index + 1}</td>
-                    <td>{element.company_name}</td>
                     <td>{element.project_code}</td>
                     <td>{element.Project_name}</td>
-                    <td>{moment(element.start_date).format('YYYY-MM-DD')}</td>
+                    <td>{element.category}</td>
+                    <td>{element.start_date ? moment(element.start_date).format('DD-MM-YYYY') : ''}</td>
+                    <td>{element.actual_finish_date ? moment(element.actual_finish_date).format('DD-MM-YYYY') : ''}</td>
+                    <td>{element.company_name}</td>
+                    <td>{element.contact_name}</td>
+                    <td>{element.status}</td>
                   </tr>
                 );
               })}

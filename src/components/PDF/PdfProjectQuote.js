@@ -19,17 +19,7 @@ const PdfProjectQuote = ({ id, quoteId }) => {
   const [gTotal, setGtotal] = React.useState(0);
   // const [hfdata, setHeaderFooterData] = React.useState();
 
-  // React.useEffect(() => {
-  //   api.get('/setting/getSettingsForCompany').then((res) => {
-  //     setHeaderFooterData(res.data.data);
-  //   });
-  // }, []);
-
-  // const findCompany = (key) => {
-  //   const filteredResult = hfdata.find((e) => e.key_text === key);
-  //   return filteredResult.value;
-  // };
-
+ 
   const getProjectById = () => {
     api
       .post('/project/getProjectById', { project_id: id })
@@ -47,11 +37,7 @@ const PdfProjectQuote = ({ id, quoteId }) => {
     });
   };
   // const calculateTotal = () => {
-  //   const grandTotal = lineItem.reduce((acc, element) => acc + element.amount, 0);
-  //   const gstValue = quote.discount || 0;
-  //   const total = grandTotal + gstValue;
-  //   return total;
-  // };
+
   const calculateTotal = () => {
     const grandTotal = lineItem.reduce((acc, element) => acc + element.amount, 0);
     const discount = quote.discount || 0; // Get the discount from the quote or default to 0 if not provided

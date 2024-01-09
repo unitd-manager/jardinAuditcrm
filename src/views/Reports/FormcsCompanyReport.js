@@ -9,6 +9,7 @@ import 'datatables.net-buttons/js/buttons.flash';
 import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.print';
 import { ToastContainer } from 'react-toastify';
+import moment from 'moment';
 import api from '../../constants/api';
 import message from '../../components/Message';
 import ExportReport from '../../components/Report/ExportReport';
@@ -27,20 +28,20 @@ function FormcsCompanyReport() {
   };
 
   //const [selectedMonth, setSelectedMonth] = useState('');
-  
-  //GET MONTH NAME
-    /*const handleMonthChange = (event) => {
-      const selectedOption = event.target.options[event.target.selectedIndex];
-      const selectedLabel = selectedOption.textContent;
-      const selectedValue = selectedOption.value;
-  
-      setSelectedMonth({
-        label: selectedLabel,
-        value: selectedValue,
-      });
-    };*/
 
-    //Get data from Training table
+  //GET MONTH NAME
+  /*const handleMonthChange = (event) => {
+    const selectedOption = event.target.options[event.target.selectedIndex];
+    const selectedLabel = selectedOption.textContent;
+    const selectedValue = selectedOption.value;
+ 
+    setSelectedMonth({
+      label: selectedLabel,
+      value: selectedValue,
+    });
+  };*/
+
+  //Get data from Training table
   const getArReturnNotfiledCompanyReport = () => {
     const selectedMonth = period.month;
     api
@@ -75,7 +76,7 @@ function FormcsCompanyReport() {
       name: 'Due Date',
       selector: 'due_date',
     },
-    
+
   ];
 
   useEffect(() => {
@@ -125,7 +126,7 @@ function FormcsCompanyReport() {
               <option value="December Year End">December Year End</option>
             </Input>
           </Col>
-         
+
           <Col md="2">
             <Button
               color="primary"
@@ -148,7 +149,7 @@ function FormcsCompanyReport() {
           <Col>
             <b>Month:</b> &nbsp; <span>{period.month}</span>
           </Col>
-        
+
         </Row>
       </div>
 
@@ -179,19 +180,12 @@ function FormcsCompanyReport() {
                       <td>{res.company_name}</td>
                       <td>{res.project_title}</td>
                       <td>{res.task_title}</td>
-                      <td>{res.due_date}</td>
-                      
+                      <td>{res.due_date ? moment(res.due_date).format('DD-MM-YYYY') : ''}</td>
+
                     </tr>
                   );
                 })}
               <tr>
-                <td>
-                  <b></b>
-                </td>
-                <td>
-                  <b></b>
-                </td>
-               
               </tr>
             </tbody>
           </Table>

@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer } from 'react-toastify';
 import { Button, Card, CardBody, Col, Input, FormGroup, Label, Row, Table } from 'reactstrap';
 import ReactPaginate from 'react-paginate';
+import moment from 'moment';
 import api from '../../constants/api';
 import message from '../../components/Message';
 import BreadCrumbs from '../../layouts/breadcrumbs/BreadCrumbs';
@@ -155,7 +156,7 @@ const AgmNotFiledReport = () => {
                     <td>{element.company_name}</td>
                     <td>{element.project_title}</td>
                     <td>{element.task_title}</td>
-                    <td>{element.due_date}</td>
+                    <td>{element.due_date ? moment(element.due_date).format('DD-MM-YYYY') : ''}</td>
                   </tr>
                 );
               })}

@@ -9,6 +9,7 @@ import 'datatables.net-buttons/js/buttons.flash';
 import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.print';
 import { ToastContainer } from 'react-toastify';
+import moment from 'moment';
 import api from '../../constants/api';
 import message from '../../components/Message';
 import ExportReport from '../../components/Report/ExportReport';
@@ -27,25 +28,25 @@ function ArReturnNotfiledCompanyReport() {
   };
 
   //const [selectedMonth, setSelectedMonth] = useState('');
-  
-  //GET MONTH NAME
-    /*const handleMonthChange = (event) => {
-      const selectedOption = event.target.options[event.target.selectedIndex];
-      const selectedLabel = selectedOption.textContent;
-      const selectedValue = selectedOption.value;
-  
-      setSelectedMonth({
-        label: selectedLabel,
-        value: selectedValue,
-      });
-    };*/
 
-    //Get data from Training table
+  //GET MONTH NAME
+  /*const handleMonthChange = (event) => {
+    const selectedOption = event.target.options[event.target.selectedIndex];
+    const selectedLabel = selectedOption.textContent;
+    const selectedValue = selectedOption.value;
+ 
+    setSelectedMonth({
+      label: selectedLabel,
+      value: selectedValue,
+    });
+  };*/
+
+  //Get data from Training table
   const getArReturnNotfiledCompanyReport = () => {
     const selectedMonth = period.month;
 
     api
-      .get('/project/getArReturnNotfiledCompanyReport',{ params: { month: selectedMonth } })
+      .get('/project/getArReturnNotfiledCompanyReport', { params: { month: selectedMonth } })
       .then((res) => {
         setArReturnNotfiledCompanyReport(res.data.data);
       })
@@ -76,7 +77,7 @@ function ArReturnNotfiledCompanyReport() {
       name: 'Due Date',
       selector: 'due_date',
     },
-    
+
   ];
 
   useEffect(() => {
@@ -111,7 +112,7 @@ function ArReturnNotfiledCompanyReport() {
           <Col></Col>
           <Col>
             <Input type="select" name="month" onChange={handleInputs}>
-              <option value="">Select Month</option>
+              <option value="">Select Group Name</option>
               <option value="January Year End">January Year End</option>
               <option value="February Year End">February Year End</option>
               <option value="March Year End">March Year End</option>
@@ -126,7 +127,7 @@ function ArReturnNotfiledCompanyReport() {
               <option value="December Year End">December Year End</option>
             </Input>
           </Col>
-         
+
           <Col md="2">
             <Button
               color="primary"
@@ -147,9 +148,9 @@ function ArReturnNotfiledCompanyReport() {
       <div className="card p-2 shadow-none mt-0">
         <Row>
           <Col>
-            <b>Month:</b> &nbsp; <span>{period.month}</span>
+            <b>Group Name</b> &nbsp; <span>{period.month}</span>
           </Col>
-        
+
         </Row>
       </div>
 
@@ -180,19 +181,14 @@ function ArReturnNotfiledCompanyReport() {
                       <td>{res.company_name}</td>
                       <td>{res.project_title}</td>
                       <td>{res.task_title}</td>
-                      <td>{res.due_date}</td>
-                      
+                      <td>{res.due_date ? moment(res.due_date).format('DD-MM-YYYY') : ''}</td>
+
                     </tr>
                   );
                 })}
               <tr>
-                <td>
-                  <b></b>
-                </td>
-                <td>
-                  <b></b>
-                </td>
-               
+
+
               </tr>
             </tbody>
           </Table>
