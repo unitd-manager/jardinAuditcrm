@@ -313,7 +313,7 @@ const ClientsEdit = () => {
     phone_direct: '',
     fax: '',
     mobile: '',
-    nationality: '',
+    nationality: 'SINGAPORE CITIZEN',
     date_of_appointment: '',
     secretary_appoint_date: '',
     secretary_resign_date: '',

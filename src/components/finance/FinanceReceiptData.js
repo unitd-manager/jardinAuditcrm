@@ -239,7 +239,7 @@ const { loggedInuser } = useContext(AppContext);
     }
     console.log("select", selectedInvoice);
   };
-
+   console.log('selectedInvoice', selectedInvoice)
 
 
   // const insertInvoices = () => {
