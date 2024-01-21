@@ -12,7 +12,7 @@ export default function ContentMoreDetails({
   subcategoryLinked,
   subgroup,
   getCategory,
-  }) {
+}) {
   ContentMoreDetails.propTypes = {
     contentDetails: PropTypes.object,
     handleInputs: PropTypes.any,
@@ -21,14 +21,12 @@ export default function ContentMoreDetails({
     subcategoryLinked: PropTypes.func,
     subgroup: PropTypes.any,
     getCategory: PropTypes.func,
-      };
+  };
   return (
     <div>
-<ComponentCard
-            title="Content Details"
-            creationModificationDate={contentDetails}
-          
-          >        <ToastContainer></ToastContainer>
+      <ComponentCard title="Content Details" creationModificationDate={contentDetails}>
+        {' '}
+        <ToastContainer></ToastContainer>
         <Row>
           <Col md="4">
             <FormGroup>
@@ -54,12 +52,14 @@ export default function ContentMoreDetails({
               }}
               value={contentDetails && contentDetails.section_id}
             >
-              <option defaultValue="selected">
-                Please Select
-              </option>
+              <option defaultValue="selected">Please Select</option>
               {section &&
                 section.map((ele) => {
-                  return <option key={ele.section_id} value={ele.section_id}>{ele.section_title}</option>;
+                  return (
+                    <option key={ele.section_id} value={ele.section_id}>
+                      {ele.section_title}
+                    </option>
+                  );
                 })}
             </Input>
           </Col>
@@ -71,12 +71,14 @@ export default function ContentMoreDetails({
               onChange={handleInputs}
               value={contentDetails && contentDetails.category_id}
             >
-              <option defaultValue="selected">
-                Please Select
-              </option>
+              <option defaultValue="selected">Please Select</option>
               {subgroup &&
                 subgroup.map((ele) => {
-                  return <option key={ele.category_id} value={ele.category_id}>{ele.category_title}</option>;
+                  return (
+                    <option key={ele.category_id} value={ele.category_id}>
+                      {ele.category_title}
+                    </option>
+                  );
                 })}
             </Input>
           </Col>
@@ -92,12 +94,14 @@ export default function ContentMoreDetails({
                 value={contentDetails && contentDetails.sub_category_id}
                 onChange={handleInputs}
               >
-                <option defaultValue="selected">
-                  Please Select
-                </option>
+                <option defaultValue="selected">Please Select</option>
                 {subcategoryLinked &&
                   subcategoryLinked.map((ele) => {
-                    return <option key={ele.sub_category_id} value={ele.sub_category_id}>{ele.sub_category_title}</option>;
+                    return (
+                      <option key={ele.sub_category_id} value={ele.sub_category_id}>
+                        {ele.sub_category_title}
+                      </option>
+                    );
                   })}
               </Input>
             </FormGroup>
@@ -111,12 +115,14 @@ export default function ContentMoreDetails({
                 value={contentDetails && contentDetails.content_type}
                 name="content_type"
               >
-                <option defaultValue="selected">
-                  Please Select
-                </option>
+                <option defaultValue="selected">Please Select</option>
                 {valuelist &&
                   valuelist.map((e) => {
-                    return <option key={e.value} value={e.value}>{e.value}</option>;
+                    return (
+                      <option key={e.value} value={e.value}>
+                        {e.value}
+                      </option>
+                    );
                   })}
               </Input>
             </FormGroup>
@@ -138,7 +144,7 @@ export default function ContentMoreDetails({
                 defaultChecked={contentDetails && contentDetails.show_title === 1 && true}
                 onChange={handleInputs}
               />
-              <br/>
+              <br />
               <Label> No </Label>
               <Input
                 name="show_title"
@@ -161,7 +167,7 @@ export default function ContentMoreDetails({
                 defaultChecked={contentDetails && contentDetails.published === 1 && true}
                 onChange={handleInputs}
               />
-              <br/>
+              <br />
               <Label>No</Label>
               <Input
                 name="published"

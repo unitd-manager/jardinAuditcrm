@@ -248,7 +248,7 @@ export default function QuotationMoreDetails({
                     <FormGroup>
                       <Row>
                         <Col md="2">
-                          <Label>
+                          <Label>{' '}
                             <span className='addline'
                               onClick={() => {
                                 getLineItem(element.quote_id);
@@ -258,7 +258,7 @@ export default function QuotationMoreDetails({
                               }}
                             >
                               <Icon.Edit />
-                            </span>
+                            </span>{' '}
                           </Label>
                         </Col>
                         <Col md="2">
